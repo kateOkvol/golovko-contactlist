@@ -14,14 +14,14 @@ import java.sql.Date;
 @Path(value = "/contactsList")
 @Consumes({MediaType.APPLICATION_JSON})
 @Produces({MediaType.APPLICATION_JSON})
-public class Controller{
+public class Controller {
 
-
+    @Path(value = "/getAll")
     @GET
     public Response searchContacts(@QueryParam("fullName") String fullName,
-                                @QueryParam("birthDate") Date birthDate,
-                                @QueryParam("address") String address,
-                                @QueryParam("company") String company) {
+                                   @QueryParam("birthDate") Date birthDate,
+                                   @QueryParam("address") String address,
+                                   @QueryParam("company") String company) {
         MainContactDTO dto = new MainContactService().findAll();
         return Response.ok(dto).build();
     }

@@ -1,10 +1,13 @@
 package entities;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Objects;
 
 
 @XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class MainContact {
     private Integer id;
     private Integer contact_id;

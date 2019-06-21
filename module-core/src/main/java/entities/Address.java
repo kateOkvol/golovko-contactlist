@@ -1,10 +1,12 @@
 package entities;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Objects;
 
 @XmlRootElement
-public class Address{
+@XmlAccessorType(XmlAccessType.FIELD)public class Address{
     private Integer id;
     private Integer zipCode;
     private String country;

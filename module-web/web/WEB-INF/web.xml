@@ -18,7 +18,7 @@
  
  <servlet-mapping>
   <servlet-name>jersey-servlet</servlet-name>
-  <url-pattern>/contacts/*</url-pattern>
+  <url-pattern>/contactsList/*</url-pattern>
  </servlet-mapping>
 
  <!--   <servlet-mapping>
