@@ -7,8 +7,8 @@ function showContacts() {
 }
 
 function createTable() {
-    if (request.readyState === 4 && request.status === 200) {
-        var contactsList = JSON.parse(request.response);
+//    if (request.readyState === 4 && request.status === 200) {
+//        var contactsList = JSON.parse(request.response);
 
         var tableHTML = "<style type=\"text/css\"> TABLE {" +
             " border-collapse: collapse; " +
@@ -21,19 +21,19 @@ function createTable() {
         tableHTML += "<td>Full name</td> <td>Birth date</td> <td>Address</td> <td>Company</td>";
         tableHTML += "</tr>";
         tableHTML += "</table>";
-
-        for (var i = 0; i < contactsList.length; i++) {
-            tableHTML += "<tr>";
-            tableHTML += "<td>" + contactsList[i].fullName + "</td> " +
-                "<td>" + contactsList[i].birthDate + "</td> " +
-                "<td>" + contactsList[i].address + "</td> " +
-                "<td>" + contactsList[i].company + "</td>";
-            tableHTML += "</tr>";
-        }
+        //
+        // for (var i = 0; i < contactsList.length; i++) {
+        //     tableHTML += "<tr>";
+        //     tableHTML += "<td>" + contactsList[i].fullName + "</td> " +
+        //         "<td>" + contactsList[i].birthDate + "</td> " +
+        //         "<td>" + contactsList[i].address + "</td> " +
+        //         "<td>" + contactsList[i].company + "</td>";
+        //     tableHTML += "</tr>";
+        // }
         document.getElementById("contact-table").innerHTML = tableHTML;
-    } else {
-        console.log("can't create table");
-    }
+    // } else {
+    //     console.log("can't create table");
+    // }
 }
 
 

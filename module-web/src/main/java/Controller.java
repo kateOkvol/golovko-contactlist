@@ -16,7 +16,7 @@ import java.sql.Date;
 @Produces({MediaType.APPLICATION_JSON})
 public class Controller {
 
-    @Path(value = "/getAll")
+    @Path(value = "getAll")
     @GET
     public Response searchContacts(@QueryParam("fullName") String fullName,
                                    @QueryParam("birthDate") Date birthDate,
