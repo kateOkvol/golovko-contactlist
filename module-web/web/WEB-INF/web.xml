@@ -21,9 +21,4 @@
   <url-pattern>/contactsList/*</url-pattern>
  </servlet-mapping>
 
- <!--   <servlet-mapping>
-        <servlet-name>Controller</servlet-name>
-        <url-patterns>/json-data</url-patterns>
-    </servlet-mapping>
-    -->
 </web-app>
