@@ -1,13 +1,16 @@
 package services;
 
-import DAO.DAOImpl.MainContactDAOImpl;
-import DB.DataBaseConnection;
-import DTO.MainContactDTO;
+import dao.DAOImpl.MainContactDAOImpl;
+import db.DataBaseConnection;
+import dto.MainContactDTO;
+import entities.MainContact;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class MainContactService {
     MainContactDAOImpl dao;
+    MainContactDTO dto;
 
     public MainContactService() {
         try {
@@ -17,13 +20,17 @@ public class MainContactService {
         }
     }
 
-    public MainContactDTO findAll(){
-        return new MainContactDTO(dao.getAll());
-
+    public MainContactDTO findAll() {
+        List<MainContact> list = this.dao.getAll();
+        this.dto = new MainContactDTO(list);
+        return this.dto;
     }
 
 //    public static void main(String[] args) {
-//        System.out.println((new MainContactService()).findAll().getMainContacts());
+//        MainContactService service = new MainContactService();
+//        MainContactDTO dto = service.findAll();
+//
+//        System.out.println(dto.toString());
 //    }
 }
 
