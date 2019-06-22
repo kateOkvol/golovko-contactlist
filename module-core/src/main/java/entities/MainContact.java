@@ -3,6 +3,7 @@ package entities;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Date;
 import java.util.Objects;
 
 
@@ -10,16 +11,20 @@ import java.util.Objects;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class MainContact {
     private Integer id;
-    private Integer contact_id;
-    private Integer address_id;
+    private String fullName;
+    private Date birthDate;
+    private String address;
+    private String company;
 
     public MainContact() {
     }
 
-    public MainContact(Integer id, Integer contact_id, Integer address_id) {
+    public MainContact(Integer id, String fullName, Date birthDate, String address, String company) {
         this.id = id;
-        this.contact_id = contact_id;
-        this.address_id = address_id;
+        this.fullName = fullName;
+        this.birthDate = birthDate;
+        this.address = address;
+        this.company = company;
     }
 
     public Integer getId() {
@@ -30,20 +35,36 @@ public class MainContact {
         this.id = id;
     }
 
-    public Integer getContact_id() {
-        return contact_id;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setContact_id(Integer contact_id) {
-        this.contact_id = contact_id;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
-    public Integer getAddress_id() {
-        return address_id;
+    public Date getBirthDate() {
+        return birthDate;
     }
 
-    public void setAddress_id(Integer address_id) {
-        this.address_id = address_id;
+    public void setBirthDate(Date birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
     }
 
     @Override
@@ -52,21 +73,25 @@ public class MainContact {
         if (o == null || getClass() != o.getClass()) return false;
         MainContact that = (MainContact) o;
         return Objects.equals(id, that.id) &&
-                Objects.equals(contact_id, that.contact_id) &&
-                Objects.equals(address_id, that.address_id);
+                Objects.equals(fullName, that.fullName) &&
+                Objects.equals(birthDate, that.birthDate) &&
+                Objects.equals(address, that.address) &&
+                Objects.equals(company, that.company);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, contact_id, address_id);
+        return Objects.hash(id, fullName, birthDate, address, company);
     }
 
     @Override
     public String toString() {
         return "MainContact{" +
                 "id=" + id +
-                ", contact_id=" + contact_id +
-                ", address_id=" + address_id +
+                ", fullName='" + fullName + '\'' +
+                ", birthDate=" + birthDate +
+                ", address='" + address + '\'' +
+                ", company='" + company + '\'' +
                 '}';
     }
 }
