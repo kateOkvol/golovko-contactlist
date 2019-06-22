@@ -1,4 +1,4 @@
-package DAO.DAOImpl;
+package dao.DAOImpl;
 
 public class MainNumberDAOImpl {
 }

@@ -1,6 +1,4 @@
-package DTO;
-
-import entities.Contact;
+package dto;
 
 
 import java.util.Date;

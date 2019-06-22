@@ -1,6 +1,4 @@
-package DTO;
-
-import entities.Attachments;
+package dto;
 
 import java.util.Date;
 

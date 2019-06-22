@@ -1,6 +1,6 @@
-package DAO.DAOImpl;
+package dao.DAOImpl;
 
-import DAO.AddressDAO;
+import dao.AddressDAO;
 import entities.Address;
 
 import java.sql.Connection;

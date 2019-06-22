@@ -1,6 +1,5 @@
-package DAO;
+package dao;
 
-import entities.MainContact;
 import entities.MainNumber;
 
 import java.util.List;

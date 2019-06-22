@@ -1,14 +1,36 @@
-var request = new XMLHttpRequest();
+//var request = new XMLHttpRequest();
+
+var response =  [
+    {
+        "id":1,
+        "fullName":"Jessica Jones",
+        "birthDate":null,
+        "address":"New York",
+        "company":"Alias private investigations"
+    },
+    {
+        "id":2,
+        "fullName":"John Wick",
+        "birthDate":null,
+        "address":"USA",
+        "company":"Russian Mafia"
+    }
+];
+
 
 function showContacts() {
+    createTable();
+/*
     request.open("GET", "/contactsList/getAll", true);
     request.onreadystatechange = createTable;
     request.send(null);
+*/
+
 }
 
 function createTable() {
-    if (request.readyState === 4 && request.status === 200) {
-        var contactsList = JSON.parse(request.response);
+   // if (request.readyState === 4 && request.status === 200) {
+        var contactsList = JSON.parse(response);
 
         var tableHTML = "<table id=\"contact-table\">";
         tableHTML += "<tr>";
@@ -25,9 +47,9 @@ function createTable() {
             tableHTML += "</tr>";
         }
         document.getElementById("contact-table").innerHTML = tableHTML;
-    } else {
-        console.log("cant create table");
-    }
+    // } else {
+    //     console.log("cant create table");
+    // }
 }
 
 

@@ -1,6 +1,6 @@
-package DAO.DAOImpl;
+package dao.DAOImpl;
 
-import DAO.ContactDAO;
+import dao.ContactDAO;
 import entities.Contact;
 
 import java.sql.Connection;

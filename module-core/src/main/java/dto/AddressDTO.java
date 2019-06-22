@@ -1,6 +1,4 @@
-package DTO;
-
-import entities.Address;
+package dto;
 
 public class AddressDTO {
 
