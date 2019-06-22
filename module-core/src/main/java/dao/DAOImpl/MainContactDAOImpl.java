@@ -1,6 +1,6 @@
-package DAO.DAOImpl;
+package dao.DAOImpl;
 
-import DAO.MainContactDAO;
+import dao.MainContactDAO;
 import entities.MainContact;
 
 import java.sql.Connection;
@@ -73,8 +73,10 @@ public class MainContactDAOImpl implements MainContactDAO {
             while (set.next()) {
                 PersistMainContact contact = new PersistMainContact();
                 contact.setId(set.getInt("id"));
-                contact.setContact_id(set.getInt("contact_id"));
-                contact.setAddress_id(set.getInt("address_id"));
+                contact.setFullName(set.getString("full_name"));
+                contact.setBirthDate(set.getDate("birth_date"));
+                contact.setAddress(set.getString("address"));
+                contact.setCompany(set.getString("company"));
                 list.add(contact);
             }
         } catch (SQLException s) {
@@ -82,10 +84,4 @@ public class MainContactDAOImpl implements MainContactDAO {
         }
         return list;
     }
-
-//    public static void main(String[] args) throws SQLException {
-//        MainContactDAOImpl contactDAO = new MainContactDAOImpl(DataBaseConnection.getConnection());
-//        System.out.println(contactDAO.getAll().get(1).getId());
-//    }
-
 }
