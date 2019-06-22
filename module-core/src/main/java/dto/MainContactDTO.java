@@ -1,6 +1,7 @@
-package DTO;
+package dto;
 
 import entities.MainContact;
+
 import java.util.List;
 
 public class MainContactDTO {
@@ -15,5 +16,12 @@ public class MainContactDTO {
 
     public List<MainContact> getMainContacts() {
         return mainContacts;
+    }
+
+    @Override
+    public String toString() {
+        return "MainContactDTO{" +
+                "mainContacts=" + mainContacts.toString() +
+                '}';
     }
 }
