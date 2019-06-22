@@ -11,14 +11,14 @@
   <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
   <init-param>
    <param-name>com.sun.jersey.config.property.packages</param-name>
-   <param-value>module-web</param-value>
+   <param-value>controllers</param-value>
   </init-param>
   <load-on-startup>1</load-on-startup>
  </servlet>
  
  <servlet-mapping>
   <servlet-name>jersey-servlet</servlet-name>
-  <url-pattern>/contactsList/*</url-pattern>
+  <url-pattern>/my-contacts/*</url-pattern>
  </servlet-mapping>
 
 </web-app>

@@ -14,11 +14,7 @@
 
     <dependencies>
         <!-- https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api -->
-        <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>javax.ws.rs-api</artifactId>
-            <version>2.0</version>
-        </dependency>
+
 
         <!-- https://mvnrepository.com/artifact/com.sun.jersey/jersey-server -->
         <dependency>
@@ -57,7 +53,6 @@
             <artifactId>lib-mustache</artifactId>
             <version>6.15.6</version>
         </dependency>
-
     </dependencies>
 
 
