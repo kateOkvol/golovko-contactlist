@@ -11,6 +11,8 @@ import java.util.Objects;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class MainContact {
     private Integer id;
+    private Integer contactId;
+    private Integer addressId;
     private String fullName;
     private Date birthDate;
     private String address;
@@ -33,6 +35,24 @@ public class MainContact {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getContactId() {
+        return contactId;
+    }
+
+    public MainContact setContactId(Integer contactId) {
+        this.contactId = contactId;
+        return this;
+    }
+
+    public Integer getAddressId() {
+        return addressId;
+    }
+
+    public MainContact setAddressId(Integer addressId) {
+        this.addressId = addressId;
+        return this;
     }
 
     public String getFullName() {

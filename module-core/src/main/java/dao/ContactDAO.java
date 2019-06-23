@@ -13,7 +13,7 @@ public interface ContactDAO {
 
     void update(Contact object);
 
-    void delete(Contact object);
+    void delete(Integer id);
 
 
 }

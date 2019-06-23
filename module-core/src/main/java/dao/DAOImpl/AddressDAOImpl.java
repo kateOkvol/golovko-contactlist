@@ -63,7 +63,8 @@ public class AddressDAOImpl implements AddressDAO {
     @Override
     public List<Address> getAll() {
         List<Address> list = null;
-        String sql = "SELECT * FROM contacts.address";
+        String sql = "SELECT id, country, city, street," +
+                "house, flat, zip_code  FROM contacts.address";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet resultSet = statement.executeQuery();
             list = parseResultSet(resultSet);
@@ -77,7 +78,8 @@ public class AddressDAOImpl implements AddressDAO {
     @Override
     public Address getById(Integer id) {
         Address address = new Address();
-        String sql = "SELECT * FROM contacts.address WHERE id = ?";
+        String sql = "SELECT country, city, street " +
+                "house, flat, zip_code  FROM contacts.address WHERE id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet resultSet = statement.executeQuery();
             address = parseResultSet(resultSet).get(1);
@@ -91,8 +93,8 @@ public class AddressDAOImpl implements AddressDAO {
     @Override
     public void update(Address address) {
         String sql = "UPDATE contacts.address SET country = ?, city = ?, street = ?, " +
-                     "house = ?, flat = ?, zip_code = ? WHERE id= ?;";
-        try(PreparedStatement statement = connection.prepareStatement(sql)){
+                "house = ?, flat = ?, zip_code = ? WHERE id= ?;";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             partOfPrepare(statement, address);
             statement.setInt(7, address.getId());
             int count = statement.executeUpdate();
@@ -107,10 +109,10 @@ public class AddressDAOImpl implements AddressDAO {
     }
 
     @Override
-    public void delete(Address address) {
+    public void delete(Integer id) {
         String sql = "DELETE FROM contacts.address WHERE id= ?;";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setObject(1, address.getId());
+            statement.setObject(1, id);
             int count = statement.executeUpdate();
             if (count != 1) {
                 System.out.println("разраб свою ошибку, делит адреса");

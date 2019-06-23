@@ -21,7 +21,7 @@ var request = new XMLHttpRequest();
 function showContacts() {
     // createTable();
 
-    request.open("GET", "/contactsList/getAll", true);
+    request.open("GET", "/my-contacts/contactsList/getAll", true);
     request.onreadystatechange = createTable;
     request.send(null);
 

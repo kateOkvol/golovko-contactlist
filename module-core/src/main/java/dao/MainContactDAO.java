@@ -13,5 +13,5 @@ public interface MainContactDAO {
 
     void update(MainContact mainContact);
 
-    void delete(MainContact mainContact);
+    void delete(Integer id);
 }

@@ -13,5 +13,5 @@ public interface AddressDAO {
 
     void update(Address object);
 
-    void delete(Address object);
+    void delete(Integer id);
 }

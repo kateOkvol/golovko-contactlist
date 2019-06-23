@@ -37,7 +37,8 @@ public class ContactDAOImpl implements ContactDAO {
     @Override
     public List<Contact> getAll() {
         List<Contact> list = null;
-        String sql = "SELECT * FROM contacts.contact";
+        String sql = "SELECT first_name, last_name, middle_name, " +
+                " birth_date, gender, citizenship, marital_status, web_site, email, company, address_id FROM contacts.contact";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet resultSet = statement.executeQuery();
             list = parseResultSet(resultSet);
@@ -51,7 +52,8 @@ public class ContactDAOImpl implements ContactDAO {
     @Override
     public Contact getById(Integer id) {
         Contact contact = new Contact();
-        String sql = "SELECT * FROM contacts.contact WHERE id = ?";
+        String sql = "SELECT first_name, last_name, middle_name, " +
+                "birth_date, gender, citizenship, marital_status, web_site, email, company, address_id FROM contacts.contact WHERE id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet resultSet = statement.executeQuery();
             contact = parseResultSet(resultSet).get(1);
@@ -72,7 +74,7 @@ public class ContactDAOImpl implements ContactDAO {
             statement.setInt(12, contact.getId());
             int count = statement.executeUpdate();
             if (count != 1) {
-                //throw new Exception();
+                System.out.println("contact update exception");//throw new Exception();
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -80,10 +82,10 @@ public class ContactDAOImpl implements ContactDAO {
     }
 
     @Override
-    public void delete(Contact contact) {
+    public void delete(Integer id) {
         String sql = "DELETE FROM contacts.contact WHERE id = ?;";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setObject(1, contact.getId());
+            statement.setObject(1, id);
             int count = statement.executeUpdate();
             if (count != 1) {
                 System.out.println("разраб свою ошибку, делит контакта");
