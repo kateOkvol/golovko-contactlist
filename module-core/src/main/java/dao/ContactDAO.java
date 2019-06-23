@@ -2,12 +2,10 @@ package dao;
 
 import entities.Contact;
 
-import java.util.List;
-
 public interface ContactDAO {
     void create(Contact contact);
 
-    List<Contact> getAll();
+//    List<Contact> getAll();
 
     Contact getById(Integer id);
 

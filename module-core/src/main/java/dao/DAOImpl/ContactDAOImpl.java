@@ -34,29 +34,31 @@ public class ContactDAOImpl implements ContactDAO {
         }
     }
 
-    @Override
-    public List<Contact> getAll() {
-        List<Contact> list = null;
-        String sql = "SELECT first_name, last_name, middle_name, " +
-                " birth_date, gender, citizenship, marital_status, web_site, email, company, address_id FROM contacts.contact";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            ResultSet resultSet = statement.executeQuery();
-            list = parseResultSet(resultSet);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("разраб свою ошибку, getall contact");
-        }
-        return list;
-    }
+//    @Override
+//    public List<Contact> getAll() {
+//        List<Contact> list = null;
+//        String sql = "SELECT first_name, last_name, middle_name, " +
+//                " birth_date, gender, citizenship, marital_status, web_site, email, company, address_id FROM contacts.contact";
+//        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+//            ResultSet resultSet = statement.executeQuery();
+//            list = parseResultSet(resultSet);
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            System.out.println("разраб свою ошибку, getall contact");
+//        }
+//        return list;
+//    }
 
     @Override
     public Contact getById(Integer id) {
         Contact contact = new Contact();
-        String sql = "SELECT first_name, last_name, middle_name, " +
-                "birth_date, gender, citizenship, marital_status, web_site, email, company, address_id FROM contacts.contact WHERE id = ?";
+        String sql = "SELECT id, first_name, last_name, middle_name, " +
+                "birth_date, gender, citizenship, marital_status, " +
+                "web_site, email, company, address_id FROM contacts.contact WHERE id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
-            contact = parseResultSet(resultSet).get(1);
+            contact = parseResultSet(resultSet).get(0);
         } catch (SQLException e) {
             e.printStackTrace();
         }
