@@ -28,7 +28,7 @@ var request = new XMLHttpRequest();
 
 function getContacts() {
     addButtons();
-    request.open("GET", "/contactsList/application?command=mainContacts", true);
+    request.open("POST", "/contactsList/application?command=mainContacts", true);
     request.onreadystatechange = createTable;
 }
 
