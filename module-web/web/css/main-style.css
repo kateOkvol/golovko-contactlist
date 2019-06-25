@@ -1,5 +1,7 @@
 body {
     font-size: 115%;
+    padding: 0;
+    margin: 0;
  /*   font-family: Calibri, monospace ;*/
 
 }
@@ -8,6 +10,8 @@ h1 {
     font-size: 300%;
     text-align: center;
     background-color: #EAFFF9;
+    padding: 0;
+    margin: 0;
 }
 
 table {
