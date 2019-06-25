@@ -7,8 +7,8 @@ import java.sql.SQLException;
 public class DataBaseConnection {   //вынести в пропертиз
     private static final String DB_DRIVER = "org.postgresql.Driver";
     private static final String URL = "jdbc:postgresql://localhost:5432/contacts";
-    private static final String USER = "postgres";
-    private static final String PASSWORD = "postgres";
+    private static final String USER = "******";
+    private static final String PASSWORD = "*******";
 
 
 
