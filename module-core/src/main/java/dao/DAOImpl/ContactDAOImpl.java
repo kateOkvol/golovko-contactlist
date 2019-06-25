@@ -24,8 +24,8 @@ public class ContactDAOImpl implements ContactDAO {
     @Override
     public void create(Contact contact) {
         String sql = "INSERT INTO contacts.contact (first_name, last_name, middle_name, " +
-                "birth_date, gender, citizenship, marital_status, web_site, email, company, address_id) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+                "birth_date, citizenship, web_site, email, company, country, city, street, house, flat, zip_code) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             partOfPrepare(statement, contact);
             statement.setInt(12, contact.getId());
@@ -34,27 +34,14 @@ public class ContactDAOImpl implements ContactDAO {
         }
     }
 
-//    @Override
-//    public List<Contact> getAll() {
-//        List<Contact> list = null;
-//        String sql = "SELECT first_name, last_name, middle_name, " +
-//                " birth_date, gender, citizenship, marital_status, web_site, email, company, address_id FROM contacts.contact";
-//        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-//            ResultSet resultSet = statement.executeQuery();
-//            list = parseResultSet(resultSet);
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            System.out.println("разраб свою ошибку, getall contact");
-//        }
-//        return list;
-//    }
 
     @Override
     public Contact getById(Integer id) {
         Contact contact = new Contact();
         String sql = "SELECT id, first_name, last_name, middle_name, " +
-                "birth_date, gender, citizenship, marital_status, " +
-                "web_site, email, company, address_id FROM contacts.contact WHERE id = ?";
+                "birth_date, citizenship, web_site, email, company, " +
+                "country, city, street, house, flat, zip_code " +
+                "FROM contacts.contact WHERE id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -69,11 +56,11 @@ public class ContactDAOImpl implements ContactDAO {
     @Override
     public void update(Contact contact) {
         String sql = "UPDATE contacts.contact SET first_name = ?, last_name = ?, middle_name = ?, " +
-                "birth_date = ?, gender = ?, citizenship = ?, marital_status = ?, web_site = ?, " +
-                "email = ?, company = ?, address_id = ? WHERE id = ?;";
+                "birth_date = ?, citizenship = ?, web_site = ?, email = ?, company = ?, " +
+                "country = ?, city = ?, street = ?, house = ?, flat = ?, zip_code = ?  WHERE id = ?;";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             partOfPrepare(statement, contact);
-            statement.setInt(12, contact.getId());
+            statement.setInt(15, contact.getId());
             int count = statement.executeUpdate();
             if (count != 1) {
                 System.out.println("contact update exception");//throw new Exception();
@@ -113,13 +100,16 @@ public class ContactDAOImpl implements ContactDAO {
                 contact.setLastName(set.getString("last_name"));
                 contact.setMiddleName(set.getString("middle_name"));
                 contact.setBirthDate(set.getDate("birth_date"));
-                contact.setGender(set.getBoolean("gender"));
                 contact.setCitizenship(set.getString("citizenship"));
-                contact.setMaritalStatus(set.getString("marital_status"));
                 contact.setEmail(set.getString("email"));
                 contact.setWebSite(set.getString("web_site"));
                 contact.setCompany(set.getString("company"));
-                contact.setAddress_id(set.getInt("address_id"));
+                contact.setCountry(set.getString("country"));
+                contact.setCity(set.getString("city"));
+                contact.setStreet(set.getString("street"));
+                contact.setHouse(set.getString("house"));
+                contact.setFlat(set.getString("flat"));
+                contact.setZipCode(set.getInt("zip_code"));
                 list.add(contact);
             }
         } catch (SQLException s) {
@@ -133,13 +123,16 @@ public class ContactDAOImpl implements ContactDAO {
         statement.setString(2, contact.getLastName());
         statement.setString(3, contact.getMiddleName());
         statement.setDate(4, (Date) contact.getBirthDate());
-        statement.setBoolean(5, contact.getGender());
-        statement.setString(6, contact.getCitizenship());
-        statement.setString(7, contact.getMaritalStatus());
-        statement.setString(8, contact.getEmail());
-        statement.setString(9, contact.getWebSite());
-        statement.setString(10, contact.getCompany());
-        statement.setInt(11, contact.getAddress_id());
+        statement.setString(5, contact.getCitizenship());
+        statement.setString(6, contact.getEmail());
+        statement.setString(7, contact.getWebSite());
+        statement.setString(8, contact.getCompany());
+        statement.setString(9, contact.getCountry());
+        statement.setString(10, contact.getCity());
+        statement.setString(11, contact.getStreet());
+        statement.setString(12, contact.getHouse());
+        statement.setString(13, contact.getFlat());
+        statement.setInt(14, contact.getZipCode());
     }
 
 }

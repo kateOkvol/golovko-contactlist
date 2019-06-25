@@ -12,7 +12,6 @@ import java.util.Objects;
 public class MainContact {
     private Integer id;
     private Integer contactId;
-    private Integer addressId;
     private String fullName;
     private Date birthDate;
     private String address;
@@ -46,14 +45,6 @@ public class MainContact {
         return this;
     }
 
-    public Integer getAddressId() {
-        return addressId;
-    }
-
-    public MainContact setAddressId(Integer addressId) {
-        this.addressId = addressId;
-        return this;
-    }
 
     public String getFullName() {
         return fullName;

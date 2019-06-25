@@ -8,19 +8,22 @@ import java.util.Objects;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Contact{
+public class Contact {
     private Integer id;
-    private Integer address_id;
     private String firstName;
     private String lastName;
     private String middleName;
     private Date birthDate;
-    private Boolean gender;
     private String citizenship;
-    private String maritalStatus;
     private String webSite;
     private String email;
     private String company;
+    private Integer zipCode;
+    private String country;
+    private String city;
+    private String street;
+    private String house;
+    private String flat;
 
     public Contact() {
     }
@@ -71,28 +74,12 @@ public class Contact{
         this.birthDate = birthDate;
     }
 
-    public Boolean getGender() {
-        return gender;
-    }
-
-    public void setGender(boolean gender) {
-        this.gender = gender;
-    }
-
     public String getCitizenship() {
         return citizenship;
     }
 
     public void setCitizenship(String citizenship) {
         this.citizenship = citizenship;
-    }
-
-    public String getMaritalStatus() {
-        return maritalStatus;
-    }
-
-    public void setMaritalStatus(String maritalStatus) {
-        this.maritalStatus = maritalStatus;
     }
 
     public String getWebSite() {
@@ -119,12 +106,53 @@ public class Contact{
         this.company = company;
     }
 
-    public Integer getAddress_id() {
-        return address_id;
+
+    public Integer getZipCode() {
+        return zipCode;
     }
 
-    public void setAddress_id(Integer address_id) {
-        this.address_id = address_id;
+    public void setZipCode(Integer zipCode) {
+        this.zipCode = zipCode;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public String getHouse() {
+        return house;
+    }
+
+    public void setHouse(String house) {
+        this.house = house;
+    }
+
+    public String getFlat() {
+        return flat;
+    }
+
+    public void setFlat(String flat) {
+        this.flat = flat;
     }
 
     @Override
@@ -136,27 +164,32 @@ public class Contact{
                 Objects.equals(firstName, contact.firstName) &&
                 Objects.equals(lastName, contact.lastName) &&
                 Objects.equals(middleName, contact.middleName) &&
-                Objects.equals(gender, contact.gender);
+                Objects.equals(birthDate, contact.birthDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, middleName, gender);
+        return Objects.hash(id, firstName, lastName, middleName, birthDate, citizenship, webSite, email, company, zipCode, country, city, street, house, flat);
     }
 
     @Override
     public String toString() {
         return "Contact{" +
                 "id=" + id +
-                ", address=" + address_id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", middleName='" + middleName + '\'' +
-                ", gender='" + gender + '\'' +
+                ", birthDate=" + birthDate +
                 ", citizenship='" + citizenship + '\'' +
                 ", webSite='" + webSite + '\'' +
                 ", email='" + email + '\'' +
                 ", company='" + company + '\'' +
+                ", zipCode=" + zipCode +
+                ", country='" + country + '\'' +
+                ", city='" + city + '\'' +
+                ", street='" + street + '\'' +
+                ", house='" + house + '\'' +
+                ", flat='" + flat + '\'' +
                 '}';
     }
 }

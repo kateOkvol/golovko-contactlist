@@ -18,11 +18,6 @@ public class ContactService {
         }
     }
 
-//    public ContactDTO findAll() {
-//        List<Contact> list = this.dao.getAll();
-//        return new ContactDTO(list);
-//    }
-
     public ContactDTO getById(Integer id) {
         return new ContactDTO(dao.getById(id));
     }

@@ -32,16 +32,14 @@ public class MainContactService {
     public void deleteContact(Integer id) {
         this.dao.delete(id);
         new ContactService().deleteContact(id);
-        new AddressService().deleteContact(id);
-
     }
 
     public static void main(String[] args) {
         MainContactService service = new MainContactService();
 
-//        MainContactDTO dto = service.findAll();
+        MainContactDTO dto = service.findAll();
 
-//        System.out.println(dto.toString());
+        System.out.println(dto.toString());
 
 //        System.out.println(service.getById(3));
 

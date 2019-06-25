@@ -21,28 +21,15 @@ public class MainContactDAOImpl implements MainContactDAO {
         this.connection = connection;
     }
 
-    @Override
-    public void create(MainContact mainContact) {
-        String sql = "INSERT INTO contacts.main_contact (contact_id, address_id) \n" +
-                "VALUES (?, ?);";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            partOfPrepare(statement, mainContact);
-            statement.setInt(3, mainContact.getId());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     public List<MainContact> getAll() {
         List<MainContact> list = null;
 
-        String sql = "SELECT main.id, concat_ws(' ', cont.first_name, cont.middle_name, cont.last_name) " +
-                "AS full_name, cont.birth_date, " +
-                "concat_ws(',', address.country, address.city) AS address, cont.company " +
-                "FROM contacts.main_contact main " +
-                "JOIN contacts.contact cont ON main.contact_id=cont.id " +
-                "JOIN contacts.address address ON main.address_id=address.id;";
+        String sql = "SELECT id, concat_ws(' ', first_name, middle_name, last_name) " +
+                "AS full_name, birth_date, " +
+                "concat_ws(', ', country, city) AS address, company " +
+                "FROM contacts.contact ;";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet resultSet = statement.executeQuery();
             list = parseResultSet(resultSet);
@@ -56,13 +43,11 @@ public class MainContactDAOImpl implements MainContactDAO {
     @Override
     public MainContact getById(Integer id) {
         MainContact mainContact = new MainContact();
-        String sql = "SELECT main.id, concat_ws(' ', cont.first_name, cont.middle_name, cont.last_name) " +
+        String sql = "SELECT id, concat_ws(' ', cont.first_name, cont.middle_name, cont.last_name) " +
                 "AS full_name, cont.birth_date, " +
-                "concat_ws(',', address.country, address.city) AS address, cont.company " +
-                "FROM contacts.main_contact main " +
-                "JOIN contacts.contact cont ON main.contact_id=cont.id " +
-                "JOIN contacts.address address ON main.address_id=address.id " +
-                "WHERE main.id = ?";
+                "concat_ws(',', country, city) AS address, cont.company " +
+                "FROM contacts.contact cont " +
+                "WHERE id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -75,13 +60,8 @@ public class MainContactDAOImpl implements MainContactDAO {
     }
 
     @Override
-    public void update(MainContact object) {
-
-    }
-
-    @Override
     public void delete(Integer id) {
-        String sql = "DELETE FROM contacts.main_contact WHERE id = ?;";
+        String sql = "DELETE FROM contacts.contact WHERE id = ?;";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setObject(1, id);
             int count = statement.executeUpdate();
@@ -115,11 +95,5 @@ public class MainContactDAOImpl implements MainContactDAO {
             ///////////////////////
         }
         return list;
-    }
-
-    private void partOfPrepare(PreparedStatement statement, MainContact mainContact) throws SQLException {
-        statement.setInt(1, mainContact.getContactId());
-        statement.setInt(2, mainContact.getAddressId());
-        statement.setInt(3, mainContact.getId());
     }
 }
