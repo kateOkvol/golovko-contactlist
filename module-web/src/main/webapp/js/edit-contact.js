@@ -1,4 +1,4 @@
-//var request = new XMLHttpRequest();
+//var contactRequest = new XMLHttpRequest();
 
 var respones = '{ ' +
     '   "id":3, ' +
@@ -17,9 +17,9 @@ var respones = '{ ' +
 function getContactInformation() {
     showInputs();
     /*
-        request.open("GET", "/contactsList/getContactById", true);
-        request.onreadystatechange = showInputs;
-        request.send(null);
+        contactRequest.open("GET", "/contactsList/getContactById", true);
+        contactRequest.onreadystatechange = showInputs;
+        contactRequest.send(null);
     */
 
 }

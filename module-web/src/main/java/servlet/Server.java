@@ -1,6 +1,8 @@
 package servlet;
 
+import controllers.ContactsController;
 import controllers.MainContactsController;
+import dto.ContactDTO;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import javax.servlet.annotation.WebServlet;
@@ -9,28 +11,33 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(name="application", urlPatterns = {"/application"})
+@WebServlet(name = "application", urlPatterns = {"/application"})
 public class Server extends HttpServlet {
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response){
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         processRequest(request, response);
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response){
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) {
         processRequest(request, response);
     }
 
-    private void processRequest(HttpServletRequest request, HttpServletResponse response){
+    private void processRequest(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
+        //response.setCharacterEncoding("UTF-8");
         String command = request.getParameter("command");
-        switch (command){
+        switch (command) {
             case "mainContacts":
                 mainContacts(request, response);
+                break;
+            case "deleteContact":
+                deleteContact(request, response);
         }
     }
 
-    private void mainContacts(HttpServletRequest request, HttpServletResponse response){
+    private void mainContacts(HttpServletRequest request, HttpServletResponse response) {
         MainContactsController main = new MainContactsController();
         ObjectMapper mapper = new ObjectMapper();
         try {
@@ -38,5 +45,26 @@ public class Server extends HttpServlet {
         } catch (IOException e) {
             System.out.println("эррор при записи в респонз. Сделай свой эксепшн! и логи добавь наконец");
         }
+    }
+
+    private void createContact(HttpServletRequest request, HttpServletResponse response) {
+        ///////// take json, parse
+        ContactDTO dto = new ContactDTO();
+        new ContactsController().createContact(dto);
+    }
+
+
+    private void deleteContact(HttpServletRequest request, HttpServletResponse response) {
+        Integer id = Integer.parseInt(request.getParameter("id"));
+        new ContactsController().deleteContact(id);
+        try {
+            response.sendRedirect("mainContacts");
+        } catch (IOException e) {
+            System.out.println("redirect deleteMainContact");
+        }
+    }
+
+    private void getContactById(HttpServletResponse response, HttpServletRequest request) {
+
     }
 }

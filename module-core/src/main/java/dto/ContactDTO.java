@@ -1,66 +1,189 @@
 package dto;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import entities.Contact;
 
-import java.util.List;
+import java.util.Date;
 
 public class ContactDTO {
-//
-//    private Integer id;
-//    private Integer address_id;
-//    private String firstName;
-//    private String lastName;
-//    private String middleName;
-//    private Date birthDate;
-//    private Boolean gender;
-//    private String citizenship;
-//    private String maritalStatus;
-//    private String webSite;
-//    private String email;
-//    private String company;
 
-
-    private List<Contact> contacts;
-    private Contact contact;
+    private Integer id;
+    private String firstName;
+    private String lastName;
+    private String middleName;
+    private String gender;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")
+    private Date birthDate;
+    private String citizenship;
+    private String maritalStatus;
+    private String webSite;
+    private String email;
+    private String company;
+    private Integer zipCode;
+    private String country;
+    private String city;
+    private String street;
+    private String house;
+    private String flat;
 
     public ContactDTO() {
     }
 
     public ContactDTO(Contact contact) {
-        this.contact = contact;
+        this.id = contact.getId();
+        this.firstName = contact.getFirstName();
+        this.lastName = contact.getLastName();
+        this.middleName = contact.getMiddleName();
+        this.gender = contact.getGender();
+        this.birthDate = contact.getBirthDate();
+        this.citizenship = contact.getCitizenship();
+        this.maritalStatus = contact.getMaritalStatus();
+        this.webSite = contact.getWebSite();
+        this.email = contact.getEmail();
+        this.company = contact.getCompany();
+        this.zipCode = contact.getZipCode();
+        this.country = contact.getCountry();
+        this.city = contact.getCity();
+        this.street = contact.getStreet();
+        this.house = contact.getHouse();
+        this.flat = contact.getFlat();
     }
 
-    public ContactDTO(List<Contact> contacts) {
-        this.contacts = contacts;
+    public Integer getId() {
+        return id;
     }
 
-    public List<Contact> getContacts() {
-        return contacts;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public ContactDTO setContacts(List<Contact> contacts) {
-        this.contacts = contacts;
-        return this;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public Contact getContact() {
-        return contact;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public ContactDTO setContact(Contact contact) {
-        this.contact = contact;
-        return this;
+    public String getLastName() {
+        return lastName;
     }
 
-    @Override
-    public String toString() {
-        if (contacts == null) {
-            return "MainContactDTO{" +
-                    "mainContact=" + contact +
-                    '}';
-        } else return "MainContactDTO{" +
-                "mainContacts=" + contacts +
-                '}';
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
+
+    public String getMiddleName() {
+        return middleName;
+    }
+
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
+    }
+
+    public Date getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(Date birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public String getCitizenship() {
+        return citizenship;
+    }
+
+    public void setCitizenship(String citizenship) {
+        this.citizenship = citizenship;
+    }
+
+    public String getWebSite() {
+        return webSite;
+    }
+
+    public void setWebSite(String webSite) {
+        this.webSite = webSite;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getMaritalStatus() {
+        return maritalStatus;
+    }
+
+    public void setMaritalStatus(String maritalStatus) {
+        this.maritalStatus = maritalStatus;
+    }
+
+    public Integer getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(Integer zipCode) {
+        this.zipCode = zipCode;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public String getHouse() {
+        return house;
+    }
+
+    public void setHouse(String house) {
+        this.house = house;
+    }
+
+    public String getFlat() {
+        return flat;
+    }
+
+    public void setFlat(String flat) {
+        this.flat = flat;
+    }
+
 }

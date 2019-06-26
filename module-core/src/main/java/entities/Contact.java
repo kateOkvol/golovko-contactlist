@@ -1,13 +1,9 @@
 package entities;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 import java.util.Objects;
 
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
+
 public class Contact {
     private Integer id;
     private String firstName;
@@ -187,26 +183,5 @@ public class Contact {
     @Override
     public int hashCode() {
         return Objects.hash(id, firstName, lastName, middleName, birthDate, citizenship, webSite, email, company, zipCode, country, city, street, house, flat);
-    }
-
-    @Override
-    public String toString() {
-        return "Contact{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", middleName='" + middleName + '\'' +
-                ", birthDate=" + birthDate +
-                ", citizenship='" + citizenship + '\'' +
-                ", webSite='" + webSite + '\'' +
-                ", email='" + email + '\'' +
-                ", company='" + company + '\'' +
-                ", zipCode=" + zipCode +
-                ", country='" + country + '\'' +
-                ", city='" + city + '\'' +
-                ", street='" + street + '\'' +
-                ", house='" + house + '\'' +
-                ", flat='" + flat + '\'' +
-                '}';
     }
 }

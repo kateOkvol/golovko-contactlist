@@ -11,7 +11,6 @@ import java.util.List;
 
 public class MainContactService {
     private MainContactDAOImpl dao;
-    private MainContactDTO dto;
 
     public MainContactService() {
         try {
@@ -24,32 +23,30 @@ public class MainContactService {
     public List<MainContactDTO> findAll() {
         List<MainContact> list = this.dao.getAll();
         List<MainContactDTO> contactList = new ArrayList<>();
-        for (MainContact contact: list) {
+        for (MainContact contact : list) {
             contactList.add(new MainContactDTO(contact));
         }
         return contactList;
     }
 
+
+
+
+
+//    public static void main(String[] args) {
+//        MainContactService service = new MainContactService();
+//
+//        List<MainContactDTO> dto = service.findAll();
+//
+//        System.out.println(dto.toString());
+//
+////        System.out.println(service.getById(3));
+//
+////        service.deleteContact(3);
+//
+//    }
 //    public MainContactDTO getById(Integer id) {
 //        return new MainContactDTO(dao.getById(id));
 //    }
-
-    public void deleteContact(Integer id) {
-        this.dao.delete(id);
-        new ContactService().deleteContact(id);
-    }
-
-    public static void main(String[] args) {
-        MainContactService service = new MainContactService();
-
-        List<MainContactDTO> dto = service.findAll();
-
-        System.out.println(dto.toString());
-
-//        System.out.println(service.getById(3));
-
-//        service.deleteContact(3);
-    }
-
 }
 

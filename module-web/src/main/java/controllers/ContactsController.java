@@ -1,6 +1,17 @@
 package controllers;
 
+import dto.ContactDTO;
+import services.ContactService;
+
 public class ContactsController {
+
+    public void createContact(ContactDTO contactDTO){
+        new ContactService(contactDTO).createContact();
+    }
+
+    public void deleteContact(Integer contactId) {
+        new ContactService().deleteContact(contactId);
+    }
 
 //    public Response getContact(@PathParam("id") Integer id) {
 //        ContactDTO dto = new ContactService().getById(id);

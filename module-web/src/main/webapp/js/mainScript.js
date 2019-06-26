@@ -1,27 +1,28 @@
-var request = new XMLHttpRequest();
+var contactRequest = new XMLHttpRequest();
 
 function getContacts() {
     addButtons();
-    request.open("POST", "?command=mainContacts", true);
+    contactRequest.open("POST", "application?command=mainContacts", true);
     console.log("method is open");
-    request.onreadystatechange = createTable;
+    contactRequest.onreadystatechange = createTable;
     console.log("on ready state change");
-    request.send(null);
+    contactRequest.send(null);
     //createTable();
 }
 
 function addButtons() {
     var buttonHTML = "<form>";
     buttonHTML += "<button type='submit' id='0' formaction='html/contact-editor.html'>Create</button>";
-    buttonHTML += "<button type='submit' id='delete'>Delete</button>";
+    buttonHTML += "<button type='submit' id='delete' formaction='delete-contact.js' onclick='getCheckbox()'>Delete</button>";
     buttonHTML += "</form>";
     document.getElementById("buttons").innerHTML = buttonHTML;
 }
 
 function createTable() {
-    console.log("state "+ request.readyState + " status " + request.status);
-    //if (request.readyState === 4 /*&& request.status === 200*/) {
-        var contactsList = JSON.parse(request);
+    console.log("state "+ contactRequest.readyState + " status " + contactRequest.status);
+    //if (contactRequest.readyState === 4 /*&& contactRequest.status === 200*/) {
+    console.log(contactRequest.response);
+        var contactsList = JSON.parse(contactRequest.response);
 
         console.log("parse is ok");
 
@@ -32,7 +33,7 @@ function createTable() {
 
         for (var i = 0; i < contactsList.length; i++) {
             tableHTML += "<tr>";
-            tableHTML += "<td><input type='checkbox' name='delete'" + i + " id=" + i + "></td>";
+            tableHTML += "<td><input type='checkbox' name='delete'  id='delete" + i + "'></td>";
             tableHTML += "<td> <a href='../html/contact-editor.html'>" + contactsList[i].fullName + "</a> </td> " +
                 "<td>" + contactsList[i].birthDate + "</td> " +
                 "<td>" + contactsList[i].address + "</td> " +

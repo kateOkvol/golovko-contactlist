@@ -8,7 +8,7 @@ import java.util.Date;
 public class MainContactDTO {
     private Integer id;
     private String fullName;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")
     private Date birthDate;
     private String address;
     private String company;
