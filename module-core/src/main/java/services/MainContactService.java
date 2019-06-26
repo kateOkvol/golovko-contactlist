@@ -6,6 +6,7 @@ import dto.MainContactDTO;
 import entities.MainContact;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainContactService {
@@ -20,9 +21,13 @@ public class MainContactService {
         }
     }
 
-    public MainContactDTO findAll() {
+    public List<MainContactDTO> findAll() {
         List<MainContact> list = this.dao.getAll();
-        return new MainContactDTO(list);
+        List<MainContactDTO> contactList = new ArrayList<>();
+        for (MainContact contact: list) {
+            contactList.add(new MainContactDTO(contact));
+        }
+        return contactList;
     }
 
 //    public MainContactDTO getById(Integer id) {
@@ -37,7 +42,7 @@ public class MainContactService {
     public static void main(String[] args) {
         MainContactService service = new MainContactService();
 
-        MainContactDTO dto = service.findAll();
+        List<MainContactDTO> dto = service.findAll();
 
         System.out.println(dto.toString());
 

@@ -3,7 +3,10 @@ var request = new XMLHttpRequest();
 function getContacts() {
     addButtons();
     request.open("POST", "?command=mainContacts", true);
+    console.log("method is open");
     request.onreadystatechange = createTable;
+    console.log("on ready state change");
+    request.send(null);
     //createTable();
 }
 
@@ -16,8 +19,11 @@ function addButtons() {
 }
 
 function createTable() {
-    if (request.readyState === 4 && request.status === 200) {
+    console.log("state "+ request.readyState + " status " + request.status);
+    //if (request.readyState === 4 /*&& request.status === 200*/) {
         var contactsList = JSON.parse(request);
+
+        console.log("parse is ok");
 
         var tableHTML = "<table id=\"contact-table\">";
         tableHTML += "<tr>";
@@ -35,10 +41,11 @@ function createTable() {
         }
         tableHTML += "</table>";
 
+        console.log("searching for element");
         document.getElementById("contact-table").innerHTML = tableHTML;
-    } else{
-        console.log("cant find contacts")
-    }
+ //   } else {
+     //   console.log("cant find contacts")
+   // }
 }
 
 
