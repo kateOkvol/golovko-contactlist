@@ -1,41 +1,16 @@
 var request = new XMLHttpRequest();
 
-
-// var response = '[' +
-//     '{' +
-//     '    "id":1,' +
-//     '     "fullName":"Jessica Jones",' +
-//     '     "birthDate":null,' +
-//     '     "address":"New York",' +
-//     '     "company":"Alias private investigations"' +
-//     '},' +
-//     '{' +
-//     '     "id":2,' +
-//     '     "fullName":"John Wick",' +
-//     '     "birthDate":null,' +
-//     '     "address":"USA",' +
-//     '     "company":"Russian Mafia"' +
-//     '},' +
-//     '{' +
-//     '    "id":3,' +
-//     '    "fullName":"Steve Joseph Rogers",' +
-//     '    "birthDate":"1918-07-04",' +
-//     '    "address":"USA, New York",' +
-//     '    "company":"The Avengers"' +
-//     '}' +
-//     ']';
-
-
 function getContacts() {
     addButtons();
-    request.open("POST", "/contactsList/application?command=mainContacts", true);
+    request.open("POST", "?command=mainContacts", true);
     request.onreadystatechange = createTable;
+    //createTable();
 }
 
 function addButtons() {
     var buttonHTML = "<form>";
-    buttonHTML += "<button type='submit' id='0' formaction='contact-editor.html'>Create</button>";
-    buttonHTML += "<button type='submit' id='2'>Delete</button>";
+    buttonHTML += "<button type='submit' id='0' formaction='html/contact-editor.html'>Create</button>";
+    buttonHTML += "<button type='submit' id='delete'>Delete</button>";
     buttonHTML += "</form>";
     document.getElementById("buttons").innerHTML = buttonHTML;
 }

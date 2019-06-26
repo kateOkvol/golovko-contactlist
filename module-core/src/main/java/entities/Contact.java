@@ -13,8 +13,10 @@ public class Contact {
     private String firstName;
     private String lastName;
     private String middleName;
+    private String gender;
     private Date birthDate;
     private String citizenship;
+    private String maritalStatus;
     private String webSite;
     private String email;
     private String company;
@@ -106,6 +108,21 @@ public class Contact {
         this.company = company;
     }
 
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getMaritalStatus() {
+        return maritalStatus;
+    }
+
+    public void setMaritalStatus(String maritalStatus) {
+        this.maritalStatus = maritalStatus;
+    }
 
     public Integer getZipCode() {
         return zipCode;

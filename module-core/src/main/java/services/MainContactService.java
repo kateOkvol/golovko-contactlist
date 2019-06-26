@@ -25,9 +25,9 @@ public class MainContactService {
         return new MainContactDTO(list);
     }
 
-    public MainContactDTO getById(Integer id) {
-        return new MainContactDTO(dao.getById(id));
-    }
+//    public MainContactDTO getById(Integer id) {
+//        return new MainContactDTO(dao.getById(id));
+//    }
 
     public void deleteContact(Integer id) {
         this.dao.delete(id);

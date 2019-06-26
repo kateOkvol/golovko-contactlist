@@ -38,8 +38,8 @@ public class ContactDAOImpl implements ContactDAO {
     @Override
     public Contact getById(Integer id) {
         Contact contact = new Contact();
-        String sql = "SELECT id, first_name, last_name, middle_name, " +
-                "birth_date, citizenship, web_site, email, company, " +
+        String sql = "SELECT id, first_name, last_name, middle_name, gender " +
+                "birth_date, citizenship, marital_status, web_site, email, company, " +
                 "country, city, street, house, flat, zip_code " +
                 "FROM contacts.contact WHERE id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -55,12 +55,12 @@ public class ContactDAOImpl implements ContactDAO {
 
     @Override
     public void update(Contact contact) {
-        String sql = "UPDATE contacts.contact SET first_name = ?, last_name = ?, middle_name = ?, " +
-                "birth_date = ?, citizenship = ?, web_site = ?, email = ?, company = ?, " +
+        String sql = "UPDATE contacts.contact SET first_name = ?, last_name = ?, middle_name = ?, gender = ?, " +
+                "birth_date = ?, citizenship = ?, marital_status = ?, web_site = ?, email = ?, company = ?, " +
                 "country = ?, city = ?, street = ?, house = ?, flat = ?, zip_code = ?  WHERE id = ?;";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             partOfPrepare(statement, contact);
-            statement.setInt(15, contact.getId());
+            statement.setInt(17, contact.getId());
             int count = statement.executeUpdate();
             if (count != 1) {
                 System.out.println("contact update exception");//throw new Exception();
@@ -99,8 +99,10 @@ public class ContactDAOImpl implements ContactDAO {
                 contact.setFirstName(set.getString("first_name"));
                 contact.setLastName(set.getString("last_name"));
                 contact.setMiddleName(set.getString("middle_name"));
+                contact.setGender(set.getString("gender"));
                 contact.setBirthDate(set.getDate("birth_date"));
                 contact.setCitizenship(set.getString("citizenship"));
+                contact.setMaritalStatus(set.getString("marital_status"));
                 contact.setEmail(set.getString("email"));
                 contact.setWebSite(set.getString("web_site"));
                 contact.setCompany(set.getString("company"));
@@ -122,17 +124,19 @@ public class ContactDAOImpl implements ContactDAO {
         statement.setString(1, contact.getFirstName());
         statement.setString(2, contact.getLastName());
         statement.setString(3, contact.getMiddleName());
-        statement.setDate(4, (Date) contact.getBirthDate());
-        statement.setString(5, contact.getCitizenship());
-        statement.setString(6, contact.getEmail());
-        statement.setString(7, contact.getWebSite());
-        statement.setString(8, contact.getCompany());
-        statement.setString(9, contact.getCountry());
-        statement.setString(10, contact.getCity());
-        statement.setString(11, contact.getStreet());
-        statement.setString(12, contact.getHouse());
-        statement.setString(13, contact.getFlat());
-        statement.setInt(14, contact.getZipCode());
+        statement.setString(4, contact.getGender());
+        statement.setDate(5, (Date) contact.getBirthDate());
+        statement.setString(6, contact.getCitizenship());
+        statement.setString(7, contact.getMaritalStatus());
+        statement.setString(8, contact.getEmail());
+        statement.setString(9, contact.getWebSite());
+        statement.setString(10, contact.getCompany());
+        statement.setString(11, contact.getCountry());
+        statement.setString(12, contact.getCity());
+        statement.setString(13, contact.getStreet());
+        statement.setString(14, contact.getHouse());
+        statement.setString(15, contact.getFlat());
+        statement.setInt(16, contact.getZipCode());
     }
 
 }

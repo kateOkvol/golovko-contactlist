@@ -11,7 +11,6 @@ import java.util.Objects;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class MainContact {
     private Integer id;
-    private Integer contactId;
     private String fullName;
     private Date birthDate;
     private String address;
@@ -35,16 +34,6 @@ public class MainContact {
     public void setId(Integer id) {
         this.id = id;
     }
-
-    public Integer getContactId() {
-        return contactId;
-    }
-
-    public MainContact setContactId(Integer contactId) {
-        this.contactId = contactId;
-        return this;
-    }
-
 
     public String getFullName() {
         return fullName;
@@ -97,7 +86,7 @@ public class MainContact {
 
     @Override
     public String toString() {
-        return "MainContact{" +
+        return "{" +
                 "id=" + id +
                 ", fullName='" + fullName + '\'' +
                 ", birthDate=" + birthDate +
