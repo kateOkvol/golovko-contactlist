@@ -34,6 +34,10 @@ public class Server extends HttpServlet {
                 break;
             case "deleteContact":
                 deleteContact(request, response);
+                break;
+            case "createContact":
+                createContact(request, response);
+                break;
         }
     }
 
@@ -41,13 +45,16 @@ public class Server extends HttpServlet {
         MainContactsController main = new MainContactsController();
         ObjectMapper mapper = new ObjectMapper();
         try {
-            response.getWriter().write(mapper.writeValueAsString(main.searchContacts()));
+            response.getWriter().write(
+                    mapper.writeValueAsString(
+                            main.searchContacts()));
         } catch (IOException e) {
             System.out.println("эррор при записи в респонз. Сделай свой эксепшн! и логи добавь наконец");
         }
     }
 
     private void createContact(HttpServletRequest request, HttpServletResponse response) {
+        System.out.println(request.toString());
         ///////// take json, parse
         ContactDTO dto = new ContactDTO();
         new ContactsController().createContact(dto);
@@ -65,6 +72,15 @@ public class Server extends HttpServlet {
     }
 
     private void getContactById(HttpServletResponse response, HttpServletRequest request) {
-
+        ContactsController controller = new ContactsController();
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            response.getWriter().write(
+                    mapper.writeValueAsString(
+                            controller.getContact(
+                                    Integer.parseInt(request.getParameter("id")))));
+        } catch (IOException e) {
+            System.out.println("эррор при записи в респонз. Сделай свой эксепшн! и логи добавь наконец");
+        }
     }
 }

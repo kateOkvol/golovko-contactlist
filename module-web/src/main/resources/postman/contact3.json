@@ -1,0 +1,12 @@
+{
+	"id":3, 
+	"address":3, 
+	"firstName":"Steve", 
+	"lastName":"Rogers", 
+	"middleName":"Joseph", 
+	"gender":true, 
+	"citizenship":"American", 
+	"webSite":null, 
+	"email":null, 
+	"company":"The Avengers"
+}

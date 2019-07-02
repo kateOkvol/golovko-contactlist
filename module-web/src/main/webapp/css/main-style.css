@@ -1,8 +1,8 @@
 body {
     font-size: 115%;
     padding: 0;
-   /* margin: 0;
- /*   font-family: Calibri, monospace ;*/
+    margin: 0;
+    /*   font-family: Calibri, monospace ;*/
 
 }
 
@@ -11,13 +11,14 @@ h1 {
     text-align: center;
     background-color: #EAFFF9;
     padding: 0;
-    margin: 0;
+    margin: 0 0 5%;
 }
 
 table {
     border-collapse: collapse;
     border: 1px solid black;
     margin: auto;
+
 }
 
 th {
@@ -54,7 +55,7 @@ button:active{
     background-color: #113128;
 }
 form {
-    align-content: center;
+    position: relative;
 }
 
 a:link {
@@ -66,5 +67,9 @@ a:visited {
 }
 
 input{
-    margin: 1% 1% auto auto ;
+    margin: 0 ;
+}
+
+label{
+    margin: 2% 0 0 0;
 }

@@ -13,10 +13,9 @@ public class ContactsController {
         new ContactService().deleteContact(contactId);
     }
 
-//    public Response getContact(@PathParam("id") Integer id) {
-//        ContactDTO dto = new ContactService().getById(id);
-//        return Response.ok(dto).build();
-//    }
+    public ContactDTO getContact(Integer id) {
+        return new ContactService().getById(id);
+    }
 //
 //
 //    public Response deleteContact(@PathParam("id") Integer id) {

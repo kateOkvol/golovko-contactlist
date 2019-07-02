@@ -1,17 +1,6 @@
 //var contactRequest = new XMLHttpRequest();
 
-var respones = '{ ' +
-    '   "id":3, ' +
-    '   "address-id":3, ' +
-    '   "firstName":"Steve", ' +
-    '   "lastName":"Rogers", ' +
-    '   "middleName":"Joseph", ' +
-    '   "gender":true, ' +
-    '   "citizenship":"American", ' +
-    '   "webSite":null, ' +
-    '   "email":null, ' +
-    '   "company":"The Avengers" ' +
-    '}';
+var request = new XMLHttpRequest();
 
 
 function getContactInformation() {
@@ -24,51 +13,57 @@ function getContactInformation() {
 
 }
 
+function showButtons() {
+    var buttonHTML = "<form>" +
+        "<button type=\"submit\" id= 'save-contact'>Save</button> " +
+        "<button type=\"reset\" id= 'cancel-creator'>Cancel</button> " +
+        "</form>";
+}
 
 function showInputs() {
     var contact = JSON.parse(respones);
     var textHTML = "<form> " +
         "<label> " +
         "First name*:" +
-        "<br>"+
+        "<br>" +
         "<input name='firstName' type=\"text\"  required value= '" + contact.firstName + "'> " +
         "</label> " +
         "<br>" +
         "<label> " +
         "Middle name:" +
-        "<br>"+
+        "<br>" +
         "<input name='middleName' type=\"text\" value= '" + contact.middleName + "'>" +
         "</label> " +
         "<br>" +
         "<label> " +
         "Last name*:" +
-        "<br>"+
+        "<br>" +
         "<input name='lastName' type=\"text\"  required value= '" + contact.lastName + "'> " +
         "</label> " +
         "<label> " +
-        "<br>"+
+        "<br>" +
         "Gender:" +
-        "<br>"+
+        "<br>" +
         "<input type=\"text\"  value= '" + contact.gender + "'> " +
         "</label> " +
         "<br>" +
         "Citizenship:" +
-        "<br>"+
+        "<br>" +
         "<input type=\"text\"  value= '" + contact.citizenship + "'> " +
         "</label> " +
         "<br>" +
         "Web Site:" +
-        "<br>"+
+        "<br>" +
         "<input type=\"text\"  value= '" + contact.webSite + "'> " +
         "</label> " +
         "<br>" +
         "email:" +
-        "<br>"+
+        "<br>" +
         "<input type=\"text\"  value= '" + contact.email + "'> " +
         "</label> " +
         "<br>" +
         "Company:" +
-        "<br>"+
+        "<br>" +
         "<input type=\"text\"  value= '" + contact.company + "'> " +
         "</label> " +
         "<br>" +
