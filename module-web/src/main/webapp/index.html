@@ -4,22 +4,38 @@
     <meta charset="UTF-8">
     <title>Contacts List</title>
 
-    <script type="text/javascript" src="js/mainScript.js"></script>
-<!--
-    <script type="text/javascript" src="js/delete-contact.js"></script>
--->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.2.0/mustache.min.js"></script>
+    <script src="https://cdn.polyfill.io/v2/polyfill.js?features=fetch,Promise"></script>
 
+    <!--
+        <script type="text/javascript" src="js/delete-contact.js"></script>
+    -->
+
+    <script type="text/javascript" src="js/mainScript.js"></script>
+    <script type="text/javascript" src="js/edit-contact.js"></script>
+
+    <style>
+        @import "css/main-style.css";
+    </style>
+    <!--
     <link rel="stylesheet" href="css/main-style.css" media="all"/>
+    -->
 </head>
-<body onload="getContacts()">
+<body  onload="loadMain()">
 
 <h1>Contacts List: </h1>
 
-<div id="contact-table"></div>
-<div id="contact-table1"></div>
+<div id="main-contact">
+    <table id="contact-table"></table>
+    <div id="main-buttons" align="center"></div>
+</div>
 
-<div id="buttons" align="center"></div>
-
+<div id="contact-editor">
+    <form id="content" style="margin: auto">
+        <div id="inputs"></div>
+        <div id="buttons"></div>
+    </form>
+</div>
 
 </body>
 </html>

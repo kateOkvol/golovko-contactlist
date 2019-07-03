@@ -1,15 +1,18 @@
 package servlet;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import controllers.ContactsController;
 import controllers.MainContactsController;
 import dto.ContactDTO;
-import org.codehaus.jackson.map.ObjectMapper;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 @WebServlet(name = "application", urlPatterns = {"/application"})
 public class Server extends HttpServlet {
@@ -26,8 +29,15 @@ public class Server extends HttpServlet {
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("application/json");
-        //response.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        try {
+            request.setCharacterEncoding("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
         String command = request.getParameter("command");
+        System.out.println(command);
         switch (command) {
             case "mainContacts":
                 mainContacts(request, response);
@@ -37,6 +47,13 @@ public class Server extends HttpServlet {
                 break;
             case "createContact":
                 createContact(request, response);
+                break;
+            case "getContactById":
+                try {
+                    getContactById(request, response);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 break;
         }
     }
@@ -54,7 +71,7 @@ public class Server extends HttpServlet {
     }
 
     private void createContact(HttpServletRequest request, HttpServletResponse response) {
-        System.out.println(request.toString());
+        //System.out.println(request.toString());
         ///////// take json, parse
         ContactDTO dto = new ContactDTO();
         new ContactsController().createContact(dto);
@@ -71,16 +88,27 @@ public class Server extends HttpServlet {
         }
     }
 
-    private void getContactById(HttpServletResponse response, HttpServletRequest request) {
+    private void getContactById(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String line = null;
+        StringBuffer buffer = new StringBuffer();
+        BufferedReader reader = request.getReader();
+        while((line = reader.readLine()) != null){
+            buffer.append(line);
+        }
+
         ContactsController controller = new ContactsController();
         ObjectMapper mapper = new ObjectMapper();
+        JsonNode jsonNode = mapper.readTree(buffer.toString());
+        System.out.println(jsonNode.get("id").asInt());
         try {
             response.getWriter().write(
                     mapper.writeValueAsString(
                             controller.getContact(
-                                    Integer.parseInt(request.getParameter("id")))));
+                                            jsonNode.get("id").asInt())));
+
         } catch (IOException e) {
             System.out.println("эррор при записи в респонз. Сделай свой эксепшн! и логи добавь наконец");
         }
     }
 }
+

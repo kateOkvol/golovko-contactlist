@@ -1,16 +1,19 @@
 var contactsList;
 
-function getContacts() {
+function loadMain() {
+    document.getElementById("contact-editor").style.display = 'none';
     addButtons();
     createTable();
 }
 
+
+
 function addButtons() {
     var buttonHTML = "<form>";
-    buttonHTML += "<button type='submit' id='create' formaction='html/contact-editor.html'>Create</button>";
-    buttonHTML += "<button type='submit' id='delete' formaction='delete-contact.js' onclick='getCheckbox()'>Delete</button>";
+    buttonHTML += "<button type='submit' id='create' onclick='loadEditor(0)'>Create</button>";
+    buttonHTML += "<button type='submit' id='delete' onclick='getCheckbox()'>Delete</button>";
     buttonHTML += "</form>";
-    document.getElementById("buttons").innerHTML = buttonHTML;
+    document.getElementById("main-buttons").innerHTML = buttonHTML;
 }
 
 async function createTable() {
@@ -21,28 +24,47 @@ async function createTable() {
         })
         .then(async response => {
             contactsList = await response;
+            console.log(contactsList);
             tableText();
+            var template = document.getElementById("template-table").innerHTML;
+            console.log(template);
+            document.getElementById("contact-table").innerHTML = Mustache.to_html(template, contactsList);
+        })
+        .catch(function (error) {
+            console.log(error);
         });
 }
 
 function tableText() {
-    var tableHTML = "<table id=\"contact-table\">";
+
+    var tableHTML = "<table id='contact-table'>";
+    tableHTML += "<script type='text/html-template' id='template-table'>";
     tableHTML += "<tr>";
-    tableHTML += "<th>&#10004</th> <th>Full name</th> <th>Birth date</th> <th>Address</th> <th>Company</th>";
+    tableHTML += "<th>&#10004</th><th>Full name</th><th>Birth date</th><th>Address</th><th>Company</th>";
     tableHTML += "</tr>";
+    tableHTML += "{{#.}}";
+    tableHTML += "<tr>";
+    tableHTML += "<td><input type='checkbox' name='delete'  id='delete{{id}}'></td>";
+    tableHTML += "<td><a href='' id=contact{{id}} onclick='loadEditor(id)'>{{fullName}}</a></td> " +
+        "<td> {{birthDate}}</td>" +
+        "<td> {{address}}</td>" +
+        "<td> {{company}}</td>";
+    tableHTML += "</tr>";
+    tableHTML += "{{/.}}";
+    tableHTML += "</script>";
 
-    for (var i = 0; i < contactsList.length; i++) {
-        tableHTML += "<tr>";
-        tableHTML += "<td><input type='checkbox' name='delete'  id='delete" + i + "'></td>";
-        tableHTML += "<td> <a href='../html/contact-editor.html' id=''>" + contactsList[i].fullName + "</a> </td> " +
-            "<td>" + contactsList[i].birthDate + "</td> " +
-            "<td>" + contactsList[i].address + "</td> " +
-            "<td>" + contactsList[i].company + "</td>";
-        tableHTML += "</tr>";
-    }
+
+    // for (var i = 0; i < contactsList.length; i++) {
+    //     tableHTML += "<tr>";
+    //     tableHTML += "<td><input type='checkbox' name='delete'  id='delete" + i + "'></td>";
+    //     tableHTML += "<td> <a href='../html/contact-editor.html' id=''>" + contactsList[i].fullName + "</a> </td> " +
+    //         "<td>" + contactsList[i].birthDate + "</td> " +
+    //         "<td>" + contactsList[i].address + "</td> " +
+    //         "<td>" + contactsList[i].company + "</td>";
+    //     tableHTML += "</tr>";
+    // }
     tableHTML += "</table>";
-
-    document.getElementById("contact-table1").innerHTML = tableHTML;
+    document.getElementById("contact-table").innerHTML = tableHTML;
 }
 
 

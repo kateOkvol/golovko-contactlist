@@ -16,6 +16,8 @@ public class ContactsController {
     public ContactDTO getContact(Integer id) {
         return new ContactService().getById(id);
     }
+
+
 //
 //
 //    public Response deleteContact(@PathParam("id") Integer id) {

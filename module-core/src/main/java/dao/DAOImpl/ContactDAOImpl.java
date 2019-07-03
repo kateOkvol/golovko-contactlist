@@ -35,6 +35,7 @@ public class ContactDAOImpl implements ContactDAO {
     }
 
 
+
     @Override
     public Contact getById(Integer id) {
         Contact contact = new Contact();
@@ -99,10 +100,10 @@ public class ContactDAOImpl implements ContactDAO {
                 contact.setFirstName(set.getString("first_name"));
                 contact.setLastName(set.getString("last_name"));
                 contact.setMiddleName(set.getString("middle_name"));
-                contact.setGender(set.getString("gender"));
-                contact.setBirthDate(set.getDate("birth_date"));
+ //               contact.setGender(set.getString("gender"));
+ //               contact.setBirthDate(set.getDate("birth_date"));
                 contact.setCitizenship(set.getString("citizenship"));
-                contact.setMaritalStatus(set.getString("marital_status"));
+ //               contact.setMaritalStatus(set.getString("marital_status"));
                 contact.setEmail(set.getString("email"));
                 contact.setWebSite(set.getString("web_site"));
                 contact.setCompany(set.getString("company"));
