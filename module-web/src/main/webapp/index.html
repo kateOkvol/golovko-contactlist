@@ -11,6 +11,7 @@
         <script type="text/javascript" src="js/delete-contact.js"></script>
     -->
 
+    <script type="text/javascript" src="js/script-manager.js"></script>
     <script type="text/javascript" src="js/mainScript.js"></script>
     <script type="text/javascript" src="js/edit-contact.js"></script>
 
@@ -21,16 +22,16 @@
     <link rel="stylesheet" href="css/main-style.css" media="all"/>
     -->
 </head>
-<body  onload="loadMain()">
+<body onload="manageScripts()">
 
 <h1>Contacts List: </h1>
 
-<div id="main-contact">
+<div id="main-contact" style="display: none">
     <table id="contact-table"></table>
     <div id="main-buttons" align="center"></div>
 </div>
 
-<div id="contact-editor">
+<div id="contact-editor" style="display: block">
     <form id="content" style="margin: auto">
         <div id="inputs"></div>
         <div id="buttons"></div>

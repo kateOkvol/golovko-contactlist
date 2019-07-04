@@ -2,7 +2,18 @@ function loadEditor(id) {
     document.getElementById("main-contact").style.display = 'none';
     document.getElementById("contact-editor").style.display = 'block';
     showButtons();
-    fillInputs(id);
+    checkId(id);
+
+    // fillInputs(id);
+    // showInputs();
+}
+
+function checkId(id) {
+    if (id !== 0) {
+        fillInputs(id);
+    } else {
+        showInputs();
+    }
 }
 
 function showButtons() {
@@ -17,80 +28,32 @@ function showButtons() {
     document.getElementById("buttons").innerHTML = buttonHTML;
 }
 
-async function fillInputs(id) {
-    var contactId = id;
-
-    const response = await fetch("application?command=getContactById", {
+function fillInputs(id) {
+    console.log(id);
+    const contactId = {id};
+    console.log(contactId);
+    const options = {
         method: 'POST',
         headers: {
+            'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(contactId)
-    }).then(async response => {
-            const json = await response.json();
-            console.log(json);
-        }
-    ).catch(function (error) {
-            console.log(error);
-        });
+    };
+    console.log(options);
+
+
+    (async () => {
+        const response = await fetch(
+            "application?command=getContactById", options);
+        const content = await response.json();
+        console.log(content);
+    })();
 
 }
 
 function showInputs() {
     var textHTML = "<form> " +
-        // "<label> " +
-        // "First name*:" +
-        // "<br>" +
-        // "<input name='firstName' type=\"text\"  required value= '" + contact.firstName + "'> " +
-        // "</label> " +
-        // "<br>" +
-        // "<label> " +
-        // "Middle name:" +
-        // "<br>" +
-        // "<input name='middleName' type=\"text\" value= '" + contact.middleName + "'>" +
-        // "</label> " +
-        // "<br>" +
-        // "<label> " +
-        // "Last name*:" +
-        // "<br>" +
-        // "<input name='lastName' type=\"text\"  required value= '" + contact.lastName + "'> " +
-        // "</label> " +
-        // "<label> " +
-        // "<br>" +
-        // "Gender:" +
-        // "<br>" +
-        // "<input type=\"text\"  value= '" + contact.gender + "'> " +
-        // "</label> " +
-        // "<br>" +
-        // "Citizenship:" +
-        // "<br>" +
-        // "<input type=\"text\"  value= '" + contact.citizenship + "'> " +
-        // "</label> " +
-        // "<br>" +
-        // "Web Site:" +
-        // "<br>" +
-        // "<input type=\"text\"  value= '" + contact.webSite + "'> " +
-        // "</label> " +
-        // "<br>" +
-        // "email:" +
-        // "<br>" +
-        // "<input type=\"text\"  value= '" + contact.email + "'> " +
-        // "</label> " +
-        // "<br>" +
-        // "Marital status:" +
-        // "<br>" +
-        // "<input name='input-label' id='maritalStatus'> " +
-        // "</label> " +
-        // "<br>" +
-        // "Company:" +
-        // "<br>" +
-        // "<input type=\"text\"  value= '" + contact.company + "'> " +
-        // "</label> " +
-        // "<br>" +
-        // "<label> " +
-        // "<button type=\"submit\">Save</button> " +
-        // "</label> " +
-
 
         "<label> " +
         "First name*:" +
@@ -142,9 +105,6 @@ function showInputs() {
         "</label> " +
         "</form>";
 
-    "</form>";
-
-
     document.getElementById("inputs").innerHTML = textHTML;
 }
 
@@ -166,7 +126,7 @@ async function saveButton() {
     var data = {firstName, middleName, lastName, gender, citizenship, webSite, email, maritalStatus, company};
 
     const response = await fetch("?command=createContact", {
-        method: 'POST',
+        method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
         },
@@ -182,3 +142,74 @@ async function saveButton() {
         });
 
 }
+
+
+//    const response =
+
+//     return fetch(
+//         "application?command=getContactById",
+//         options)
+//         .then(response => {
+//             return response.json();
+//         })
+//         .then(async response => {
+//             var contact = await response.json();
+//             console.log(contact);
+//             showInputs();
+//         });
+
+//   const json = await response.json();
+//   console.log(json);
+
+// "<label> " +
+// "First name*:" +
+// "<br>" +
+// "<input name='firstName' type=\"text\"  required value= '" + contact.firstName + "'> " +
+// "</label> " +
+// "<br>" +
+// "<label> " +
+// "Middle name:" +
+// "<br>" +
+// "<input name='middleName' type=\"text\" value= '" + contact.middleName + "'>" +
+// "</label> " +
+// "<br>" +
+// "<label> " +
+// "Last name*:" +
+// "<br>" +
+// "<input name='lastName' type=\"text\"  required value= '" + contact.lastName + "'> " +
+// "</label> " +
+// "<label> " +
+// "<br>" +
+// "Gender:" +
+// "<br>" +
+// "<input type=\"text\"  value= '" + contact.gender + "'> " +
+// "</label> " +
+// "<br>" +
+// "Citizenship:" +
+// "<br>" +
+// "<input type=\"text\"  value= '" + contact.citizenship + "'> " +
+// "</label> " +
+// "<br>" +
+// "Web Site:" +
+// "<br>" +
+// "<input type=\"text\"  value= '" + contact.webSite + "'> " +
+// "</label> " +
+// "<br>" +
+// "email:" +
+// "<br>" +
+// "<input type=\"text\"  value= '" + contact.email + "'> " +
+// "</label> " +
+// "<br>" +
+// "Marital status:" +
+// "<br>" +
+// "<input name='input-label' id='maritalStatus'> " +
+// "</label> " +
+// "<br>" +
+// "Company:" +
+// "<br>" +
+// "<input type=\"text\"  value= '" + contact.company + "'> " +
+// "</label> " +
+// "<br>" +
+// "<label> " +
+// "<button type=\"submit\">Save</button> " +
+// "</label> " +

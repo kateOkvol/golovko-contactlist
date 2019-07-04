@@ -46,7 +46,7 @@ public class ContactService {
         contact.setFlat(dto.getFlat());
         contact.setZipCode(dto.getZipCode());
 
-        this.dao.create(contact);
+        dao.create(contact);
     }
 
     public void deleteContact(Integer id) {

@@ -6,6 +6,7 @@ import controllers.ContactsController;
 import controllers.MainContactsController;
 import dto.ContactDTO;
 
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +28,11 @@ public class Server extends HttpServlet {
         processRequest(request, response);
     }
 
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        processRequest(req, resp);
+    }
+
     private void processRequest(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
@@ -46,7 +52,11 @@ public class Server extends HttpServlet {
                 deleteContact(request, response);
                 break;
             case "createContact":
-                createContact(request, response);
+                try {
+                    createContact(request, response);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 break;
             case "getContactById":
                 try {
@@ -70,10 +80,13 @@ public class Server extends HttpServlet {
         }
     }
 
-    private void createContact(HttpServletRequest request, HttpServletResponse response) {
-        //System.out.println(request.toString());
-        ///////// take json, parse
-        ContactDTO dto = new ContactDTO();
+    private void createContact(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String jsonString = processRequest(request);
+
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode jsonNode = mapper.readTree(jsonString);
+
+        ContactDTO dto = mapper.convertValue(jsonNode, ContactDTO.class);
         new ContactsController().createContact(dto);
     }
 
@@ -89,26 +102,31 @@ public class Server extends HttpServlet {
     }
 
     private void getContactById(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String line = null;
-        StringBuffer buffer = new StringBuffer();
-        BufferedReader reader = request.getReader();
-        while((line = reader.readLine()) != null){
-            buffer.append(line);
-        }
+        String jsonString = processRequest(request);
 
         ContactsController controller = new ContactsController();
         ObjectMapper mapper = new ObjectMapper();
-        JsonNode jsonNode = mapper.readTree(buffer.toString());
+        JsonNode jsonNode = mapper.readTree(jsonString);
         System.out.println(jsonNode.get("id").asInt());
         try {
             response.getWriter().write(
                     mapper.writeValueAsString(
                             controller.getContact(
-                                            jsonNode.get("id").asInt())));
+                                    jsonNode.get("id").asInt())));
 
         } catch (IOException e) {
             System.out.println("эррор при записи в респонз. Сделай свой эксепшн! и логи добавь наконец");
         }
+    }
+
+    private String processRequest(HttpServletRequest request) throws IOException {
+        String line = null;
+        StringBuffer buffer = new StringBuffer();
+        BufferedReader reader = request.getReader();
+        while ((line = reader.readLine()) != null) {
+            buffer.append(line);
+        }
+        return buffer.toString();
     }
 }
 

@@ -45,25 +45,15 @@ function tableText() {
     tableHTML += "{{#.}}";
     tableHTML += "<tr>";
     tableHTML += "<td><input type='checkbox' name='delete'  id='delete{{id}}'></td>";
-    tableHTML += "<td><a href='' id=contact{{id}} onclick='loadEditor(id)'>{{fullName}}</a></td> " +
+    tableHTML += "<td><a href='' id={{id}} onclick='loadEditor(id)'>{{fullName}}</a></td> " +
         "<td> {{birthDate}}</td>" +
         "<td> {{address}}</td>" +
         "<td> {{company}}</td>";
     tableHTML += "</tr>";
     tableHTML += "{{/.}}";
     tableHTML += "</script>";
-
-
-    // for (var i = 0; i < contactsList.length; i++) {
-    //     tableHTML += "<tr>";
-    //     tableHTML += "<td><input type='checkbox' name='delete'  id='delete" + i + "'></td>";
-    //     tableHTML += "<td> <a href='../html/contact-editor.html' id=''>" + contactsList[i].fullName + "</a> </td> " +
-    //         "<td>" + contactsList[i].birthDate + "</td> " +
-    //         "<td>" + contactsList[i].address + "</td> " +
-    //         "<td>" + contactsList[i].company + "</td>";
-    //     tableHTML += "</tr>";
-    // }
     tableHTML += "</table>";
+
     document.getElementById("contact-table").innerHTML = tableHTML;
 }
 
