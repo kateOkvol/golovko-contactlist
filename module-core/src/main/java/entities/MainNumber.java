@@ -3,32 +3,45 @@ package entities;
 import java.util.Objects;
 
 public class MainNumber {
-    private Integer contact_id;
-    private Integer number_id;
+    private Integer contactId;
+    private Integer id;
+    private String fullNumber;
+    private String type;
     private String note;
 
     public MainNumber() {
     }
 
-    public MainNumber(Integer contact_id, Integer number_id) {
-        this.contact_id = contact_id;
-        this.number_id = number_id;
+    public Integer getContactId() {
+        return contactId;
     }
 
-    public Integer getContact_id() {
-        return contact_id;
+    public void setContactId(Integer contactId) {
+        this.contactId = contactId;
     }
 
-    public void setContact_id(Integer contact_id) {
-        this.contact_id = contact_id;
+    public Integer getId() {
+        return id;
     }
 
-    public Integer getNumber_id() {
-        return number_id;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public void setNumber_id(Integer number_id) {
-        this.number_id = number_id;
+    public String getFullNumber() {
+        return fullNumber;
+    }
+
+    public void setFullNumber(String fullNumber) {
+        this.fullNumber = fullNumber;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getNote() {
@@ -44,20 +57,25 @@ public class MainNumber {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MainNumber that = (MainNumber) o;
-        return Objects.equals(contact_id, that.contact_id) &&
-                Objects.equals(number_id, that.number_id);
+        return Objects.equals(contactId, that.contactId) &&
+                Objects.equals(id, that.id) &&
+                Objects.equals(fullNumber, that.fullNumber) &&
+                Objects.equals(type, that.type) &&
+                Objects.equals(note, that.note);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(contact_id, number_id);
+        return Objects.hash(contactId, id, fullNumber, type, note);
     }
 
     @Override
     public String toString() {
-        return "MainNumberDTO{" +
-                "contact_id=" + contact_id +
-                ", number_id=" + number_id +
+        return "MainNumber{" +
+                "contactId=" + contactId +
+                ", id=" + id +
+                ", fullNumber=" + fullNumber +
+                ", type='" + type + '\'' +
                 ", note='" + note + '\'' +
                 '}';
     }

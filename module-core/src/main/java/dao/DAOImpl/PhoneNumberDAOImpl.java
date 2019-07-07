@@ -1,91 +1,109 @@
 package dao.DAOImpl;
 
-public class PhoneNumberDAOImpl {
-//    public PhoneNumberDAOImpl(Connection connection) {
-//        super(connection);
-//    }
-//
-//    @Override
-//    public String getSelectQuery() {
-//        return "SELECT * FROM contacts.number";
-//    }
-//
-//    @Override
-//    public String getCreateQuery() {
-//        return "INSERT INTO contacts.number (contact_id, number, country_code, " +
-//                "operator_code, type, note) VALUES (?, ?, ?, ?, ?, ?);";
-//    }
-//
-//    @Override
-//    public String getUpdateQuery() {
-//        return "UPDATE SET contacts.number contact_id = ? number = ? country_code = ? " +
-//                "operator_code = ? type = ? note = ? WHERE id = ?;";
-//    }
-//
-//    @Override
-//    public String getDeleteQuery() {
-//        return "DELETE FROM contacts.number WHERE id = ?;";
-//    }
-//
-//    @Override
-//    public List<PhoneNumberDTO> parseResultSet(ResultSet set) {
-//        LinkedList<PhoneNumberDTO> list = new LinkedList<>();
-//        try {
-//            while (set.next()) {
-//                PersistNumber number = new PersistNumber();
-//                number.setId(set.getInt("id"));
-//                number.setId(set.getInt("contact_id"));
-//                number.setId(set.getInt("number"));
-//                number.setId(set.getInt("country_code"));
-//                number.setId(set.getInt("operator_code"));
-//                number.setType(set.getString("type"));
-//                number.setNote(set.getString("note"));
-//                list.add(number);
-//            }
-//        } catch (SQLException s) {
-//            ///////////////////////
-//        }
-//        return list;
-//    }
-//
-//    @Override
-//    public void prepareForInsert(PreparedStatement statement, PhoneNumberDTO number) {
-//        try {
-//            partOfPrepare(statement,number);
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    @Override
-//    public void prepareForUpdate(PreparedStatement statement, PhoneNumberDTO number) {
-//        try {
-//            partOfPrepare(statement,number);
-//            statement.setInt(7, number.getId());
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    @Override
-//    public PhoneNumberDTO create() {
-//
-//        PhoneNumberDTO number = new PhoneNumberDTO();
-//        return persist(number);
-//    }
-//
-//    private void partOfPrepare(PreparedStatement statement, PhoneNumberDTO number) throws SQLException {
-//        statement.setInt(1, number.getContactID());
-//        statement.setInt(2, number.getNumber());
-//        statement.setInt(3, number.getCountryCode());
-//        statement.setInt(4, number.getOperatorCode());
-//        statement.setString(5, number.getType());
-//        statement.setString(6, number.getNote());
-//    }
-//
-//    private class PersistNumber extends PhoneNumberDTO{
-//        public void setId(Integer id){
-//            super.setId(id);
-//        }
-//    }
+import dao.PhoneNumberDAO;
+import entities.PhoneNumber;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.LinkedList;
+import java.util.List;
+
+public class PhoneNumberDAOImpl implements PhoneNumberDAO {
+    private Connection connection;
+
+    public PhoneNumberDAOImpl() {
+    }
+
+    public PhoneNumberDAOImpl(Connection connection) {
+        this.connection = connection;
+    }
+
+    @Override
+    public void create(PhoneNumber phoneNumber) {
+        String sql = "INSERT INTO contacts.number (contact_id, numder, country_code, operator_code, note, type)" +
+                "VALUES (?, ?, ?, ?, ?, ?::contacts.phone_type);";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            partOfPrepare(statement, phoneNumber);
+            int count = statement.executeUpdate();
+            if (count != 1) {
+                System.out.println("contact update exception");//throw new Exception();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public PhoneNumber getById(Integer id) {
+        PhoneNumber phoneNumber = new PhoneNumber();
+        String sql = "SELECT id, contact_id, numder, country_code, operator_code, note, type::contacts.phone_type " +
+                "FROM contacts.number WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            phoneNumber = parseResultSet(resultSet).get(0);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return phoneNumber;
+    }
+
+    @Override
+    public void update(PhoneNumber phoneNumber) {
+        String sql = "UPDATE contacts.number SET numder = ?, country_code = ?, operator_code = ?, " +
+                "type = ?::contacts.phone_type, note = ? WHERE id = ?;";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(6, phoneNumber.getId());
+            partOfPrepare(statement, phoneNumber);
+            int count = statement.executeUpdate();
+            if (count != 1) {
+                System.out.println("contact update exception");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void delete(Integer id) {
+        String sql = "DELETE FROM contacts.number WHERE id = ?;";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setObject(1, id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private List<PhoneNumber> parseResultSet(ResultSet set) {
+        LinkedList<PhoneNumber> list = new LinkedList<>();
+        try {
+            while (set.next()) {
+                PhoneNumber phoneNumber = new PhoneNumber();
+                phoneNumber.setId(set.getInt("id"));
+                phoneNumber.setContactID(set.getInt("contact_id"));
+                phoneNumber.setNumber(set.getInt("number"));
+                phoneNumber.setCountryCode(set.getInt("country_code"));
+                phoneNumber.setOperatorCode(set.getInt("operator_code"));
+                phoneNumber.setNote(set.getString("note"));
+                phoneNumber.setType(set.getString("tyoe"));
+                list.add(phoneNumber);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    private void partOfPrepare(PreparedStatement statement, PhoneNumber number) throws SQLException {
+        statement.setInt(1, number.getContactID());
+        statement.setInt(2, number.getNumber());
+        statement.setInt(3, number.getCountryCode());
+        statement.setInt(4, number.getOperatorCode());
+        statement.setString(5, number.getType());
+        statement.setString(6, number.getNote());
+    }
 }

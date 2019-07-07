@@ -13,7 +13,10 @@
 
     <script type="text/javascript" src="js/script-manager.js"></script>
     <script type="text/javascript" src="js/mainScript.js"></script>
-    <script type="text/javascript" src="js/edit-contact.js"></script>
+    <script type="text/javascript" src="js/contact-info.js"></script>
+    <script type="text/javascript" src="js/showContactScript.js"></script>
+    <script type="text/javascript" src="js/showAddressScript.js"></script>
+    <script type="text/javascript" src="js/delete-contact.js"></script>
 
     <style>
         @import "css/main-style.css";
@@ -26,17 +29,26 @@
 
 <h1>Contacts List: </h1>
 
-<div id="main-contact" style="display: none">
+<div id="contact-editor">
+    <div id='forms'>
+        <fieldset  style="display: inline-block">
+            <legend aria-label="center">Personal data</legend>
+            <form id='addressContent' enctype="multipart/form-data" method="post"></form>
+        </fieldset>
+        <fieldset style="display: inline-block">
+            <legend aria-label="center">Contact Address</legend>
+            <form id="content" enctype="multipart/form-data" method="post"></form>
+        </fieldset>
+
+    </div>
+    <form id='buttons'></form>
+</div>
+
+<div id="main-contact">
     <table id="contact-table"></table>
     <div id="main-buttons" align="center"></div>
 </div>
 
-<div id="contact-editor" style="display: block">
-    <form id="content" style="margin: auto">
-        <div id="inputs"></div>
-        <div id="buttons"></div>
-    </form>
-</div>
 
 </body>
 </html>

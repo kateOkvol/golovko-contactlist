@@ -40,30 +40,14 @@ public class MainContactDAOImpl implements MainContactDAO {
         return list;
     }
 
-    @Override
-    public MainContact getById(Integer id) {
-        MainContact mainContact = new MainContact();
-        String sql = "SELECT id, concat_ws(' ', cont.first_name, cont.middle_name, cont.last_name) " +
-                "AS full_name, cont.birth_date, " +
-                "concat_ws(',', country, city) AS address, cont.company " +
-                "FROM contacts.contact cont " +
-                "WHERE id = ?";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, id);
-            ResultSet resultSet = statement.executeQuery();
-            mainContact = parseResultSet(resultSet).get(0);
-        } catch (SQLException e) {
-            System.out.println("разраб свою ошибку, getbyid main");
-            e.printStackTrace();
-        }
-        return mainContact;
-    }
 
     @Override
     public void delete(Integer id) {
-        String sql = "DELETE FROM contacts.contact WHERE id = ?;";
+        String sql = "DELETE FROM contacts.number WHERE contact_id = ?;" +
+                "DELETE FROM contacts.contact WHERE id = ?;";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setObject(1, id);
+            statement.setObject(2, id);
             int count = statement.executeUpdate();
             if (count != 1) {
                 System.out.println("error main contact");
@@ -73,17 +57,12 @@ public class MainContactDAOImpl implements MainContactDAO {
         }
     }
 
-    private class PersistMainContact extends MainContact {
-        public void setId(Integer id) {
-            super.setId(id);
-        }
-    }
 
     private List<MainContact> parseResultSet(ResultSet set) {
         LinkedList<MainContact> list = new LinkedList<>();
         try {
             while (set.next()) {
-                PersistMainContact contact = new PersistMainContact();
+                MainContact contact = new MainContact();
                 contact.setId(set.getInt("id"));
                 contact.setFullName(set.getString("full_name"));
                 contact.setBirthDate(set.getDate("birth_date"));

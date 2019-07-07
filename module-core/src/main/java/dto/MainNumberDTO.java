@@ -1,27 +1,56 @@
 package dto;
 
+import entities.MainNumber;
+
 public class MainNumberDTO {
-    private Integer contact_id;
-    private Integer number_id;
+    private Integer contactId;
+    private Integer id;
+    private String fullNumber;
+    private String type;
     private String note;
 
     public MainNumberDTO() {
     }
 
-    public Integer getContact_id() {
-        return contact_id;
+    public MainNumberDTO(MainNumber mainNumber) {
+        this.contactId = mainNumber.getContactId();
+        this.id = mainNumber.getId();
+        this.fullNumber = mainNumber.getFullNumber();
+        this.note = mainNumber.getNote();
+        this.type = mainNumber.getType();
     }
 
-    public void setContact_id(Integer contact_id) {
-        this.contact_id = contact_id;
+    public Integer getContactId() {
+        return contactId;
+    }
+
+    public void setContactId(Integer contactId) {
+        this.contactId = contactId;
     }
 
     public Integer getNumber_id() {
-        return number_id;
+        return id;
     }
 
-    public void setNumber_id(Integer number_id) {
-        this.number_id = number_id;
+    public MainNumberDTO setNumber_id(Integer id) {
+        this.id = id;
+        return this;
+    }
+
+    public String getFullNumber() {
+        return fullNumber;
+    }
+
+    public void setFullNumber(String fullNumber) {
+        this.fullNumber = fullNumber;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getNote() {
@@ -35,8 +64,10 @@ public class MainNumberDTO {
     @Override
     public String toString() {
         return "MainNumberDTO{" +
-                "contact_id=" + contact_id +
-                ", number_id=" + number_id +
+                "contactId=" + contactId +
+                ", number_id=" + id +
+                ", fullNumber=" + fullNumber +
+                ", type='" + type + '\'' +
                 ", note='" + note + '\'' +
                 '}';
     }

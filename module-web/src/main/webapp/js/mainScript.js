@@ -1,29 +1,28 @@
 var contactsList;
 
 function loadMain() {
-    document.getElementById("contact-editor").style.display = 'none';
+    event.preventDefault();
     addButtons();
     createTable();
 }
 
 
-
 function addButtons() {
-    var buttonHTML = "<form>";
-    buttonHTML += "<button type='submit' id='create' onclick='loadEditor(0)'>Create</button>";
-    buttonHTML += "<button type='submit' id='delete' onclick='getCheckbox()'>Delete</button>";
-    buttonHTML += "</form>";
+    var buttonHTML = "<button type='submit' id='create' onclick='loadEditor(event, 0)'>Create</button>";
+    buttonHTML += "<button type='submit' id='delete' onclick='deleteManager()'>Delete</button>";
     document.getElementById("main-buttons").innerHTML = buttonHTML;
 }
 
-async function createTable() {
+function createTable() {
     return fetch("application?command=mainContacts"
     )
         .then(response => {
-            return response.json();
+            return response.json().catch(error => {
+                return Promise.reject(new Error('Invalid JSON: ' + error.message));
+            });
         })
-        .then(async response => {
-            contactsList = await response;
+        .then( response => {
+            contactsList =  response;
             console.log(contactsList);
             tableText();
             var template = document.getElementById("template-table").innerHTML;
@@ -42,15 +41,17 @@ function tableText() {
     tableHTML += "<tr>";
     tableHTML += "<th>&#10004</th><th>Full name</th><th>Birth date</th><th>Address</th><th>Company</th>";
     tableHTML += "</tr>";
+    tableHTML += "<tbody id='table-body'>";
     tableHTML += "{{#.}}";
     tableHTML += "<tr>";
-    tableHTML += "<td><input type='checkbox' name='delete'  id='delete{{id}}'></td>";
-    tableHTML += "<td><a href='' id={{id}} onclick='loadEditor(id)'>{{fullName}}</a></td> " +
+    tableHTML += "<td><input type='checkbox' name='delete'  id='{{id}}'></td>";
+    tableHTML += "<td><a href='' id={{id}} onclick='loadEditor(event, id)'>{{fullName}}</a></td> " +
         "<td> {{birthDate}}</td>" +
         "<td> {{address}}</td>" +
         "<td> {{company}}</td>";
     tableHTML += "</tr>";
     tableHTML += "{{/.}}";
+    tableHTML += "</tbody>";
     tableHTML += "</script>";
     tableHTML += "</table>";
 

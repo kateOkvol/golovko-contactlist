@@ -4,7 +4,7 @@ package dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import entities.Contact;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class ContactDTO {
 
@@ -13,7 +13,7 @@ public class ContactDTO {
     private String lastName;
     private String middleName;
     private String gender;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date birthDate;
     private String citizenship;
     private String maritalStatus;
@@ -186,4 +186,26 @@ public class ContactDTO {
         this.flat = flat;
     }
 
+    @Override
+    public String toString() {
+        return "ContactDTO{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", middleName='" + middleName + '\'' +
+                ", gender='" + gender + '\'' +
+                ", birthDate=" + birthDate +
+                ", citizenship='" + citizenship + '\'' +
+                ", maritalStatus='" + maritalStatus + '\'' +
+                ", webSite='" + webSite + '\'' +
+                ", email='" + email + '\'' +
+                ", company='" + company + '\'' +
+                ", zipCode=" + zipCode +
+                ", country='" + country + '\'' +
+                ", city='" + city + '\'' +
+                ", street='" + street + '\'' +
+                ", house='" + house + '\'' +
+                ", flat='" + flat + '\'' +
+                '}';
+    }
 }

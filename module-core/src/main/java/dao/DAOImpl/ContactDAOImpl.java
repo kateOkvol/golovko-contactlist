@@ -4,7 +4,6 @@ import dao.ContactDAO;
 import entities.Contact;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,24 +22,27 @@ public class ContactDAOImpl implements ContactDAO {
 
     @Override
     public void create(Contact contact) {
-        String sql = "INSERT INTO contacts.contact (first_name, last_name, middle_name, " +
-                "birth_date, citizenship, web_site, email, company, country, city, street, house, flat, zip_code) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+        String sql = "INSERT INTO contacts.contact (first_name, last_name, middle_name, gender, " +
+                "birth_date, citizenship, marital_status, web_site, email, company, country, city, street, house, flat, zip_code) " +
+                "VALUES (?, ?, ?, ?::contacts.gender, ?, ?, ?::contacts.marital_status, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             partOfPrepare(statement, contact);
-            statement.setInt(12, contact.getId());
+            int count = statement.executeUpdate();
+            if (count != 1) {
+                System.out.println("contact update exception");//throw new Exception();
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
 
-
     @Override
     public Contact getById(Integer id) {
         Contact contact = new Contact();
-        String sql = "SELECT id, first_name, last_name, middle_name, gender " +
-                "birth_date, citizenship, marital_status, web_site, email, company, " +
+        String sql = "SELECT id, first_name, last_name, middle_name, gender::contacts.gender, " +
+                "birth_date, citizenship, marital_status::contacts.marital_status, web_site, email, company, " +
                 "country, city, street, house, flat, zip_code " +
                 "FROM contacts.contact WHERE id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -56,12 +58,12 @@ public class ContactDAOImpl implements ContactDAO {
 
     @Override
     public void update(Contact contact) {
-        String sql = "UPDATE contacts.contact SET first_name = ?, last_name = ?, middle_name = ?, gender = ?, " +
-                "birth_date = ?, citizenship = ?, marital_status = ?, web_site = ?, email = ?, company = ?, " +
+        String sql = "UPDATE contacts.contact SET first_name = ?, last_name = ?, middle_name = ?, gender = ?::contacts.gender, " +
+                "birth_date = ?, citizenship = ?, marital_status = ?::contacts.marital_status, web_site = ?, email = ?, company = ?, " +
                 "country = ?, city = ?, street = ?, house = ?, flat = ?, zip_code = ?  WHERE id = ?;";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            partOfPrepare(statement, contact);
             statement.setInt(17, contact.getId());
+            partOfPrepare(statement, contact);
             int count = statement.executeUpdate();
             if (count != 1) {
                 System.out.println("contact update exception");//throw new Exception();
@@ -85,25 +87,19 @@ public class ContactDAOImpl implements ContactDAO {
         }
     }
 
-    private class PersistContact extends Contact {
-        public void setId(Integer id) {
-            super.setId(id);
-        }
-    }
-
     private List<Contact> parseResultSet(ResultSet set) {
         LinkedList<Contact> list = new LinkedList<>();
         try {
             while (set.next()) {
-                PersistContact contact = new PersistContact();
+                Contact contact = new Contact();
                 contact.setId(set.getInt("id"));
                 contact.setFirstName(set.getString("first_name"));
                 contact.setLastName(set.getString("last_name"));
                 contact.setMiddleName(set.getString("middle_name"));
- //               contact.setGender(set.getString("gender"));
- //               contact.setBirthDate(set.getDate("birth_date"));
+                contact.setGender(set.getString("gender"));
+                contact.setBirthDate(set.getDate("birth_date"));
                 contact.setCitizenship(set.getString("citizenship"));
- //               contact.setMaritalStatus(set.getString("marital_status"));
+                contact.setMaritalStatus(set.getString("marital_status"));
                 contact.setEmail(set.getString("email"));
                 contact.setWebSite(set.getString("web_site"));
                 contact.setCompany(set.getString("company"));
@@ -112,7 +108,7 @@ public class ContactDAOImpl implements ContactDAO {
                 contact.setStreet(set.getString("street"));
                 contact.setHouse(set.getString("house"));
                 contact.setFlat(set.getString("flat"));
-                contact.setZipCode(set.getInt("zip_code"));
+                contact.setZipCode((Integer) set.getObject("zip_code"));
                 list.add(contact);
             }
         } catch (SQLException s) {
@@ -122,22 +118,22 @@ public class ContactDAOImpl implements ContactDAO {
     }
 
     private void partOfPrepare(PreparedStatement statement, Contact contact) throws SQLException {
-        statement.setString(1, contact.getFirstName());
-        statement.setString(2, contact.getLastName());
-        statement.setString(3, contact.getMiddleName());
-        statement.setString(4, contact.getGender());
-        statement.setDate(5, (Date) contact.getBirthDate());
-        statement.setString(6, contact.getCitizenship());
-        statement.setString(7, contact.getMaritalStatus());
-        statement.setString(8, contact.getEmail());
-        statement.setString(9, contact.getWebSite());
-        statement.setString(10, contact.getCompany());
-        statement.setString(11, contact.getCountry());
-        statement.setString(12, contact.getCity());
-        statement.setString(13, contact.getStreet());
-        statement.setString(14, contact.getHouse());
-        statement.setString(15, contact.getFlat());
-        statement.setInt(16, contact.getZipCode());
+        statement.setObject(1, contact.getFirstName());
+        statement.setObject(2, contact.getLastName());
+        statement.setObject(3, contact.getMiddleName());
+        statement.setObject(4, contact.getGender());
+        statement.setObject(5, contact.getBirthDate());
+        statement.setObject(6, contact.getCitizenship());
+        statement.setObject(7, contact.getMaritalStatus());
+        statement.setObject(9, contact.getEmail());
+        statement.setObject(8, contact.getWebSite());
+        statement.setObject(10, contact.getCompany());
+        statement.setObject(11, contact.getCountry());
+        statement.setObject(12, contact.getCity());
+        statement.setObject(13, contact.getStreet());
+        statement.setObject(14, contact.getHouse());
+        statement.setObject(15, contact.getFlat());
+        statement.setObject(16, contact.getZipCode());
     }
 
 }

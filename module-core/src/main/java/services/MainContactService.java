@@ -28,25 +28,5 @@ public class MainContactService {
         }
         return contactList;
     }
-
-
-
-
-
-//    public static void main(String[] args) {
-//        MainContactService service = new MainContactService();
-//
-//        List<MainContactDTO> dto = service.findAll();
-//
-//        System.out.println(dto.toString());
-//
-////        System.out.println(service.getById(3));
-//
-////        service.deleteContact(3);
-//
-//    }
-//    public MainContactDTO getById(Integer id) {
-//        return new MainContactDTO(dao.getById(id));
-//    }
 }
 

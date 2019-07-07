@@ -1,5 +1,7 @@
 package dto;
 
+import entities.PhoneNumber;
+
 public class PhoneNumberDTO {
 
     private Integer id;
@@ -11,6 +13,16 @@ public class PhoneNumberDTO {
     private String note;
 
     public PhoneNumberDTO() {
+    }
+
+    public PhoneNumberDTO(PhoneNumber phoneNumber) {
+        this.id = phoneNumber.getId();
+        this.note = phoneNumber.getNote();
+        this.number = phoneNumber.getNumber();
+        this.type = phoneNumber.getType();
+        this.contactID = phoneNumber.getContactID();
+        this.countryCode = phoneNumber.getCountryCode();
+        this.operatorCode = phoneNumber.getOperatorCode();
     }
 
     public Integer getId() {

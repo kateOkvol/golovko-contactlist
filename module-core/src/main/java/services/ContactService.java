@@ -20,6 +20,11 @@ public class ContactService {
     }
 
     public ContactService(ContactDTO dto) {
+        try {
+            this.dao = new ContactDAOImpl(DataBaseConnection.getConnection());
+        } catch (SQLException e) {
+            System.out.println("no connection to start the address service");
+        }
         this.dto = dto;
     }
 
@@ -28,7 +33,21 @@ public class ContactService {
     }
 
     public void createContact() {
+        dao.create(setContactFields());
+    }
+
+    public void updateContact(){
+        dao.update(setContactFields());
+    }
+
+    public void deleteContact(Integer id) {
+        this.dao.delete(id);
+
+    }
+
+    private Contact setContactFields(){
         Contact contact = new Contact();
+        contact.setId(dto.getId());
         contact.setFirstName(dto.getFirstName());
         contact.setLastName(dto.getLastName());
         contact.setMiddleName(dto.getMiddleName());
@@ -46,11 +65,6 @@ public class ContactService {
         contact.setFlat(dto.getFlat());
         contact.setZipCode(dto.getZipCode());
 
-        dao.create(contact);
-    }
-
-    public void deleteContact(Integer id) {
-        this.dao.delete(id);
-
+        return contact;
     }
 }

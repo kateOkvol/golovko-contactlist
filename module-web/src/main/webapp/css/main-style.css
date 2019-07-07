@@ -55,7 +55,12 @@ button:active{
     background-color: #113128;
 }
 form {
-    position: relative;
+    align-self: baseline;
+    align-content: center;
+    width: fit-content;
+    padding: 0;
+    margin: auto;
+    border: 0;
 }
 
 a:link {
@@ -72,4 +77,16 @@ input{
 
 label{
     margin: 2% 0 0 0;
+    width: border-box;
+}
+
+select{
+    width: border-box;
+}
+
+fieldset{
+    align-self: auto;
+    margin: auto;
+    border-color:  #7AC1AC;
+    border-width: 2px;
 }

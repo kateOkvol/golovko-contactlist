@@ -7,7 +7,7 @@ public interface ContactDAO {
 
     Contact getById(Integer id);
 
-    void update(Contact object);
+    void update(Contact contact);
 
     void delete(Integer id);
 

@@ -2,18 +2,12 @@ package dao;
 
 import entities.PhoneNumber;
 
-import java.util.List;
-
 public interface PhoneNumberDAO {
     void create(PhoneNumber phoneNumber);
 
-    List<PhoneNumber> getAll();
-
     PhoneNumber getById(Integer id);
 
-    void update(PhoneNumber object);
+    void update(PhoneNumber phoneNumber);
 
-    void delete(PhoneNumber object);
-
-
+    void delete(Integer id);
 }
