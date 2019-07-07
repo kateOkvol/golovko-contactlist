@@ -21,12 +21,14 @@ public class MainNumberDAOImpl implements MainNumberDAO {
     }
 
     @Override
-    public List<MainNumber> getAll() {
+    public List<MainNumber> getAll(Integer contactId) {
         List<MainNumber> list = null;
         String sql = "SELECT contact_id, id, concat_ws(' ', country_code, operator_code, numder) " +
                 "AS full_number, type::contacts.phone_type, note " +
-                "FROM contacts.number ;";
+                "FROM contacts.number " +
+                "WHERE contact_id = ?;";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, contactId);
             ResultSet resultSet = statement.executeQuery();
             list = parseResultSet(resultSet);
         } catch (SQLException e) {

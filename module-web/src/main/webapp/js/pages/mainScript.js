@@ -8,8 +8,12 @@ function loadMain() {
 
 
 function addButtons() {
+    const tableBodyId = "\"table-body\"";
+    const url = "\"application?command=deleteContacts\"";
+    const parameters = tableBodyId + ", " + url;
+    console.log(parameters);
     var buttonHTML = "<button type='submit' id='create' onclick='loadEditor(event, 0)'>Create</button>";
-    buttonHTML += "<button type='submit' id='delete' onclick='deleteManager()'>Delete</button>";
+    buttonHTML += "<button type='submit' id='delete' onclick='deleteManager("+parameters+")'>Delete</button>";
     document.getElementById("main-buttons").innerHTML = buttonHTML;
 }
 
@@ -21,8 +25,8 @@ function createTable() {
                 return Promise.reject(new Error('Invalid JSON: ' + error.message));
             });
         })
-        .then( response => {
-            contactsList =  response;
+        .then(response => {
+            contactsList = response;
             console.log(contactsList);
             tableText();
             var template = document.getElementById("template-table").innerHTML;
@@ -36,8 +40,7 @@ function createTable() {
 
 function tableText() {
 
-    var tableHTML = "<table id='contact-table'>";
-    tableHTML += "<script type='text/html-template' id='template-table'>";
+    var tableHTML = "<script type='text/html-template' id='template-table'>";
     tableHTML += "<tr>";
     tableHTML += "<th>&#10004</th><th>Full name</th><th>Birth date</th><th>Address</th><th>Company</th>";
     tableHTML += "</tr>";
@@ -53,7 +56,6 @@ function tableText() {
     tableHTML += "{{/.}}";
     tableHTML += "</tbody>";
     tableHTML += "</script>";
-    tableHTML += "</table>";
 
     document.getElementById("contact-table").innerHTML = tableHTML;
 }

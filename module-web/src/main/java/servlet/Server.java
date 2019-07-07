@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import controllers.ContactsController;
 import controllers.MainContactsController;
+import controllers.MainNumberController;
+import controllers.NumberController;
 import dto.ContactDTO;
 
 import javax.servlet.annotation.WebServlet;
@@ -46,7 +48,7 @@ public class Server extends HttpServlet {
             case "mainContacts":
                 mainContacts(request, response);
                 break;
-            case "deleteContact":
+            case "deleteContacts":
                 try {
                     deleteContact(request, response);
                 } catch (IOException e) {
@@ -74,6 +76,19 @@ public class Server extends HttpServlet {
                     e.printStackTrace();
                 }
                 break;
+            case "mainPhones":
+                try {
+                    mainPhones(request, response);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case "deletePhone":
+                try {
+                    deletePhone(request, response);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
         }
     }
 
@@ -101,7 +116,9 @@ public class Server extends HttpServlet {
 
     private void deleteContact(HttpServletRequest request, HttpServletResponse response) throws IOException {
         ContactsController controller = new ContactsController();
+
         String jsonString = processRequest(request);
+
         ObjectMapper mapper = new ObjectMapper();
         JsonNode jsonNode = mapper.readTree(jsonString);
         System.out.println(jsonNode);
@@ -131,6 +148,39 @@ public class Server extends HttpServlet {
         }
     }
 
+    private void mainPhones(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        MainNumberController main = new MainNumberController();
+
+        String jsonString = processRequest(request);
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode jsonNode = mapper.readTree(jsonString);
+        System.out.println(jsonNode);
+        Integer contactId = jsonNode.asInt();
+
+        try {
+            response.getWriter().write(
+                    mapper.writeValueAsString(
+                            main.searchPhones(contactId)));
+        } catch (IOException e) {
+            System.out.println("эррор при записи в респонз. Сделай свой эксепшн! и логи добавь наконец");
+        }
+    }
+
+    private void deletePhone(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        NumberController controller = new NumberController();
+
+        String jsonString = processRequest(request);
+
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode jsonNode = mapper.readTree(jsonString);
+        System.out.println(jsonNode);
+        ArrayList array = mapper.convertValue(jsonNode, ArrayList.class);
+
+        for (Object element : array) {
+            controller.deletePhone(Integer.parseInt((String) element));
+        }
+    }
+
     private String processRequest(HttpServletRequest request) throws IOException {
         String line = null;
         StringBuffer buffer = new StringBuffer();
@@ -149,7 +199,6 @@ public class Server extends HttpServlet {
         ObjectMapper mapper = new ObjectMapper();
         mapper.disable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
         mapper.disable(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS);
-        mapper.disable(DeserializationFeature.USE_BIG_INTEGER_FOR_INTS);
 
         JsonNode jsonNode = mapper.readTree(jsonString);
 

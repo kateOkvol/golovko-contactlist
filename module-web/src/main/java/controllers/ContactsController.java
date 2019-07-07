@@ -5,7 +5,10 @@ import services.ContactService;
 
 public class ContactsController {
 
-    public void createContact(ContactDTO contactDTO){
+    public ContactsController() {
+    }
+
+    public void createContact(ContactDTO contactDTO) {
         new ContactService(contactDTO).createContact();
     }
 
@@ -17,7 +20,7 @@ public class ContactsController {
         return new ContactService().getById(id);
     }
 
-    public void updateContact(ContactDTO contactDTO){
+    public void updateContact(ContactDTO contactDTO) {
         new ContactService(contactDTO).updateContact();
     }
 }

@@ -36,7 +36,7 @@ public class ContactService {
         dao.create(setContactFields());
     }
 
-    public void updateContact(){
+    public void updateContact() {
         dao.update(setContactFields());
     }
 
@@ -45,7 +45,7 @@ public class ContactService {
 
     }
 
-    private Contact setContactFields(){
+    private Contact setContactFields() {
         Contact contact = new Contact();
         contact.setId(dto.getId());
         contact.setFirstName(dto.getFirstName());
