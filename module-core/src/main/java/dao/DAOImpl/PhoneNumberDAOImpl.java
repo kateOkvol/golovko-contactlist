@@ -22,7 +22,7 @@ public class PhoneNumberDAOImpl implements PhoneNumberDAO {
 
     @Override
     public void create(PhoneNumber phoneNumber) {
-        String sql = "INSERT INTO contacts.number (contact_id, numder, country_code, operator_code, note, type)" +
+        String sql = "INSERT INTO contacts.number (contact_id, phone, country_code, operator_code, note, type)" +
                 "VALUES (?, ?, ?, ?, ?, ?::contacts.phone_type);";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             partOfPrepare(statement, phoneNumber);
@@ -39,7 +39,7 @@ public class PhoneNumberDAOImpl implements PhoneNumberDAO {
     @Override
     public PhoneNumber getById(Integer id) {
         PhoneNumber phoneNumber = new PhoneNumber();
-        String sql = "SELECT id, contact_id, numder, country_code, operator_code, note, type::contacts.phone_type " +
+        String sql = "SELECT id, contact_id, phone, country_code, operator_code, note, type::contacts.phone_type " +
                 "FROM contacts.number WHERE id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);
@@ -53,7 +53,7 @@ public class PhoneNumberDAOImpl implements PhoneNumberDAO {
 
     @Override
     public void update(PhoneNumber phoneNumber) {
-        String sql = "UPDATE contacts.number SET numder = ?, country_code = ?, operator_code = ?, " +
+        String sql = "UPDATE contacts.number SET phone = ?, country_code = ?, operator_code = ?, " +
                 "type = ?::contacts.phone_type, note = ? WHERE id = ?;";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(6, phoneNumber.getId());
@@ -83,13 +83,13 @@ public class PhoneNumberDAOImpl implements PhoneNumberDAO {
         try {
             while (set.next()) {
                 PhoneNumber phoneNumber = new PhoneNumber();
-                phoneNumber.setId(set.getInt("id"));
-                phoneNumber.setContactID(set.getInt("contact_id"));
-                phoneNumber.setNumber(set.getInt("number"));
-                phoneNumber.setCountryCode(set.getInt("country_code"));
-                phoneNumber.setOperatorCode(set.getInt("operator_code"));
+                phoneNumber.setId((Integer) set.getObject("id"));
+                phoneNumber.setContactID((Integer) set.getObject("contact_id"));
+                phoneNumber.setNumber((Integer) set.getObject("phone"));
+                phoneNumber.setCountryCode((Integer) set.getObject("country_code"));
+                phoneNumber.setOperatorCode((Integer) set.getObject("operator_code"));
                 phoneNumber.setNote(set.getString("note"));
-                phoneNumber.setType(set.getString("tyoe"));
+                phoneNumber.setType(set.getString("type"));
                 list.add(phoneNumber);
             }
         } catch (SQLException e) {

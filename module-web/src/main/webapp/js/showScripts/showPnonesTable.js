@@ -1,9 +1,6 @@
-const url = "application?command=deletePhone";
-const tableBodyId = "phone-table-body";
-
 function showPhonesTable(contactId) {
-    createPhonesTable(contactId);
     addPhonesButtons();
+    createPhonesTable(contactId);
 }
 
 function phonesTableHTML() {
@@ -14,9 +11,9 @@ function phonesTableHTML() {
     tableHTML += "<tbody id='phone-table-body'>";
     tableHTML += "{{#.}}";
     tableHTML += "<tr>";
-    tableHTML += "<td><input type='checkbox' name='delete'  id='phone{{number_id}}'></td>";
-    tableHTML += "<td> {{type}}</td>" +
-        "<td>{{fullNumber}}</td> " +
+    tableHTML += "<td><input type='checkbox' name='delete' id='phone{{number_id}}'></td>";
+    tableHTML += "<td><a href='' id='number{{number_id}}' onclick='loadPopupPhones(event, id)'>{{fullNumber}}</a></td> " +
+        "<td> {{type}}</td>" +
         "<td> {{note}}</td>";
     tableHTML += "</tr>";
     tableHTML += "{{/.}}";
@@ -28,13 +25,13 @@ function phonesTableHTML() {
 
 function createPhonesTable(contactId) {
 
-    return fetch(url, {
+    return fetch("application?command=mainPhones", {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(contactId)
+            body: JSON.stringify({"contactId": contactId})
         }
     )
         .then(response => {
@@ -56,7 +53,16 @@ function createPhonesTable(contactId) {
 }
 
 function addPhonesButtons() {
-    var buttonHTML = "<button type='submit' id='create' onclick=''>Create</button>";
-    buttonHTML += "<button type='submit' id='delete' onclick='deleteManager(\"" + tableBodyId + "\",\"" + url + ")'>Delete</button>";
+    const url = "application?command=deletePhone";
+    const tableBodyId = "phone-table-body";
+
+    var buttonHTML = "<button type='submit' id='create' onclick='loadPopupPhones(event, 0)'>Create</button>";
+    buttonHTML += "<button type='submit' id='delete' onclick='deleteManager(\"" + tableBodyId + "\",\"" + url + "\")'>Delete</button>";
     document.getElementById("phones-buttons").innerHTML = buttonHTML;
+}
+
+
+function addNumberToTable(phoneId) {
+
+
 }

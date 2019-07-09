@@ -46,7 +46,11 @@ public class Server extends HttpServlet {
         System.out.println(command);
         switch (command) {
             case "mainContacts":
-                mainContacts(request, response);
+                try {
+                    mainContacts(request, response);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 break;
             case "deleteContacts":
                 try {
@@ -89,19 +93,23 @@ public class Server extends HttpServlet {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                break;
+            case "getPhoneById":
+                try {
+                    getPhoneById(request,response);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
         }
     }
 
-    private void mainContacts(HttpServletRequest request, HttpServletResponse response) {
+    private void mainContacts(HttpServletRequest request, HttpServletResponse response) throws IOException {
         MainContactsController main = new MainContactsController();
         ObjectMapper mapper = new ObjectMapper();
-        try {
             response.getWriter().write(
                     mapper.writeValueAsString(
                             main.searchContacts()));
-        } catch (IOException e) {
-            System.out.println("эррор при записи в респонз. Сделай свой эксепшн! и логи добавь наконец");
-        }
     }
 
     private void createContact(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -137,15 +145,13 @@ public class Server extends HttpServlet {
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         JsonNode jsonNode = mapper.readTree(jsonString);
         System.out.println(jsonNode.get("id").asInt());
-        try {
-            response.getWriter().write(
-                    mapper.writeValueAsString(
-                            controller.getContact(
-                                    jsonNode.get("id").asInt())));
 
-        } catch (IOException e) {
-            System.out.println("эррор при записи в респонз. Сделай свой эксепшн! и логи добавь наконец");
-        }
+        response.getWriter().write(
+                mapper.writeValueAsString(
+                        controller.getContact(
+                                jsonNode.get("id").asInt())));
+
+
     }
 
     private void mainPhones(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -155,15 +161,11 @@ public class Server extends HttpServlet {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode jsonNode = mapper.readTree(jsonString);
         System.out.println(jsonNode);
-        Integer contactId = jsonNode.asInt();
-
-        try {
-            response.getWriter().write(
-                    mapper.writeValueAsString(
-                            main.searchPhones(contactId)));
-        } catch (IOException e) {
-            System.out.println("эррор при записи в респонз. Сделай свой эксепшн! и логи добавь наконец");
-        }
+        Integer contactId = jsonNode.get("contactId").asInt();
+        System.out.println(contactId);
+        response.getWriter().write(
+                mapper.writeValueAsString(
+                        main.searchPhones(contactId)));
     }
 
     private void deletePhone(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -180,6 +182,22 @@ public class Server extends HttpServlet {
             controller.deletePhone(Integer.parseInt((String) element));
         }
     }
+
+    private void getPhoneById(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String jsonString = processRequest(request);
+
+        NumberController controller = new NumberController();
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        JsonNode jsonNode = mapper.readTree(jsonString);
+        System.out.println(jsonNode.get("id").asInt());
+
+        response.getWriter().write(
+                mapper.writeValueAsString(
+                        controller.getPhone(
+                                jsonNode.get("id").asInt())));
+    }
+
 
     private String processRequest(HttpServletRequest request) throws IOException {
         String line = null;

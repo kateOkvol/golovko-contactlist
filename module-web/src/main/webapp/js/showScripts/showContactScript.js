@@ -72,7 +72,7 @@ function showContactInputs(promise) {
     document.getElementById('content').innerHTML = textHTML;
 
     if (promise == null) {
-        noInputValues();
+        noInputValues('input-label');
     } else {
         inputValues('firstName', promise);
         inputValues('middleName', promise);

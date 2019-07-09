@@ -23,7 +23,7 @@ function showButtons() {
     var buttonHTML = "<button type='submit' id= 'save-contact' onclick='contactSave(contactId)'>" +
         "Save" +
         "</button> " +
-        "<button type='reset' id= 'cancel-creator' onclick='cancelButton()'>" +
+        "<button type='reset' id= 'cancel-creator' onclick='cancelButton(\"input-label\")'>" +
         "Cancel" +
         "</button> ";
     document.getElementById("buttons").innerHTML = buttonHTML;
@@ -52,6 +52,7 @@ async function fillInputs(id) {
             })
     });
 
+
     showContactInputs(promise);
     showAddressInputs(promise);
 }
@@ -64,8 +65,8 @@ function inputValues(info, promise) {
     }
 }
 
-function noInputValues() {
-    const contactInfo = document.getElementsByName('input-label');
+function noInputValues(name) {
+    const contactInfo = document.getElementsByName(name);
 
     contactInfo.forEach(function (input) {
         input.value = null;
@@ -73,8 +74,8 @@ function noInputValues() {
     })
 }
 
-function cancelButton() {
-    noInputValues();
+function cancelButton(elementName) {
+    noInputValues(elementName);
     manageScripts();
 }
 

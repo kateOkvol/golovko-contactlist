@@ -23,7 +23,7 @@ public class MainNumberDAOImpl implements MainNumberDAO {
     @Override
     public List<MainNumber> getAll(Integer contactId) {
         List<MainNumber> list = null;
-        String sql = "SELECT contact_id, id, concat_ws(' ', country_code, operator_code, numder) " +
+        String sql = "SELECT contact_id, id, concat_ws(' ', country_code, operator_code, phone) " +
                 "AS full_number, type::contacts.phone_type, note " +
                 "FROM contacts.number " +
                 "WHERE contact_id = ?;";

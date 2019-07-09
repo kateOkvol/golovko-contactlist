@@ -39,7 +39,7 @@ function showAddressInputs(promise) {
     document.getElementById('addressContent').innerHTML = textHTML;
 
     if (promise == null) {
-        noInputValues();
+        noInputValues('input-label');
     } else {
         inputValues('country', promise);
         inputValues('city', promise);

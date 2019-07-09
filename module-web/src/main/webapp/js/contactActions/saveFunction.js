@@ -57,5 +57,5 @@ async function buttonSave(url, data) {
     );
     console.log(returnData);
     manageScripts();
-    noInputValues();
+    noInputValues('input-label');
 }

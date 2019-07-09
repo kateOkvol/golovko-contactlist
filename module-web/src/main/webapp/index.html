@@ -7,21 +7,19 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.2.0/mustache.min.js"></script>
     <script src="https://cdn.polyfill.io/v2/polyfill.js?features=fetch,Promise"></script>
 
-    <!--
-        <script type="text/javascript" src="js/deleteContacts.js"></script>
-    -->
-
     <script type="text/javascript" src="js/managers/script-manager.js"></script>
     <script type="text/javascript" src="js/pages/mainScript.js"></script>
     <script type="text/javascript" src="js/pages/contact-info.js"></script>
     <script type="text/javascript" src="js/showScripts/showContactScript.js"></script>
     <script type="text/javascript" src="js/showScripts/showAddressScript.js"></script>
     <script type="text/javascript" src="js/showScripts/showPnonesTable.js"></script>
+    <script type="text/javascript" src="js/showScripts/showPhonePopup.js"></script>
     <script type="text/javascript" src="js/contactActions/deleteContacts.js"></script>
     <script type="text/javascript" src="js/contactActions/saveFunction.js"></script>
 
     <style>
         @import "css/main-style.css";
+        @import "css/popUpWindow.css";
     </style>
     <!--
     <link rel="stylesheet" href="css/main-style.css" media="all"/>
@@ -43,8 +41,9 @@
         </fieldset>
         <div style="display: inline-block; vertical-align: top">
             <div id="phones-layout">
-                <table id="phones-table"></table>
                 <div id="phones-buttons"></div>
+                <table id="phones-table"></table>
+                <div class="modal-window" id="phones-window"></div>
             </div>
             <div id="attachments-layout"></div>
         </div>
