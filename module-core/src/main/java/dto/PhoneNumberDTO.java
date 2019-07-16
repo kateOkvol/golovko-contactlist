@@ -2,11 +2,11 @@ package dto;
 
 import entities.PhoneNumber;
 
-public class PhoneNumberDTO {
+public class PhoneNumberDTO implements DTO{
 
     private Integer id;
-    private Integer contactID;
-    private Integer number;
+    private Integer contactId;
+    private Integer phone;
     private Integer countryCode;
     private Integer operatorCode;
     private String type;
@@ -18,9 +18,9 @@ public class PhoneNumberDTO {
     public PhoneNumberDTO(PhoneNumber phoneNumber) {
         this.id = phoneNumber.getId();
         this.note = phoneNumber.getNote();
-        this.number = phoneNumber.getNumber();
+        this.phone = phoneNumber.getPhone();
         this.type = phoneNumber.getType();
-        this.contactID = phoneNumber.getContactID();
+        this.contactId = phoneNumber.getContactId();
         this.countryCode = phoneNumber.getCountryCode();
         this.operatorCode = phoneNumber.getOperatorCode();
     }
@@ -33,20 +33,20 @@ public class PhoneNumberDTO {
         this.id = id;
     }
 
-    public Integer getContactID() {
-        return contactID;
+    public Integer getContactId() {
+        return contactId;
     }
 
-    public void setContactID(Integer contactID) {
-        this.contactID = contactID;
+    public void setContactId(Integer contactId) {
+        this.contactId = contactId;
     }
 
-    public Integer getNumber() {
-        return number;
+    public Integer getPhone() {
+        return phone;
     }
 
-    public void setNumber(Integer number) {
-        this.number = number;
+    public void setPhone(Integer phone) {
+        this.phone = phone;
     }
 
     public Integer getCountryCode() {
@@ -85,8 +85,8 @@ public class PhoneNumberDTO {
     public String toString() {
         return "PhoneNumberDTO{" +
                 "id=" + id +
-                ", contactID=" + contactID +
-                ", number=" + number +
+                ", contactId=" + contactId +
+                ", phone=" + phone +
                 ", countryCode=" + countryCode +
                 ", operatorCode=" + operatorCode +
                 ", type='" + type + '\'' +

@@ -1,47 +1,26 @@
-function contactSave(contactId) {
-    const id = contactId;
-    const firstName = document.getElementById('firstName').value;
-    const middleName = document.getElementById('middleName').value;
-    const lastName = document.getElementById('lastName').value;
-    const birthDate = document.getElementById('birthDate').value;
-    const citizenship = document.getElementById('citizenship').value;
-    const webSite = document.getElementById('webSite').value;
-    const email = document.getElementById('email').value;
-    const company = document.getElementById('company').value;
-
-    const genderElement = document.getElementById('gender');
-    const gender = genderElement.options[genderElement.selectedIndex].value;
-    const maritalStatusElement = document.getElementById('maritalStatus');
-    const maritalStatus = maritalStatusElement.options[maritalStatusElement.selectedIndex].value;
-
-    const country = document.getElementById('country').value;
-    const city = document.getElementById('city').value;
-    const street = document.getElementById('street').value;
-    const house = document.getElementById('house').value;
-    const flat = document.getElementById('flat').value;
-    const zipCode = document.getElementById('zipCode').value;
-
-    var contactData;
+function buttonSave() {
+    let personalData = new FormData(document.forms.contactInputs);
+    let addressData = new FormData(document.forms.addressInputs);
+    var contactData = createPostContactData(personalData, addressData);
     var url;
+
+    console.log(JSON.stringify(contactData));
+
     if (contactId === 0) {
-        contactData = {
-            firstName, middleName, lastName, birthDate, gender, citizenship, webSite, email, maritalStatus, company,
-            country, city, street, house, flat, zipCode
-        };
-        url = 'application?command=createContact';
+        let promise = contactCreate('application?command=createContact', contactData);
+        promise.then(result => {
+            let id = JSON.parse(result);
+            createPhone(id);
+        })
     } else {
-        contactData = {
-            id, firstName, middleName, lastName, birthDate, gender, citizenship, webSite, email, maritalStatus, company,
-            country, city, street, house, flat, zipCode
-        };
-        url = 'application?command=updateContact';
+        contactSave('application?command=updateContact', contactData);
     }
 
-    buttonSave(url, contactData);
+    manageScripts();
 }
 
-async function buttonSave(url, data) {
-    let returnData = await new Promise((resolve, reject) => {
+function contactCreate(url, data) {
+    return new Promise((resolve, reject) => {
             return fetch(url, {
                 method: 'POST',
                 headers: {
@@ -49,13 +28,96 @@ async function buttonSave(url, data) {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(data)
+            }).then(response => {
+                return resolve(response.json());
             })
                 .catch(function (error) {
                     reject(new Error(error.message));
                 })
         }
     );
-    console.log(returnData);
-    manageScripts();
-    noInputValues('input-label');
+}
+
+
+function contactSave(url, data) {
+    new Promise((resolve, reject) => {
+            return fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Accept-type': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }).then(() => {
+                manageSave(contactId);
+            })
+                .catch(function (error) {
+                    reject(new Error(error.message));
+                })
+        }
+    );
+}
+
+function createPhone(id) {
+    inputForm.append('contactId', id);
+    let innerArray = {};
+    inputForm.forEach(function (value, key) {
+        innerArray[key] = value;
+    });
+
+    let newPhone = new Promise((resolve, reject) => {
+        return fetch('application?command=createPhone', {
+            method: 'POST',
+            headers: {
+                'Accept-type': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(innerArray)
+        })
+            .catch(function (error) {
+                reject(new Error(error.message));
+            })
+    });
+    console.log(newPhone);
+}
+
+function updatePhone() {
+    let newPhone = new Promise((resolve, reject) => {
+        return fetch('application?command=updatePhone', {
+            method: 'POST',
+            headers: {
+                'Accept-type': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updateArray)
+        })
+            .catch(function (error) {
+                reject(new Error(error.message));
+            })
+    });
+    console.log(newPhone);
+}
+
+function manageSave(responseId) {
+    if (createArray.length !== 0) {
+        createPhone(responseId);
+    }
+
+    if (updateArray.length !== 0) {
+        updatePhone();
+    }
+}
+
+function createPostContactData(personalData, addressData) {
+    let contactData = {};
+    if (contactId !== 0) {
+        personalData.append('id', contactId);
+    }
+    personalData.forEach(function (value, key) {
+        contactData[key] = value;
+    });
+    addressData.forEach(function (value, key) {
+        contactData[key] = value;
+    });
+    return contactData;
 }

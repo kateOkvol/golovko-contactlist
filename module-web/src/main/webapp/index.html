@@ -14,8 +14,10 @@
     <script type="text/javascript" src="js/showScripts/showAddressScript.js"></script>
     <script type="text/javascript" src="js/showScripts/showPnonesTable.js"></script>
     <script type="text/javascript" src="js/showScripts/showPhonePopup.js"></script>
+    <script type="text/javascript" src="js/showScripts/showAttachmentsScript.js"></script>
     <script type="text/javascript" src="js/contactActions/deleteContacts.js"></script>
     <script type="text/javascript" src="js/contactActions/saveFunction.js"></script>
+
 
     <style>
         @import "css/main-style.css";
@@ -31,13 +33,19 @@
 
 <div id="contact-editor">
     <div id='forms'>
-        <fieldset style="display: inline-block">
+
+        <fieldset style="display: inline-block; border: 0">
+            <div id='avatar'>
+            </div>
+
+        <fieldset>
             <legend aria-label="center">Contact Address</legend>
-            <form id='addressContent' enctype="multipart/form-data" method="post"></form>
+            <div id='addressContent'></div>
+        </fieldset>
         </fieldset>
         <fieldset style="display: inline-block">
             <legend aria-label="center">Personal data</legend>
-            <form id="content" enctype="multipart/form-data" method="post"></form>
+            <div id="content"></div>
         </fieldset>
         <div style="display: inline-block; vertical-align: top">
             <div id="phones-layout">
@@ -45,11 +53,15 @@
                 <table id="phones-table"></table>
                 <div class="modal-window" id="phones-window"></div>
             </div>
-            <div id="attachments-layout"></div>
+            <div id="attachment-layout">
+                <div id="attachButtons"></div>
+                <table id="attach-table"></table>
+                <div class="modal-window" id="attach-window"></div>
+            </div>
         </div>
 
     </div>
-    <form id='buttons'></form>
+    <div id='buttons'></div>
 </div>
 
 <div id="main-contact">

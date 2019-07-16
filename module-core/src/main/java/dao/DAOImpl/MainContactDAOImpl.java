@@ -44,10 +44,12 @@ public class MainContactDAOImpl implements MainContactDAO {
     @Override
     public void delete(Integer id) {
         String sql = "DELETE FROM contacts.number WHERE contact_id = ?;" +
+                "DELETE FROM contacts.attachments WHERE contact_id = ?;" +
                 "DELETE FROM contacts.contact WHERE id = ?;";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setObject(1, id);
             statement.setObject(2, id);
+            statement.setObject(3, id);
             int count = statement.executeUpdate();
             if (count != 1) {
                 System.out.println("error main contact");

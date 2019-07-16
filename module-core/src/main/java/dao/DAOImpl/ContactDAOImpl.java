@@ -21,20 +21,22 @@ public class ContactDAOImpl implements ContactDAO {
     }
 
     @Override
-    public void create(Contact contact) {
+    public Integer create(Contact contact) {
+        Integer id = null;
         String sql = "INSERT INTO contacts.contact (first_name, last_name, middle_name, gender, " +
                 "birth_date, citizenship, marital_status, web_site, email, company, country, city, street, house, flat, zip_code) " +
-                "VALUES (?, ?, ?, ?::contacts.gender, ?, ?, ?::contacts.marital_status, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+                "VALUES (?, ?, ?, ?::contacts.gender, ?, ?, ?::contacts.marital_status, ?, ?, ?, ?, ?, ?, ?, ?, ?) " +
+                "RETURNING id;";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             partOfPrepare(statement, contact);
-            int count = statement.executeUpdate();
-            if (count != 1) {
-                System.out.println("contact update exception");//throw new Exception();
-            }
+            ResultSet insertPerson = statement.executeQuery();
+            insertPerson.next();
+            id = (Integer) insertPerson.getObject(1);
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return id;
     }
 
 
@@ -62,11 +64,11 @@ public class ContactDAOImpl implements ContactDAO {
                 "birth_date = ?, citizenship = ?, marital_status = ?::contacts.marital_status, web_site = ?, email = ?, company = ?, " +
                 "country = ?, city = ?, street = ?, house = ?, flat = ?, zip_code = ?  WHERE id = ?;";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(17, contact.getId());
             partOfPrepare(statement, contact);
+            statement.setInt(17, contact.getId());
             int count = statement.executeUpdate();
             if (count != 1) {
-                System.out.println("contact update exception");//throw new Exception();
+                System.out.println("contact update exception");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -75,13 +77,12 @@ public class ContactDAOImpl implements ContactDAO {
 
     @Override
     public void delete(Integer id) {
-        String sql = "DELETE FROM contacts.contact WHERE id = ?;";
+        String sql = "DELETE FROM contacts.number WHERE contact_id = ?;" +
+                "DELETE FROM contacts.contact WHERE id = ?;";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setObject(1, id);
-            int count = statement.executeUpdate();
-            if (count != 1) {
-                System.out.println("разраб свою ошибку, делит контакта");
-            }
+            statement.setObject(2, id);
+            statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }

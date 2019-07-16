@@ -6,6 +6,7 @@ function loadEditor(event, id) {
     document.getElementById("contact-editor").style.display = 'block';
     checkId(id);
     showPhonesTable(contactId);
+    showAttach(contactId);
     showButtons();
 }
 
@@ -20,10 +21,10 @@ function checkId(id) {
 }
 
 function showButtons() {
-    var buttonHTML = "<button type='submit' id= 'save-contact' onclick='contactSave(contactId)'>" +
+    let buttonHTML = "<button type='submit' id= 'save-contact' onclick='buttonSave()'>" +
         "Save" +
         "</button> " +
-        "<button type='reset' id= 'cancel-creator' onclick='cancelButton(\"input-label\")'>" +
+        "<button type='reset' id= 'cancel-creator' onclick='cancelButton()'>" +
         "Cancel" +
         "</button> ";
     document.getElementById("buttons").innerHTML = buttonHTML;
@@ -65,24 +66,8 @@ function inputValues(info, promise) {
     }
 }
 
-function noInputValues(name) {
-    const contactInfo = document.getElementsByName(name);
-
-    contactInfo.forEach(function (input) {
-        input.value = null;
-        input.placeholder = 'fill the field'
-    })
+function cancelButton() {
+    if (confirm("Are you sure? You lose all the changes.")){
+        manageScripts();
+    }
 }
-
-function cancelButton(elementName) {
-    noInputValues(elementName);
-    manageScripts();
-}
-
-
-// var data = {id, firstName, middleName, lastName, gender, citizenship, webSite, email, maritalStatus, company};
-// const contactForm = document.forms.namedItem('content');
-// console.log(contactForm);
-// const formData = new FormData(contactForm);
-// console.log(formData);
-// console.log(formData);

@@ -5,7 +5,7 @@ import entities.MainContact;
 
 import java.util.Date;
 
-public class MainContactDTO {
+public class MainContactDTO implements DTO {
     private Integer id;
     private String fullName;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")

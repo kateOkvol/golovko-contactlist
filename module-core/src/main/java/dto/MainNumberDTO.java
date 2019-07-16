@@ -2,7 +2,7 @@ package dto;
 
 import entities.MainNumber;
 
-public class MainNumberDTO {
+public class MainNumberDTO implements DTO{
     private Integer contactId;
     private Integer id;
     private String fullNumber;

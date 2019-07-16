@@ -1,30 +1,33 @@
 package entities;
 
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.Objects;
 
-public class Attachments {
-    private Integer contact_id;
+public class Attachment {
+    private Integer contactId;
+    private Integer id;
     private String path;
     private Date date;
     private String note;
 
-    public Attachments() {
+    public Attachment() {
     }
 
-    public Attachments(Integer contact_id, String path, Date date) {
-        this.contact_id = contact_id;
-        this.path = path;
-        this.date = date;
+    public Integer getContactId() {
+        return contactId;
     }
 
-    public Integer getContact_id() {
-        return contact_id;
+    public void setContactId(Integer contactId) {
+        this.contactId = contactId;
     }
 
-    public void setContact_id(Integer contact_id) {
-        this.contact_id = contact_id;
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getPath() {
@@ -55,21 +58,21 @@ public class Attachments {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Attachments that = (Attachments) o;
-        return Objects.equals(contact_id, that.contact_id) &&
+        Attachment that = (Attachment) o;
+        return Objects.equals(contactId, that.contactId) &&
                 Objects.equals(path, that.path) &&
                 Objects.equals(date, that.date);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(contact_id, path, date);
+        return Objects.hash(contactId, path, date);
     }
 
     @Override
     public String toString() {
-        return "Attachments{" +
-                "contact_id=" + contact_id +
+        return "Attachment{" +
+                "contactId=" + contactId +
                 ", path='" + path + '\'' +
                 ", date=" + date +
                 ", note='" + note + '\'' +

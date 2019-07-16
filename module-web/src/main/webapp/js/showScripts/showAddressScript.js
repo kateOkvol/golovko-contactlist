@@ -1,46 +1,46 @@
 function showAddressInputs(promise) {
-    const textHTML = "<label>" +
+    const textHTML = "<form id='addressInputs'>" +
+        "<label>" +
         "<br>" +
         "Country:" +
         "<br>" +
-        "<input name='input-label' id='country'> " +
+        "<input name='country' id='country'> " +
         "</label> " +
         "<label>" +
         "<br>" +
         "City:" +
         "<br>" +
-        "<input name='input-label' id='city'> " +
+        "<input name='city' id='city'> " +
         "</label> " +
         "<label>" +
         "<br>" +
         "Street:" +
         "<br>" +
-        "<input name='input-label' id='street'> " +
+        "<input name='street' id='street'> " +
         "</label> " +
         "<label>" +
         "<br>" +
         "House:" +
         "<br>" +
-        "<input name='input-label' id='house'> " +
+        "<input name='house' id='house'> " +
         "</label> " +
         "<label>" +
         "<br>" +
         "Flat:" +
         "<br>" +
-        "<input name='input-label' id='flat'> " +
+        "<input name='flat' id='flat'> " +
         "</label> " +
         "<label>" +
         "<br>" +
         "Zip code:" +
         "<br>" +
-        "<input name='input-label' id='zipCode'> " +
-        "</label> ";
+        "<input name='zipCode' id='zipCode'> " +
+        "</label>" +
+        "</form>";
 
     document.getElementById('addressContent').innerHTML = textHTML;
 
-    if (promise == null) {
-        noInputValues('input-label');
-    } else {
+    if (promise !== null) {
         inputValues('country', promise);
         inputValues('city', promise);
         inputValues('street', promise);

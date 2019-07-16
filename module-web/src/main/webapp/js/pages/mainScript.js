@@ -11,7 +11,6 @@ function addButtons() {
     const tableBodyId = "\"table-body\"";
     const url = "\"application?command=deleteContacts\"";
     const parameters = tableBodyId + ", " + url;
-    console.log(parameters);
     var buttonHTML = "<button type='submit' id='create' onclick='loadEditor(event, 0)'>Create</button>";
     buttonHTML += "<button type='submit' id='delete' onclick='deleteManager("+parameters+")'>Delete</button>";
     document.getElementById("main-buttons").innerHTML = buttonHTML;

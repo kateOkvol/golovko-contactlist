@@ -49,8 +49,8 @@ public class PhoneNumberService {
     private PhoneNumber setContactFields() {
         PhoneNumber phoneNumber = new PhoneNumber();
         phoneNumber.setId(dto.getId());
-        phoneNumber.setContactID(dto.getContactID());
-        phoneNumber.setNumber(dto.getNumber());
+        phoneNumber.setContactId(dto.getContactId());
+        phoneNumber.setPhone(dto.getPhone());
         phoneNumber.setCountryCode(dto.getCountryCode());
         phoneNumber.setOperatorCode(dto.getOperatorCode());
         phoneNumber.setNote(dto.getNote());

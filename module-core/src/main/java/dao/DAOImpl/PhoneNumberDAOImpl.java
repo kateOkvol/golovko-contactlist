@@ -53,10 +53,10 @@ public class PhoneNumberDAOImpl implements PhoneNumberDAO {
 
     @Override
     public void update(PhoneNumber phoneNumber) {
-        String sql = "UPDATE contacts.number SET phone = ?, country_code = ?, operator_code = ?, " +
-                "type = ?::contacts.phone_type, note = ? WHERE id = ?;";
+        String sql = "UPDATE contacts.number SET contact_id = ?, phone = ?, country_code = ?, operator_code = ?, " +
+                "note = ?, type = ?::contacts.phone_type  WHERE id = ?;";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(6, phoneNumber.getId());
+            statement.setInt(7, phoneNumber.getId());
             partOfPrepare(statement, phoneNumber);
             int count = statement.executeUpdate();
             if (count != 1) {
@@ -84,8 +84,8 @@ public class PhoneNumberDAOImpl implements PhoneNumberDAO {
             while (set.next()) {
                 PhoneNumber phoneNumber = new PhoneNumber();
                 phoneNumber.setId((Integer) set.getObject("id"));
-                phoneNumber.setContactID((Integer) set.getObject("contact_id"));
-                phoneNumber.setNumber((Integer) set.getObject("phone"));
+                phoneNumber.setContactId((Integer) set.getObject("contact_id"));
+                phoneNumber.setPhone((Integer) set.getObject("phone"));
                 phoneNumber.setCountryCode((Integer) set.getObject("country_code"));
                 phoneNumber.setOperatorCode((Integer) set.getObject("operator_code"));
                 phoneNumber.setNote(set.getString("note"));
@@ -99,11 +99,11 @@ public class PhoneNumberDAOImpl implements PhoneNumberDAO {
     }
 
     private void partOfPrepare(PreparedStatement statement, PhoneNumber number) throws SQLException {
-        statement.setInt(1, number.getContactID());
-        statement.setInt(2, number.getNumber());
-        statement.setInt(3, number.getCountryCode());
-        statement.setInt(4, number.getOperatorCode());
-        statement.setString(5, number.getType());
-        statement.setString(6, number.getNote());
+        statement.setInt(1, number.getContactId());
+        statement.setInt(2, number.getPhone());
+        statement.setObject(3, number.getCountryCode());
+        statement.setObject(4, number.getOperatorCode());
+        statement.setObject(5, number.getNote());
+        statement.setObject(6, number.getType());
     }
 }

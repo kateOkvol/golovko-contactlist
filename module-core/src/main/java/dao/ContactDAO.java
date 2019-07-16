@@ -3,7 +3,7 @@ package dao;
 import entities.Contact;
 
 public interface ContactDAO {
-    void create(Contact contact);
+    Integer create(Contact contact);
 
     Contact getById(Integer id);
 

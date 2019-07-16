@@ -7,14 +7,14 @@ function phonesTableHTML() {
     var tableHTML = "<script type='text/html-template' id='template-phones-table'>";
     tableHTML += "<tr>";
     tableHTML += "<th>&#10004</th><th>Full number</th><th>Phone number type</th><th>Note</th>";
-    tableHTML += "</tr>";
     tableHTML += "<tbody id='phone-table-body'>";
+    tableHTML += "</tr>";
     tableHTML += "{{#.}}";
     tableHTML += "<tr>";
     tableHTML += "<td><input type='checkbox' name='delete' id='phone{{number_id}}'></td>";
     tableHTML += "<td><a href='' id='number{{number_id}}' onclick='loadPopupPhones(event, id)'>{{fullNumber}}</a></td> " +
-        "<td> {{type}}</td>" +
-        "<td> {{note}}</td>";
+        "<td id='type{{number_id}}'> {{type}}</td>" +
+        "<td id='note{{number_id}}'> {{note}}</td>";
     tableHTML += "</tr>";
     tableHTML += "{{/.}}";
     tableHTML += "</tbody>";
@@ -56,13 +56,8 @@ function addPhonesButtons() {
     const url = "application?command=deletePhone";
     const tableBodyId = "phone-table-body";
 
-    var buttonHTML = "<button type='submit' id='create' onclick='loadPopupPhones(event, 0)'>Create</button>";
+    let buttonHTML = "<button type='submit' id='create' onclick='loadPopupPhones(event, 0)'>Create</button>";
     buttonHTML += "<button type='submit' id='delete' onclick='deleteManager(\"" + tableBodyId + "\",\"" + url + "\")'>Delete</button>";
     document.getElementById("phones-buttons").innerHTML = buttonHTML;
 }
 
-
-function addNumberToTable(phoneId) {
-
-
-}

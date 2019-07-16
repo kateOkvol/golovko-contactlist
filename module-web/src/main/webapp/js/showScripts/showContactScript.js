@@ -1,34 +1,34 @@
 function showContactInputs(promise) {
-    var textHTML = "<label> " +
+    var textHTML = "<form id='contactInputs'>" +
+        "<label> " +
         "<br>" +
         "First name*:" +
         "<br>" +
-        "<input name='input-label' id='firstName' required> " +
+        "<input name='firstName' id='firstName' required> " +
         "</label> " +
         "<br>" +
         "<label> " +
         "Middle name:" +
         "<br>" +
-        "<input name='input-label' id='middleName'>" +
+        "<input name='middleName' id='middleName'>" +
         "</label> " +
         "<br>" +
         "<label> " +
         "Last name*:" +
         "<br>" +
-        "<input name='input-label'  id='lastName' required> " +
+        "<input name='lastName'  id='lastName' required> " +
         "</label> " +
-        "<label> " +
         "<br>" +
         "<label> " +
         "Birthday:" +
         "<br>" +
-        "<input name='input-label' type='date' id='birthDate'> " +
+        "<input name='birthDate' type='date' id='birthDate'> " +
         "</label> " +
         "<label> " +
         "<br>" +
         "Gender:" +
         "<br>" +
-        "<select  id='gender'>" +
+        "<select  name = 'gender' id='gender'>" +
         "<option value='' selected>not chosen</option>" +
         "<option value='male'>male</option>" +
         "<option value='female'>female</option>" +
@@ -38,25 +38,25 @@ function showContactInputs(promise) {
         "<br>" +
         "Citizenship:" +
         "<br>" +
-        "<input name='input-label' id='citizenship'> " +
+        "<input name='citizenship' id='citizenship'> " +
         "</label> " +
         "<label>" +
         "<br>" +
         "Web Site:" +
         "<br>" +
-        "<input name='input-label' id='webSite'> " +
+        "<input name='webSite' id='webSite'> " +
         "</label> " +
         "<label>" +
         "<br>" +
         "email:" +
         "<br>" +
-        "<input name='input-label' id='email'> " +
+        "<input name='email' id='email'> " +
         "</label> " +
         "<label>" +
         "<br>" +
         "Marital status:" +
         "<br>" +
-        "<select  id='maritalStatus'>" +
+        "<select  name='maritalStatus' id='maritalStatus'>" +
         "<option value='' selected>not chosen</option>" +
         "<option value='single'>single</option>" +
         "<option value='in a relationship'>in a relationship</option>" +
@@ -67,13 +67,12 @@ function showContactInputs(promise) {
         "<br>" +
         "Company:" +
         "<br>" +
-        "<input name='input-label' id='company'> " +
-        "</label>";
+        "<input name='company' id='company'> " +
+        "</label>" +
+        "</form>";
     document.getElementById('content').innerHTML = textHTML;
 
-    if (promise == null) {
-        noInputValues('input-label');
-    } else {
+    if (promise !== null) {
         inputValues('firstName', promise);
         inputValues('middleName', promise);
         inputValues('lastName', promise);

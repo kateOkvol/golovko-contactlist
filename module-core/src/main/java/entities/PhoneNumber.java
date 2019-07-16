@@ -4,8 +4,8 @@ import java.util.Objects;
 
 public class PhoneNumber{
     private Integer id;
-    private Integer contactID;
-    private Integer number;
+    private Integer contactId;
+    private Integer phone;
     private Integer countryCode;
     private Integer operatorCode;
     private String type;
@@ -14,10 +14,10 @@ public class PhoneNumber{
     public PhoneNumber() {
     }
 
-    public PhoneNumber(Integer id, Integer contactID, Integer number) {
+    public PhoneNumber(Integer id, Integer contactId, Integer phone) {
         this.id = id;
-        this.contactID = contactID;
-        this.number = number;
+        this.contactId = contactId;
+        this.phone = phone;
     }
 
     public Integer getId() {
@@ -28,20 +28,20 @@ public class PhoneNumber{
         this.id = id;
     }
 
-    public Integer getContactID() {
-        return contactID;
+    public Integer getContactId() {
+        return contactId;
     }
 
-    public void setContactID(Integer contactID) {
-        this.contactID = contactID;
+    public void setContactId(Integer contactId) {
+        this.contactId = contactId;
     }
 
-    public Integer getNumber() {
-        return number;
+    public Integer getPhone() {
+        return phone;
     }
 
-    public void setNumber(Integer number) {
-        this.number = number;
+    public void setPhone(Integer phone) {
+        this.phone = phone;
     }
 
     public Integer getCountryCode() {
@@ -82,8 +82,8 @@ public class PhoneNumber{
         if (o == null || getClass() != o.getClass()) return false;
         PhoneNumber phoneNumber1 = (PhoneNumber) o;
         return Objects.equals(id, phoneNumber1.id) &&
-                Objects.equals(contactID, phoneNumber1.contactID) &&
-                Objects.equals(number, phoneNumber1.number) &&
+                Objects.equals(contactId, phoneNumber1.contactId) &&
+                Objects.equals(phone, phoneNumber1.phone) &&
                 Objects.equals(countryCode, phoneNumber1.countryCode) &&
                 Objects.equals(operatorCode, phoneNumber1.operatorCode) &&
                 Objects.equals(type, phoneNumber1.type) &&
@@ -92,15 +92,15 @@ public class PhoneNumber{
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, contactID, number, countryCode, operatorCode, type, note);
+        return Objects.hash(id, contactId, phone, countryCode, operatorCode, type, note);
     }
 
     @Override
     public String toString() {
         return "PhoneNumberDTO{" +
                 "id=" + id +
-                ", contactID=" + contactID +
-                ", number=" + number +
+                ", contactId=" + contactId +
+                ", phone=" + phone +
                 ", countryCode=" + countryCode +
                 ", operatorCode=" + operatorCode +
                 ", type='" + type + '\'' +

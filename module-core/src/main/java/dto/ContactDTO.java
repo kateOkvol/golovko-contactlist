@@ -6,7 +6,7 @@ import entities.Contact;
 
 import java.sql.Date;
 
-public class ContactDTO {
+public class ContactDTO implements DTO{
 
     private Integer id;
     private String firstName;
