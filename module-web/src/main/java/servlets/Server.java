@@ -1,4 +1,4 @@
-package servlet;
+package servlets;
 
 import controllers.AttachmentController;
 import controllers.ContactsController;
@@ -6,6 +6,7 @@ import controllers.MainContactsController;
 import controllers.MainNumberController;
 import controllers.NumberController;
 
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 @WebServlet(name = "application", urlPatterns = {"/application"})
+@MultipartConfig
 public class Server extends HttpServlet {
 
     @Override
@@ -27,7 +29,6 @@ public class Server extends HttpServlet {
     }
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.addHeader("Access-Control-Allow-Origin", "*");
         try {
@@ -36,14 +37,13 @@ public class Server extends HttpServlet {
             e.printStackTrace();
         }
 
-        String command = request.getParameter("command");
-        System.out.println(command);
+        String command = request.getQueryString();
         try {
             switch (command) {
                 case "mainContacts":
                     mainContacts(response);
                     break;
-                case "deleteContacts":
+                case "deleteElementByURL":
                     deleteContact(request);
                     break;
                 case "createContact":
@@ -55,6 +55,9 @@ public class Server extends HttpServlet {
                 case "getContactById":
                     getContactById(request, response);
                     break;
+//                case "getAvatar":
+//                    getAvatar(request, response);
+//                    break;
                 case "mainPhones":
                     mainPhones(request, response);
                     break;
@@ -71,66 +74,106 @@ public class Server extends HttpServlet {
                     updatePhone(request);
                     break;
                 case "mainAttaches":
-                    mainAttaches(request);
+                    mainAttaches(request, response);
+                    break;
+                case "getAttachById":
+                    getAttachById(request, response);
+                    break;
+                case "createAttach":
+                    createAttach(request);
+                    break;
+                case "uploadAttach":
+                    uploadAttach(request, response);
+                    break;
+                case "uploadAva":
+                    uploadAva(request, response);
+                    break;
+                case "deleteAttach":
+                    deleteAttach(request);
+                    break;
+                case "updateAttach":
+                    updateAttach(request);
+                    break;
+                case "downloadAttach":
+                    downloadAttach(request, response);
+                    break;
             }
+            System.out.println(command + " finished");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private void mainContacts(HttpServletResponse response) throws IOException {
-        MainContactsController main = new MainContactsController(response);
-        main.searchContacts();
+        new MainContactsController().searchContacts(response);
     }
 
     private void createContact(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        ContactsController controller = new ContactsController(request, response);
-        controller.createContact();
+        new ContactsController().createContact(request, response);
     }
 
     private void updateContact(HttpServletRequest request) throws IOException {
-        ContactsController controller = new ContactsController(request);
-        controller.updateContact();
+        new ContactsController().updateContact(request);
     }
 
     private void deleteContact(HttpServletRequest request) throws IOException {
-        ContactsController controller = new ContactsController(request);
-        controller.deleteContact();
+        new ContactsController().deleteContact(request);
     }
 
     private void getContactById(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        ContactsController controller = new ContactsController(request, response);
-        controller.getContact();
+        new ContactsController().getContact(request, response);
     }
 
     private void mainPhones(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        MainNumberController main = new MainNumberController(request, response);
-        main.searchPhones();
+        new MainNumberController().searchPhones(request, response);
     }
 
     private void deletePhone(HttpServletRequest request) throws IOException {
-        NumberController controller = new NumberController(request);
-        controller.deletePhone();
+        new NumberController().deletePhone(request);
     }
 
     private void getPhoneById(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        NumberController controller = new NumberController(request, response);
-        controller.getPhone();
+        new NumberController().getPhone(request, response);
     }
 
     private void createPhone(HttpServletRequest request) throws IOException {
-        NumberController controller = new NumberController(request);
-        controller.createPhone();
+        new NumberController().createPhone(request);
     }
 
     private void updatePhone(HttpServletRequest request) throws IOException {
-        NumberController controller = new NumberController(request);
-        controller.updatePhone();
+        new NumberController().updatePhone(request);
     }
 
-    private void mainAttaches(HttpServletRequest request) throws IOException {
-        AttachmentController controller = new AttachmentController(request);
-        controller.searchAttaches();
+    private void mainAttaches(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        new AttachmentController().searchAttaches(request, response);
+    }
+
+    private void getAttachById(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        new AttachmentController().getAttach(request, response);
+    }
+
+    private void createAttach(HttpServletRequest request) throws IOException {
+        new AttachmentController().createAttach(request);
+    }
+
+    private void downloadAttach(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        new AttachmentController().download(response, request);
+    }
+
+    private void uploadAttach(HttpServletRequest request, HttpServletResponse response) {
+        new AttachmentController().uploadAttach(request, response);
+    }
+
+    private void deleteAttach(HttpServletRequest request) throws IOException {
+        new AttachmentController().deleteAttach(request);
+    }
+
+    private void updateAttach(HttpServletRequest request) throws IOException {
+        new AttachmentController().updateAttach(request);
+    }
+
+    private void uploadAva(HttpServletRequest request, HttpServletResponse response) {
+        new ContactsController().uploadAvatar(request, response);
     }
 }
 

@@ -6,6 +6,7 @@ import dto.ContactDTO;
 import entities.Contact;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class ContactService {
     private ContactDAOImpl dao;
@@ -29,7 +30,9 @@ public class ContactService {
     }
 
     public ContactDTO getById(Integer id) {
-        return new ContactDTO(dao.getById(id));
+        ContactDTO dto = new ContactDTO(dao.getById(id));
+        this.dto = dto;
+        return dto;
     }
 
     public void createContact() {
@@ -41,9 +44,8 @@ public class ContactService {
         dao.update(setContactFields());
     }
 
-    public void deleteContact(Integer id) {
-        this.dao.delete(id);
-
+    public List<String> deleteContact(Integer id) {
+        return this.dao.delete(id);
     }
 
     private Contact setContactFields() {
@@ -65,7 +67,11 @@ public class ContactService {
         contact.setHouse(dto.getHouse());
         contact.setFlat(dto.getFlat());
         contact.setZipCode(dto.getZipCode());
-
+        contact.setAvatar(dto.getAvatar());
         return contact;
+    }
+
+    public ContactDTO getDto() {
+        return dto;
     }
 }

@@ -9,7 +9,7 @@ function loadMain() {
 
 function addButtons() {
     const tableBodyId = "\"table-body\"";
-    const url = "\"application?command=deleteContacts\"";
+    const url = "\"application?deleteElementByURL\"";
     const parameters = tableBodyId + ", " + url;
     var buttonHTML = "<button type='submit' id='create' onclick='loadEditor(event, 0)'>Create</button>";
     buttonHTML += "<button type='submit' id='delete' onclick='deleteManager("+parameters+")'>Delete</button>";
@@ -17,7 +17,7 @@ function addButtons() {
 }
 
 function createTable() {
-    return fetch("application?command=mainContacts"
+    return fetch("application?mainContacts"
     )
         .then(response => {
             return response.json().catch(error => {

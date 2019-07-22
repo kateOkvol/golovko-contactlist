@@ -10,16 +10,11 @@ import java.util.List;
 
 
 public class MainContactsController {
-    private HttpServletResponse response;
 
     public MainContactsController() {
     }
 
-    public MainContactsController(HttpServletResponse response) {
-        this.response = response;
-    }
-
-    public void searchContacts() throws IOException {
+    public void searchContacts(HttpServletResponse response) throws IOException {
         List<MainContactDTO> list = new MainContactService().findAll();
         ObjectMapper mapper = new ObjectMapper();
         response.getWriter().write(

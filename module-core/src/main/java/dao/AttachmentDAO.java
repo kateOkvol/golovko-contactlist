@@ -13,5 +13,5 @@ public interface AttachmentDAO {
 
     void update(Attachment object);
 
-    void delete(Integer id);
+    String delete(Integer id);
 }

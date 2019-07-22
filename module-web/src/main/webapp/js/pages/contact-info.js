@@ -4,17 +4,18 @@ function loadEditor(event, id) {
     event.preventDefault();
     document.getElementById("main-contact").style.display = 'none';
     document.getElementById("contact-editor").style.display = 'block';
+    document.getElementById('h1').innerHTML = 'Contact Editor';
     checkId(id);
     showPhonesTable(contactId);
-    showAttach(contactId);
     showButtons();
 }
 
 function checkId(id) {
     contactId = id;
     if (id !== 0) {
-        fillInputs(id);
+        fillFields(id);
     } else {
+        showAttaches(null);
         showContactInputs(null);
         showAddressInputs(null);
     }
@@ -30,7 +31,7 @@ function showButtons() {
     document.getElementById("buttons").innerHTML = buttonHTML;
 }
 
-async function fillInputs(id) {
+async function fillFields(id) {
     const contactId = {id};
     console.log(contactId);
     const options = {
@@ -44,7 +45,7 @@ async function fillInputs(id) {
     console.log(options);
 
     let promise = await new Promise((resolve, reject) => {
-        return fetch("application?command=getContactById", options)
+        return fetch("application?getContactById", options)
             .then(response => {
                 return resolve(response.json());
             })
@@ -52,8 +53,7 @@ async function fillInputs(id) {
                 reject(new Error(error.message));
             })
     });
-
-
+    showAttaches(promise);
     showContactInputs(promise);
     showAddressInputs(promise);
 }
@@ -61,7 +61,7 @@ async function fillInputs(id) {
 
 function inputValues(info, promise) {
     document.getElementById(info).value = promise[info];
-    if (promise[info] == null) {
+    if (promise[info] == null || promise[info] === '' ) {
         document.getElementById(info).placeholder = 'fill the field';
     }
 }

@@ -1,12 +1,10 @@
 package controllers;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import controllers.utils.ControllerUtils;
 import dto.PhoneNumberDTO;
 import services.PhoneNumberService;
+import utils.ControllerUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,82 +12,48 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class NumberController {
-    private HttpServletRequest request;
-    private HttpServletResponse response;
-    private final ControllerUtils<PhoneNumberDTO> util;
+    private final ControllerUtils util;
 
 
     public NumberController() {
-        this.util = new ControllerUtils<>(PhoneNumberDTO.class);
+        this.util = new ControllerUtils();
     }
 
-    public NumberController(HttpServletRequest request){
-        this.request = request;
-        this.util = new ControllerUtils<>(PhoneNumberDTO.class);
-    }
 
-    public NumberController(HttpServletRequest request, HttpServletResponse response) {
-        this.request = request;
-        this.response = response;
-        this.util = new ControllerUtils<>(PhoneNumberDTO.class);
-    }
-
-    public void createPhone() throws IOException {
-        PhoneNumberDTO[] dto = parseIntoPhoneDTO(request);
+    public void createPhone(HttpServletRequest request) throws IOException {
+        PhoneNumberDTO[] dto = new ObjectMapper().convertValue(
+                util.prepareToDTO(request), PhoneNumberDTO[].class);;
         for (PhoneNumberDTO phone : dto) {
             new PhoneNumberService(phone).createPhoneNumber();
         }
     }
 
-    public void deletePhone() throws IOException {
-        String jsonString = util.processRequest(request);
-
+    public void deletePhone(HttpServletRequest request) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        JsonNode jsonNode = mapper.readTree(jsonString);
-        System.out.println(jsonNode);
-        ArrayList array = mapper.convertValue(jsonNode, ArrayList.class);
-
+        ArrayList array = mapper.convertValue(util.prepareToDTO(request), ArrayList.class);
         PhoneNumberService service = new PhoneNumberService();
-
         for (Object element : array) {
             service.deletePhoneNumber(Integer.parseInt((String) element));
         }
     }
 
-    public void getPhone() throws IOException {
-        PhoneNumberService service = new  PhoneNumberService();
-        String jsonString = util.processRequest(request);
-
+    public void getPhone(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        PhoneNumberService service = new PhoneNumberService();
         ObjectMapper mapper = new ObjectMapper();
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        JsonNode jsonNode = mapper.readTree(jsonString);
-        System.out.println(jsonNode.get("id").asInt());
+        Integer id = util.processId("id", request);
 
         response.getWriter().write(
                 mapper.writeValueAsString(
-                        service.getById(
-                                jsonNode.get("id").asInt())));
+                        service.getById(id)));
     }
 
-    public void updatePhone() throws IOException {
-        PhoneNumberDTO[] dto = parseIntoPhoneDTO(request);
+    public void updatePhone(HttpServletRequest request) throws IOException {
+        PhoneNumberDTO[] dto = new ObjectMapper().convertValue(
+                util.prepareToDTO(request), PhoneNumberDTO[].class);
         for (PhoneNumberDTO phone : dto) {
             new PhoneNumberService(phone).updatePhoneNumber();
         }
     }
 
-    private PhoneNumberDTO[] parseIntoPhoneDTO(HttpServletRequest request) throws IOException {
-        String jsonString = util.processRequest(request);
-
-        System.out.println(jsonString);
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.disable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
-        mapper.disable(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS);
-        mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
-
-        JsonNode jsonNode = mapper.readTree(jsonString);
-
-        return mapper.convertValue(jsonNode, PhoneNumberDTO[].class);
-    }
 }

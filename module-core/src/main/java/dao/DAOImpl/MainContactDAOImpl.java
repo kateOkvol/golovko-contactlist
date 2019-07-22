@@ -36,7 +36,6 @@ public class MainContactDAOImpl implements MainContactDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        //свой exception
         return list;
     }
 

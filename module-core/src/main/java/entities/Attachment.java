@@ -7,6 +7,7 @@ import java.util.Objects;
 public class Attachment {
     private Integer contactId;
     private Integer id;
+    private String attachName;
     private String path;
     private Date date;
     private String note;
@@ -28,6 +29,14 @@ public class Attachment {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getAttachName() {
+        return attachName;
+    }
+
+    public void setAttachName(String attachName) {
+        this.attachName = attachName;
     }
 
     public String getPath() {
@@ -73,7 +82,9 @@ public class Attachment {
     public String toString() {
         return "Attachment{" +
                 "contactId=" + contactId +
+                ", id=" + id +
                 ", path='" + path + '\'' +
+                ", attachName='" + attachName + '\'' +
                 ", date=" + date +
                 ", note='" + note + '\'' +
                 '}';

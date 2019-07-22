@@ -6,7 +6,6 @@ var inputForm;
 function loadPopupPhones(event, id) {
     event.preventDefault();
     checkPhoneId(id);
-
 }
 
 function checkPhoneId(id) {
@@ -79,7 +78,7 @@ function phonePopUpWindow() {
 
 function addPhonePopupButtons() {
     var textHTML = "<button id='phoneOk' type='submit' onclick='phonesSave()'>Ok</button>" +
-        "<button type='reset' onclick='cancelButton(\"phonesPopUp\")'>Cancel</button>";
+        "<button type='reset' onclick='cancelButton()'>Cancel</button>";
     document.getElementById('phone-popup-buttons').innerHTML = textHTML;
 }
 
@@ -97,7 +96,7 @@ async function fillPhoneInputs(id) {
     console.log(options);
 
     let promise = await new Promise((resolve, reject) => {
-        return fetch("application?command=getPhoneById", options)
+        return fetch("application?getPhoneById", options)
             .then(response => {
                 return resolve(response.json());
             })

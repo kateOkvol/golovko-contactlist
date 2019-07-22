@@ -2,77 +2,92 @@ package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import controllers.utils.ControllerUtils;
 import dto.ContactDTO;
 import services.ContactService;
+import utils.ControllerUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
 public class ContactsController {
-    private HttpServletRequest request;
-    private HttpServletResponse response;
-    private final ControllerUtils<ContactDTO> util;
+    private final ControllerUtils util;
+    private Properties properties = new Properties();
 
 
     public ContactsController() {
-        this.util = new ControllerUtils<>(ContactDTO.class);
+        this.util = new ControllerUtils();
+        try {
+            this.properties.load(AttachmentController.class.getClassLoader().getResourceAsStream("config-web.properties"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public ContactsController(HttpServletRequest request){
-        this.request = request;
-        this.util = new ControllerUtils<>(ContactDTO.class);
-    }
-
-    public ContactsController(HttpServletRequest request, HttpServletResponse response) {
-        this.request = request;
-        this.response = response;
-        this.util = new ControllerUtils<>(ContactDTO.class);
-    }
-
-    public void createContact() throws IOException {
-        ContactDTO dto = util.parseIntoDTO(request);
+    public void createContact(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        ContactDTO dto = new ObjectMapper().convertValue(
+                util.prepareToDTO(request), ContactDTO.class);
         ContactService service = new ContactService(dto);
         service.createContact();
-        String jsonString = "["+dto.getId()+"]";
+        String jsonString = "[" + dto.getId() + "]";
         response.getWriter().write(jsonString);
         System.out.println(jsonString);
     }
 
-    public void updateContact() throws IOException {
-        ContactDTO dto = util.parseIntoDTO(request);
+    public void updateContact(HttpServletRequest request) throws IOException {
+        ContactDTO dto = new ObjectMapper().convertValue(
+                util.prepareToDTO(request), ContactDTO.class);
         new ContactService(dto).updateContact();
     }
 
-    public void deleteContact() throws IOException {
-        String jsonString = util.processRequest(request);
+    public void deleteContact(HttpServletRequest request) throws IOException {
         ContactService service = new ContactService();
         ObjectMapper mapper = new ObjectMapper();
+
+        String jsonString = util.processRequest(request);
         JsonNode jsonNode = mapper.readTree(jsonString);
         System.out.println(jsonNode);
         ArrayList array = mapper.convertValue(jsonNode, ArrayList.class);
 
+        String filePath = properties.getProperty("file_path");
         for (Object element : array) {
-            service.deleteContact(Integer.parseInt((String) element));
+            List<String> files = service.deleteContact(Integer.parseInt((String) element));
+            for (String path : files
+            ) {
+                new File(filePath + path).delete();
+            }
         }
     }
 
-    public void getContact() throws IOException {
-        String jsonString = util.processRequest(request);
-
+    public void getContact(HttpServletRequest request, HttpServletResponse response) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        JsonNode jsonNode = mapper.readTree(jsonString);
-        System.out.println(jsonNode.get("id").asInt());
-
+        Integer id = util.processId("id", request);
+        ContactService service = new ContactService();
+        String path = service.getById(id).getAvatar();
+        if (path == null) {
+            service.getDto().setAvatar(properties.getProperty("ava_path") + "noAva.jpg");
+        } else {
+            service.getDto().setAvatar(properties.getProperty("ava_path") + path);
+        }
         response.getWriter().write(
                 mapper.writeValueAsString(
-                        new ContactService().getById(
-                                jsonNode.get("id").asInt())));
+                        service.getDto()));
     }
 
+    public void uploadAvatar(HttpServletRequest request, HttpServletResponse response){
+        String path = properties.getProperty("ava_upload_path");
+        util.uploadAttach(path, request, response);
+    }
 
+//    public void getAvatar(HttpServletRequest request, HttpServletResponse response) throws IOException {
+//        ContactService service = new ContactService();
+//        ObjectMapper mapper = new ObjectMapper();
+//        Integer id = util.processId("id", request);
+//        String filePath = properties.getProperty("ava_path") + "noAva.jpg";//service.getById(id).getAvatar();
+//        response.getWriter().write(mapper.writeValueAsString(filePath));//util.writeAttachResponse(filePath, response);
+//    }
 }

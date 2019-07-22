@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AttachmentService {
-    private static final String PATH = "C:\\Users\\okvol\\Desktop\\iTechArt\\attachments\\";
-
     private AttachmentDAOImpl dao;
     private AttachmentDTO dto;
 
@@ -53,18 +51,16 @@ public class AttachmentService {
         dao.update(setContactFields());
     }
 
-    public void deleteAttach(Integer id) {
-        this.dao.delete(id);
-
+    public String deleteAttach(Integer id) {
+        return this.dao.delete(id);
     }
 
     private Attachment setContactFields() {
         Attachment attachment = new Attachment();
         attachment.setId(dto.getId());
         attachment.setContactId(dto.getContactId());
-        if (!dto.getPath().isEmpty()) {
-            attachment.setPath(PATH + dto.getPath());
-        }
+        attachment.setPath(dto.getPath());
+        attachment.setAttachName(dto.getAttachName());
         attachment.setDate(dto.getDate());
         attachment.setNote(dto.getNote());
         return attachment;

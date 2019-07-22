@@ -24,7 +24,7 @@ public class MainNumberDAOImpl implements MainNumberDAO {
     public List<MainNumber> getAll(Integer contactId) {
         List<MainNumber> list = null;
         String sql = "SELECT contact_id, id, concat_ws(' ', country_code, operator_code, phone) " +
-                "AS full_number, type::contacts.phone_type, note " +
+                "AS full_number, type::contacts.phone_type, regexp_replace(note, '\\s+$', '') as note " +
                 "FROM contacts.number " +
                 "WHERE contact_id = ?;";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {

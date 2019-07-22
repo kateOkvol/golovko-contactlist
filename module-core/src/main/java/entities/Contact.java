@@ -22,6 +22,7 @@ public class Contact {
     private String street;
     private String house;
     private String flat;
+    private String avatar;
 
     public Contact() {
     }
@@ -166,6 +167,14 @@ public class Contact {
 
     public void setFlat(String flat) {
         this.flat = flat;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     @Override

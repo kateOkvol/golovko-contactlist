@@ -26,6 +26,7 @@ public class ContactDTO implements DTO{
     private String street;
     private String house;
     private String flat;
+    private String avatar;
 
     public ContactDTO() {
     }
@@ -48,6 +49,7 @@ public class ContactDTO implements DTO{
         this.street = contact.getStreet();
         this.house = contact.getHouse();
         this.flat = contact.getFlat();
+        this.avatar = contact.getAvatar();
     }
 
     public Integer getId() {
@@ -186,6 +188,14 @@ public class ContactDTO implements DTO{
         this.flat = flat;
     }
 
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
     @Override
     public String toString() {
         return "ContactDTO{" +
@@ -206,6 +216,7 @@ public class ContactDTO implements DTO{
                 ", street='" + street + '\'' +
                 ", house='" + house + '\'' +
                 ", flat='" + flat + '\'' +
+                ", avatar='" + avatar + '\'' +
                 '}';
     }
 }

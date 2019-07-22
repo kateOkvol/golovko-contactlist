@@ -4,6 +4,7 @@ import dao.ContactDAO;
 import entities.Contact;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -43,9 +44,22 @@ public class ContactDAOImpl implements ContactDAO {
     @Override
     public Contact getById(Integer id) {
         Contact contact = new Contact();
-        String sql = "SELECT id, first_name, last_name, middle_name, gender::contacts.gender, " +
-                "birth_date, citizenship, marital_status::contacts.marital_status, web_site, email, company, " +
-                "country, city, street, house, flat, zip_code " +
+        String sql = "SELECT id, regexp_replace(first_name, '\\s+$', '') AS first_name, " +
+                "regexp_replace(last_name, '\\s+$', '') AS last_name, " +
+                "regexp_replace(middle_name, '\\s+$', '') AS middle_name, " +
+                "gender::contacts.gender, " +
+                "birth_date, " +
+                "regexp_replace(citizenship, '\\s+$', '') AS citizenship, " +
+                "marital_status::contacts.marital_status, " +
+                "regexp_replace(web_site, '\\s+$', '') AS web_site, " +
+                "regexp_replace(email, '\\s+$', '') AS email, " +
+                "regexp_replace(company, '\\s+$', '') AS company, " +
+                "regexp_replace(country, '\\s+$', '') AS country, " +
+                "regexp_replace(city, '\\s+$', '') AS city, " +
+                "regexp_replace(street, '\\s+$', '') AS street, " +
+                "regexp_replace(house, '\\s+$', '') AS house, " +
+                "regexp_replace(flat, '\\s+$', '') AS flat, " +
+                "zip_code, avatar " +
                 "FROM contacts.contact WHERE id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);
@@ -59,13 +73,30 @@ public class ContactDAOImpl implements ContactDAO {
     }
 
     @Override
+    public List<Contact> getByBirthDate(Date date) {
+        List<Contact> list = null;
+        String sql = "SELECT first_name, middle_name, last_name " +
+                "FROM contacts.contact WHERE birth_date = ?::date;";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setDate(1, date);
+            ResultSet resultSet = statement.executeQuery();
+            list = parseResultSet(resultSet);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        //свой exception
+        return list;
+
+    }
+
+    @Override
     public void update(Contact contact) {
         String sql = "UPDATE contacts.contact SET first_name = ?, last_name = ?, middle_name = ?, gender = ?::contacts.gender, " +
                 "birth_date = ?, citizenship = ?, marital_status = ?::contacts.marital_status, web_site = ?, email = ?, company = ?, " +
-                "country = ?, city = ?, street = ?, house = ?, flat = ?, zip_code = ?  WHERE id = ?;";
+                "country = ?, city = ?, street = ?, house = ?, flat = ?, zip_code = ?, avatar = ? WHERE id = ?;";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             partOfPrepare(statement, contact);
-            statement.setInt(17, contact.getId());
+            statement.setInt(18, contact.getId());
             int count = statement.executeUpdate();
             if (count != 1) {
                 System.out.println("contact update exception");
@@ -76,16 +107,26 @@ public class ContactDAOImpl implements ContactDAO {
     }
 
     @Override
-    public void delete(Integer id) {
-        String sql = "DELETE FROM contacts.number WHERE contact_id = ?;" +
-                "DELETE FROM contacts.contact WHERE id = ?;";
+    public List<String> delete(Integer id) {
+        String sql = "DELETE FROM contacts.attachments WHERE contact_id = ? RETURNING path;" +
+                "DELETE FROM contacts.number WHERE contact_id = ?;" +
+                "DELETE FROM contacts.contact WHERE id = ? RETURNING avatar;";
+        LinkedList<String> list = new LinkedList<>();
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setObject(1, id);
             statement.setObject(2, id);
+            statement.setObject(3, id);
+
+            ResultSet set = statement.executeQuery();
+            while (set.next()){
+                list.add(set.getString(1));
+                list.add(set.getString(2));
+            }
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return list;
     }
 
     private List<Contact> parseResultSet(ResultSet set) {
@@ -110,6 +151,7 @@ public class ContactDAOImpl implements ContactDAO {
                 contact.setHouse(set.getString("house"));
                 contact.setFlat(set.getString("flat"));
                 contact.setZipCode((Integer) set.getObject("zip_code"));
+                contact.setAvatar(set.getString("avatar"));
                 list.add(contact);
             }
         } catch (SQLException s) {
@@ -135,6 +177,7 @@ public class ContactDAOImpl implements ContactDAO {
         statement.setObject(14, contact.getHouse());
         statement.setObject(15, contact.getFlat());
         statement.setObject(16, contact.getZipCode());
+        statement.setObject(17, contact.getAvatar());
     }
 
 }

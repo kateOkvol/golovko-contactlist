@@ -39,7 +39,7 @@ public class PhoneNumberDAOImpl implements PhoneNumberDAO {
     @Override
     public PhoneNumber getById(Integer id) {
         PhoneNumber phoneNumber = new PhoneNumber();
-        String sql = "SELECT id, contact_id, phone, country_code, operator_code, note, type::contacts.phone_type " +
+        String sql = "SELECT id, contact_id, phone, country_code, operator_code, regexp_replace(note, '\\s+$', '') as note, type::contacts.phone_type " +
                 "FROM contacts.number WHERE id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);

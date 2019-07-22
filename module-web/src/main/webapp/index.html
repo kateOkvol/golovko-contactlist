@@ -15,7 +15,9 @@
     <script type="text/javascript" src="js/showScripts/showPnonesTable.js"></script>
     <script type="text/javascript" src="js/showScripts/showPhonePopup.js"></script>
     <script type="text/javascript" src="js/showScripts/showAttachmentsScript.js"></script>
-    <script type="text/javascript" src="js/contactActions/deleteContacts.js"></script>
+    <script type="text/javascript" src="js/showScripts/showAttachTable.js"></script>
+    <script type="text/javascript" src="js/showScripts/showAttachPopup.js"></script>
+    <script type="text/javascript" src="js/contactActions/deleteElementByURL.js"></script>
     <script type="text/javascript" src="js/contactActions/saveFunction.js"></script>
 
 
@@ -29,7 +31,7 @@
 </head>
 <body onload="manageScripts()">
 
-<h1>Contacts List: </h1>
+<h1 id="h1">Contacts List: </h1>
 
 <div id="contact-editor">
     <div id='forms'>
@@ -49,12 +51,12 @@
         </fieldset>
         <div style="display: inline-block; vertical-align: top">
             <div id="phones-layout">
-                <div id="phones-buttons"></div>
+                <div class="table-buttons" id="phones-buttons"></div>
                 <table id="phones-table"></table>
                 <div class="modal-window" id="phones-window"></div>
             </div>
             <div id="attachment-layout">
-                <div id="attachButtons"></div>
+                <div class="table-buttons" id="attach-buttons"></div>
                 <table id="attach-table"></table>
                 <div class="modal-window" id="attach-window"></div>
             </div>

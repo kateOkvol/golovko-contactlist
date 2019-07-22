@@ -1,6 +1,10 @@
 function showPhonesTable(contactId) {
     addPhonesButtons();
-    createPhonesTable(contactId);
+    if (contactId === 0) {
+        phonesTableHTML();
+    } else {
+        createPhonesTable(contactId);
+    }
 }
 
 function phonesTableHTML() {
@@ -24,20 +28,19 @@ function phonesTableHTML() {
 }
 
 function createPhonesTable(contactId) {
+    let url = "application?mainPhones";
+    let options = {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({"contactId": contactId})
+    };
 
-    return fetch("application?command=mainPhones", {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({"contactId": contactId})
-        }
-    )
+    return fetch(url, options)
         .then(response => {
-            return response.json().catch(error => {
-                return Promise.reject(new Error('Invalid JSON: ' + error.message));
-            });
+            return response.json()
         })
         .then(response => {
             const phonesList = response;
@@ -53,7 +56,7 @@ function createPhonesTable(contactId) {
 }
 
 function addPhonesButtons() {
-    const url = "application?command=deletePhone";
+    const url = "application?deletePhone";
     const tableBodyId = "phone-table-body";
 
     let buttonHTML = "<button type='submit' id='create' onclick='loadPopupPhones(event, 0)'>Create</button>";

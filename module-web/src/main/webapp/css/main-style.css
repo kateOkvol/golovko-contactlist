@@ -3,13 +3,13 @@ body {
     padding: 0;
     margin: 0;
     /*   font-family: Calibri, monospace ;*/
-
 }
 
 h1 {
     font-size: 300%;
     text-align: center;
-    background-color: #EAFFF9;
+    background-color: black;
+    color: #EAFFF9;
     padding: 0;
     margin: 0 0 5%;
 }
@@ -40,7 +40,7 @@ button {
     color: #183E33;
     text-decoration: none;
     user-select: none;
-    background-color: #7AC1AC;
+    background-color: #1DAFAC;
     /*025038*/
     border: 1px;
     border-bottom-color: #183E33;
@@ -55,6 +55,8 @@ button:hover {
 button:active{
     background-color: #113128;
 }
+
+
 form {
     align-self: baseline;
     align-content: center;
@@ -69,7 +71,7 @@ a:link {
 }
 
 a:visited {
-    color: #7AC1AC;
+    color: #1DAFAC;
 }
 
 input{
@@ -88,6 +90,30 @@ select{
 fieldset{
     align-self: auto;
     margin: auto;
-    border-color:  #7AC1AC;
+    border-color:  #1DAFAC;
     border-width: 1px;
+}
+
+.input-label {
+    font-size: 0.75em;
+    font-family: Arial, serif;
+    position: relative;
+    display: inline-block;
+    color: #183E33;
+    text-decoration: none;
+    user-select: none;
+    background-color: #1DAFAC;
+    /*025038*/
+    border: 1px;
+    border-bottom-color: #183E33;
+    padding: 0.5em 1em;
+    outline: none;
+    margin: 0.5% 0.1%;
+}
+
+.input-label:hover {
+    background-color: #8EE6CC;
+}
+.input-label:active{
+    background-color: #113128;
 }
