@@ -4,13 +4,15 @@ import java.util.List;
 import java.util.Objects;
 
 public class EmailMessage {
+    private String topic;
     private String message;
     private List<String> recipients;
 
     public EmailMessage() {
     }
 
-    public EmailMessage(String message, List<String> recipients) {
+    public EmailMessage(String message, String topic, List<String> recipients) {
+        this.topic = topic;
         this.message = message;
         this.recipients = recipients;
     }
@@ -29,6 +31,14 @@ public class EmailMessage {
 
     public void setRecipients(List<String> recipients) {
         this.recipients = recipients;
+    }
+
+    public String getTopic() {
+        return topic;
+    }
+
+    public void setTopic(String topic) {
+        this.topic = topic;
     }
 
     @Override

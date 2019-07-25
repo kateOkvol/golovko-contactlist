@@ -1,6 +1,5 @@
 package controllers;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dto.ContactDTO;
 import services.ContactService;
@@ -45,19 +44,13 @@ public class ContactsController {
     }
 
     public void deleteContact(HttpServletRequest request) throws IOException {
+        String filePath = properties.getProperty("file_path");
         ContactService service = new ContactService();
         ObjectMapper mapper = new ObjectMapper();
-
-        String jsonString = util.processRequest(request);
-        JsonNode jsonNode = mapper.readTree(jsonString);
-        System.out.println(jsonNode);
-        ArrayList array = mapper.convertValue(jsonNode, ArrayList.class);
-
-        String filePath = properties.getProperty("file_path");
+        ArrayList array = mapper.convertValue(util.prepareToDTO(request), ArrayList.class);
         for (Object element : array) {
             List<String> files = service.deleteContact(Integer.parseInt((String) element));
-            for (String path : files
-            ) {
+            for (String path : files) {
                 new File(filePath + path).delete();
             }
         }

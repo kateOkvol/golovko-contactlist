@@ -3,13 +3,15 @@ package dto;
 import java.util.List;
 
 public class EmailMessageDTO implements DTO {
+    private String topic;
     private String message;
     private List<String> recipients;
 
     public EmailMessageDTO() {
     }
 
-    public EmailMessageDTO(String message, List<String> recipients) {
+    public EmailMessageDTO(String message, String topic, List<String> recipients) {
+        this.topic = topic;
         this.message = message;
         this.recipients = recipients;
     }
@@ -28,6 +30,14 @@ public class EmailMessageDTO implements DTO {
 
     public void setRecipients(List<String> recipients) {
         this.recipients = recipients;
+    }
+
+    public String getTopic() {
+        return topic;
+    }
+
+    public void setTopic(String topic) {
+        this.topic = topic;
     }
 
     @Override

@@ -8,8 +8,9 @@
     <script src="https://cdn.polyfill.io/v2/polyfill.js?features=fetch,Promise"></script>
 
     <script type="text/javascript" src="js/managers/script-manager.js"></script>
-    <script type="text/javascript" src="js/pages/mainScript.js"></script>
-    <script type="text/javascript" src="js/pages/contact-info.js"></script>
+    <script type="text/javascript" src="js/pages/contact-list.js"></script>
+    <script type="text/javascript" src="js/pages/contact-editor.js"></script>
+    <script type="text/javascript" src="js/pages/email.js"></script>
     <script type="text/javascript" src="js/showScripts/showContactScript.js"></script>
     <script type="text/javascript" src="js/showScripts/showAddressScript.js"></script>
     <script type="text/javascript" src="js/showScripts/showPnonesTable.js"></script>
@@ -25,25 +26,25 @@
         @import "css/main-style.css";
         @import "css/popUpWindow.css";
     </style>
-    <!--
-    <link rel="stylesheet" href="css/main-style.css" media="all"/>
-    -->
 </head>
-<body onload="manageScripts()">
+<body onload="loadMain()">
 
 <h1 id="h1">Contacts List: </h1>
 
-<div id="contact-editor">
-    <div id='forms'>
+<div id="main-contact" style="width: fit-content; margin: auto">
+    <div id="main-buttons" style="display: block;padding: auto"></div>
+    <table id="contact-table"></table>
+</div>
 
+<div id="contact-editor" style="display: none">
+    <div id='forms'>
         <fieldset style="display: inline-block; border: 0">
             <div id='avatar'>
             </div>
-
-        <fieldset>
-            <legend aria-label="center">Contact Address</legend>
-            <div id='addressContent'></div>
-        </fieldset>
+            <fieldset>
+                <legend aria-label="center">Contact Address</legend>
+                <div id='addressContent'></div>
+            </fieldset>
         </fieldset>
         <fieldset style="display: inline-block">
             <legend aria-label="center">Personal data</legend>
@@ -61,16 +62,39 @@
                 <div class="modal-window" id="attach-window"></div>
             </div>
         </div>
-
     </div>
     <div id='buttons'></div>
 </div>
 
-<div id="main-contact">
-    <table id="contact-table"></table>
-    <div id="main-buttons" align="center"></div>
+<div id="email-page" style="display: none; width: fit-content; align-self: center">
+    <fieldset id="recipients">
+        <label>To whom: </label>
+        <label id="names"></label>
+    </fieldset>
+    <fieldset id="topic">
+        <label>Topic:
+            <input id="topic-input" placeholder="enter topic name" size="200%">
+        </label>
+    </fieldset>
+    <fieldset>
+        <form>
+            <label>
+                Template:
+                <select id="templ-select">
+                    <option value='' selected>not chosen</option>
+                    <option value='birthday' onclick="">Birthday</option>
+                    <option value='newYear'>New Year</option>
+                </select>
+            </label>
+        </form>
+        <form>
+            <label>
+                <textarea id="message-area" placeholder="enter your message"></textarea>
+            </label>
+        </form>
+    </fieldset>
+    <div id='email-buttons'></div>
 </div>
-
 
 </body>
 </html>

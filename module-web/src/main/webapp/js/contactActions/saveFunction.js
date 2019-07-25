@@ -15,7 +15,7 @@ function buttonSave() {
             manageSave(id);
         })
     }
-    manageScripts();
+    manageScripts('contact-editor');
 }
 
 function contactCreate(url, data) {

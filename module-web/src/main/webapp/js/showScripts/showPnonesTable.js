@@ -58,7 +58,6 @@ function createPhonesTable(contactId) {
 function addPhonesButtons() {
     const url = "application?deletePhone";
     const tableBodyId = "phone-table-body";
-
     let buttonHTML = "<button type='submit' id='create' onclick='loadPopupPhones(event, 0)'>Create</button>";
     buttonHTML += "<button type='submit' id='delete' onclick='deleteManager(\"" + tableBodyId + "\",\"" + url + "\")'>Delete</button>";
     document.getElementById("phones-buttons").innerHTML = buttonHTML;

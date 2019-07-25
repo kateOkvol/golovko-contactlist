@@ -1,6 +1,6 @@
 package servlets;
 
-import email.Quartz;
+import email.QuartzJob;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
@@ -12,23 +12,25 @@ import org.quartz.impl.StdSchedulerFactory;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import javax.servlet.annotation.WebListener;
 
-@WebListener
 public class QuartsListener implements ServletContextListener {
     private Scheduler scheduler;
+
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-        JobDetail job = JobBuilder.newJob(Quartz.class)
-                        .withIdentity("job", "group").build();
-        Trigger trigger = TriggerBuilder.newTrigger()
-                .withIdentity("job", "group")
-                .withSchedule(CronScheduleBuilder.cronSchedule("10 0 * * * ?"))   //at midnight everyday
-                .build();
         try {
+            JobDetail job = JobBuilder.newJob(QuartzJob.class)
+                    .withIdentity("job", "group").build();
+            Trigger trigger = TriggerBuilder.newTrigger()
+                    .withIdentity("trigger", "group")
+                    .forJob(job)
+                    .withSchedule(CronScheduleBuilder.cronSchedule("0 0 0 * * ?"))   //at midnight everyday
+                    .build();
+
             scheduler = new StdSchedulerFactory().getScheduler();
+            scheduler.scheduleJob(job, trigger);
             scheduler.start();
-            scheduler.scheduleJob(job,trigger);
+
         } catch (SchedulerException e) {
             e.printStackTrace();
         }

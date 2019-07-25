@@ -1,4 +1,4 @@
-var contactId;
+let contactId;
 
 function loadEditor(event, id) {
     event.preventDefault();
@@ -25,7 +25,7 @@ function showButtons() {
     let buttonHTML = "<button type='submit' id= 'save-contact' onclick='buttonSave()'>" +
         "Save" +
         "</button> " +
-        "<button type='reset' id= 'cancel-creator' onclick='cancelButton()'>" +
+        "<button type='reset' id= 'cancel-creator' onclick='cancelButton(\"contact-editor\")'>" +
         "Cancel" +
         "</button> ";
     document.getElementById("buttons").innerHTML = buttonHTML;
@@ -66,8 +66,8 @@ function inputValues(info, promise) {
     }
 }
 
-function cancelButton() {
+function cancelButton(element) {
     if (confirm("Are you sure? You lose all the changes.")){
-        manageScripts();
+            manageScripts(element);
     }
 }

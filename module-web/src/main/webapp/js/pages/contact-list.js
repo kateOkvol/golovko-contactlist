@@ -12,7 +12,8 @@ function addButtons() {
     const url = "\"application?deleteElementByURL\"";
     const parameters = tableBodyId + ", " + url;
     var buttonHTML = "<button type='submit' id='create' onclick='loadEditor(event, 0)'>Create</button>";
-    buttonHTML += "<button type='submit' id='delete' onclick='deleteManager("+parameters+")'>Delete</button>";
+    buttonHTML += "<button type='submit' id='delete' onclick='deleteManager("+parameters+")'>Delete</button>" +
+        "<button type='submit' id='email-button' onclick='manageScripts(\"main-contact\", \"email-page\");'>Send email</button>";
     document.getElementById("main-buttons").innerHTML = buttonHTML;
 }
 

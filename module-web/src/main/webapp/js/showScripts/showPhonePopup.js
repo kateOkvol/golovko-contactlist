@@ -152,7 +152,7 @@ function phonesSave() {
         document.getElementById('type' + phoneId).innerHTML = type;
         document.getElementById('note' + phoneId).innerHTML = note;
     }
-    manageScripts();
+    manageScripts("phone-window");
 }
 
 function inputNotNull(countryCode, operatorCode, phone) {

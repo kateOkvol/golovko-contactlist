@@ -2,6 +2,7 @@ package servlets;
 
 import controllers.AttachmentController;
 import controllers.ContactsController;
+import controllers.EmailMessageController;
 import controllers.MainContactsController;
 import controllers.MainNumberController;
 import controllers.NumberController;
@@ -55,9 +56,6 @@ public class Server extends HttpServlet {
                 case "getContactById":
                     getContactById(request, response);
                     break;
-//                case "getAvatar":
-//                    getAvatar(request, response);
-//                    break;
                 case "mainPhones":
                     mainPhones(request, response);
                     break;
@@ -97,9 +95,15 @@ public class Server extends HttpServlet {
                 case "downloadAttach":
                     downloadAttach(request, response);
                     break;
+                case"getTemplates":
+                    getTemplates(response);
+                    break;
+                case "sendEmail":
+                    sendEmail(request);
+                    break;
             }
             System.out.println(command + " finished");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -174,6 +178,14 @@ public class Server extends HttpServlet {
 
     private void uploadAva(HttpServletRequest request, HttpServletResponse response) {
         new ContactsController().uploadAvatar(request, response);
+    }
+
+    private void getTemplates(HttpServletResponse response) throws IOException {
+        new EmailMessageController().getTemplates(response);
+    }
+
+    private void sendEmail(HttpServletRequest request) throws Exception {
+        new EmailMessageController().sendEmail(request);
     }
 }
 

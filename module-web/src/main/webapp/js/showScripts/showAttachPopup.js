@@ -92,7 +92,7 @@ function attachSave(promise) {
             document.getElementById('date' + attachId).innerHTML = date;
             document.getElementById('attachNote' + attachId).innerHTML = note;
         }
-        manageScripts();
+        manageScripts('attach-window');
     }, false);
 }
 

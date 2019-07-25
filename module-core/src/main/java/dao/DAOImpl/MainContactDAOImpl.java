@@ -26,7 +26,9 @@ public class MainContactDAOImpl implements MainContactDAO {
     public List<MainContact> getAll() {
         List<MainContact> list = null;
 
-        String sql = "SELECT id, concat_ws(' ', first_name, middle_name, last_name) " +
+        String sql = "SELECT id, concat_ws(' ', regexp_replace(first_name, '\\s+$', ''), " +
+                "regexp_replace(last_name, '\\s+$', ''), " +
+                "regexp_replace(middle_name, '\\s+$', '')) " +
                 "AS full_name, birth_date, " +
                 "concat_ws(', ', country, city) AS address, company " +
                 "FROM contacts.contact ;";
