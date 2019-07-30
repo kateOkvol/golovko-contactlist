@@ -23,6 +23,17 @@ public class MainContactDAOImpl implements MainContactDAO {
         this.connection = connection;
     }
 
+    public Integer countContacts() {
+        String sql = "SELECT count(*) FROM contacts.contact ";
+        Integer result = null;
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            ResultSet resultSet = statement.executeQuery();
+            result = resultSet.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 
     @Override
     public List<MainContact> getAll(int page) {
@@ -39,7 +50,7 @@ public class MainContactDAOImpl implements MainContactDAO {
                 "AS full_name, birth_date, " +
                 "concat_ws(', ', regexp_replace(country, '\\s+$', ''), " +
                 "regexp_replace(city, '\\s+$', '')) AS address, company " +
-                "FROM contacts.contact limit " + amount +" offset "+ amount * (page - 1) +   ";";
+                "FROM contacts.contact limit " + amount + " offset " + amount * (page - 1) + ";";
         return processGetReq(sql);
     }
 
