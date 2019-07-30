@@ -20,21 +20,23 @@ public class NumberController {
     }
 
 
-    public void createPhone(HttpServletRequest request) throws IOException {
+    public void createPhone(HttpServletRequest request, HttpServletResponse response) throws IOException {
         PhoneNumberDTO[] dto = new ObjectMapper().convertValue(
                 util.prepareToDTO(request), PhoneNumberDTO[].class);;
         for (PhoneNumberDTO phone : dto) {
             new PhoneNumberService(phone).createPhoneNumber();
         }
+        response.setStatus(200);
     }
 
-    public void deletePhone(HttpServletRequest request) throws IOException {
+    public void deletePhone(HttpServletRequest request, HttpServletResponse response) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         ArrayList array = mapper.convertValue(util.prepareToDTO(request), ArrayList.class);
         PhoneNumberService service = new PhoneNumberService();
         for (Object element : array) {
             service.deletePhoneNumber(Integer.parseInt((String) element));
         }
+        response.setStatus(200);
     }
 
     public void getPhone(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -48,12 +50,13 @@ public class NumberController {
                         service.getById(id)));
     }
 
-    public void updatePhone(HttpServletRequest request) throws IOException {
+    public void updatePhone(HttpServletRequest request, HttpServletResponse response) throws IOException {
         PhoneNumberDTO[] dto = new ObjectMapper().convertValue(
                 util.prepareToDTO(request), PhoneNumberDTO[].class);
         for (PhoneNumberDTO phone : dto) {
             new PhoneNumberService(phone).updatePhoneNumber();
         }
+        response.setStatus(200);
     }
 
 }

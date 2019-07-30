@@ -40,13 +40,13 @@ public class ContactsController {
         System.out.println(jsonString);
     }
 
-    public void updateContact(HttpServletRequest request) throws IOException {
+    public void updateContact(HttpServletRequest request, HttpServletResponse response) throws IOException {
         ContactDTO dto = new ObjectMapper().convertValue(
                 util.prepareToDTO(request), ContactDTO.class);
         new ContactService(dto).updateContact();
     }
 
-    public void deleteContacts(HttpServletRequest request) throws IOException {
+    public void deleteContacts(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String filePath = properties.getProperty("file_path");
         ContactService service = new ContactService();
         ObjectMapper mapper = new ObjectMapper();
@@ -57,6 +57,7 @@ public class ContactsController {
                 new File(filePath + path).delete();
             }
         }
+        response.setStatus(200);
     }
 
     public void getContact(HttpServletRequest request, HttpServletResponse response) throws IOException {

@@ -17,17 +17,18 @@ public class EmailMessageController {
         this.util = new ControllerUtils();
     }
 
-    public void getTemplates(HttpServletResponse response) throws IOException {
+    public void getTemplates(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Map templates = new EmailMessageService().getTemplatesMap();
         ObjectMapper mapper = new ObjectMapper();
         response.getWriter().write(
                 mapper.writeValueAsString(templates));
     }
 
-    public void sendEmail(HttpServletRequest request) throws Exception {
+    public void sendEmail(HttpServletRequest request, HttpServletResponse response) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         EmailMessageService service = new EmailMessageService();
         EmailMessageDTO email = mapper.convertValue(util.prepareToDTO(request), EmailMessageDTO.class);
         service.sendEmail(email);
+        response.setStatus(200);
     }
 }

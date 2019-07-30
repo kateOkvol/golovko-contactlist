@@ -45,16 +45,16 @@ public class AttachmentController {
                         service.getById(id)));
     }
 
-    public void createAttach(HttpServletRequest request) throws IOException {
+    public void createAttach(HttpServletRequest request, HttpServletResponse response) throws IOException {
         AttachmentDTO[] elements = new ObjectMapper().convertValue(
                 util.prepareToDTO(request), AttachmentDTO[].class);
         for (AttachmentDTO dto : elements) {
             new AttachmentService(dto).createAttach();
         }
-
+        response.setStatus(200);
     }
 
-    public void deleteAttach(HttpServletRequest request) throws IOException {
+    public void deleteAttach(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String filePath = properties.getProperty("file_path");
         ObjectMapper mapper = new ObjectMapper();
         ArrayList array = mapper.convertValue(util.prepareToDTO(request), ArrayList.class);
@@ -63,6 +63,7 @@ public class AttachmentController {
             String path = service.deleteAttach(Integer.parseInt((String) element));
             new File(filePath + path).delete();
         }
+        response.setStatus(200);
     }
 
     public void uploadAttach(HttpServletRequest request, HttpServletResponse response) {
@@ -70,15 +71,16 @@ public class AttachmentController {
         util.uploadAttach(path, request, response);
     }
 
-    public void updateAttach(HttpServletRequest request) throws IOException {
+    public void updateAttach(HttpServletRequest request, HttpServletResponse response) throws IOException {
         AttachmentDTO[] elements = new ObjectMapper().convertValue(
                 util.prepareToDTO(request), AttachmentDTO[].class);
         for (AttachmentDTO dto : elements) {
             new AttachmentService(dto).updateAttach();
         }
+        response.setStatus(200);
     }
 
-    public void download(HttpServletResponse response, HttpServletRequest request) throws IOException {
+    public void download(HttpServletRequest request, HttpServletResponse response) throws IOException {
         AttachmentService service = new AttachmentService();
         Integer id = util.processId("id", request);
         String fileName = properties.getProperty("file_path") + service.getById(id).getPath();
