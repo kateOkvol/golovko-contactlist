@@ -1,7 +1,7 @@
 function showAttachTable(contactId) {
     addAttachButtons();
     if (contactId === 0) {
-        AttachTableHTML();
+        document.getElementById("attach-table").innerHTML ="<tr><th>&#10004</th><th>File name</th><th>Date of download</th><th>Note</th></tr>";
     } else {
         createAttachTable(contactId);
     }
@@ -9,7 +9,7 @@ function showAttachTable(contactId) {
 }
 
 function AttachTableHTML() {
-    var tableHTML = "<script type='text/html-template' id='template-attach-table'>";
+    let tableHTML =         "<script type='text/html-template' id='template-attach-table'>";
     tableHTML += "<tr>";
     tableHTML += "<th>&#10004</th><th>File name</th><th>Date of download</th><th>Note</th>";
     tableHTML += "<tbody id='attach-table-body'>";
@@ -17,7 +17,8 @@ function AttachTableHTML() {
     tableHTML += "{{#.}}";
     tableHTML += "<tr>";
     tableHTML += "<td><input class='messageCheckbox' type='checkbox' name='delete' id='attach{{id}}'></td>";
-    tableHTML += "<td><a id='attachName{{id}}' onclick='downloadAttachFetch(id)' style='cursor:pointer'>{{attachName}}</a></td> " +
+    tableHTML += "<td id='attachName{{id}}' style='cursor: pointer' onclick='downloadAttachFetch(id)'>{{attachName}}</td> " +
+        "<a id='a{{id}}' style='display: none' href=''>href</a>" +
         "<td id='date{{id}}'> {{date}}</td>" +
         "<td id='attachNote{{id}}'> {{note}}</td>";
     tableHTML += "</tr>";
@@ -89,7 +90,7 @@ function downloadAttachFetch(attachmentId) {
                         let header = response.headers.get("Content-Disposition");
                         let name = header.split('=', 2)[1];
                         let file = new Blob([responseFile], {type: 'application/octet-stream'});
-                        let aTeg = document.getElementById(attachmentId);
+                        let aTeg = document.getElementById('a'+number);
                         aTeg.href = URL.createObjectURL(file);
                         aTeg.download = name;
                         aTeg.click();

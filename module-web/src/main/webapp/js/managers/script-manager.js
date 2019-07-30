@@ -1,5 +1,5 @@
 function manageScripts(element, pageId) {
-//pageId - id of active div
+//pageId - id of page to go
     switch (element) {
         case("phones-window"):
             document.getElementById(element).style.display = 'none';
@@ -7,6 +7,7 @@ function manageScripts(element, pageId) {
         case("attach-window"):
             document.getElementById(element).style.display = 'none';
             break;
+        case("search-page"):
         case("contact-editor"):
         case("email-page"):
             document.getElementById(element).style.display = 'none';
@@ -17,12 +18,16 @@ function manageScripts(element, pageId) {
         case("main-contact"):
             document.getElementById(element).style.display = 'none';
             document.getElementById(pageId).style.display = 'block';
-            if (pageId === 'contact-editor') {
-                loadEditor(event, 0);
+            switch (pageId) {
+                case 'contact-editor':
+                    loadEditor(event, 0);
+                    break;
+                case'email-page':
+                    loadEmail(event);
+                    break;
+                case'search-page':
+                    loadSearch(event);
+                    break;
             }
-            if (pageId === 'email-page') {
-                loadEmail(event);
-            }
-            break;
     }
 }

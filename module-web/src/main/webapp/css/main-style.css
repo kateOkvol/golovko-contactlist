@@ -49,13 +49,16 @@ button {
     margin: 0.5% 0.1%;
 }
 
+button:disabled{
+    background-color: darkgrey;
+}
+
 button:hover {
     background-color: #8EE6CC;
 }
 button:active{
     background-color: #113128;
 }
-
 
 form {
     align-self: baseline;
@@ -95,7 +98,7 @@ fieldset{
 }
 
 .input-label {
-    font-size: 0.75em;
+    font-size: 0.72em;
     font-family: Arial, serif;
     position: relative;
     display: inline-block;
@@ -103,7 +106,6 @@ fieldset{
     text-decoration: none;
     user-select: none;
     background-color: #1DAFAC;
-    /*025038*/
     border: 1px;
     border-bottom-color: #183E33;
     padding: 0.5em 1em;
@@ -116,4 +118,9 @@ fieldset{
 }
 .input-label:active{
     background-color: #113128;
+}
+
+.simple div{
+    width: fit-content;
+    align-self: center;
 }

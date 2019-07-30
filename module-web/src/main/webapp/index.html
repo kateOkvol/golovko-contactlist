@@ -11,6 +11,7 @@
     <script type="text/javascript" src="js/pages/contact-list.js"></script>
     <script type="text/javascript" src="js/pages/contact-editor.js"></script>
     <script type="text/javascript" src="js/pages/email.js"></script>
+    <script type="text/javascript" src="js/pages/contact-search.js"></script>
     <script type="text/javascript" src="js/showScripts/showContactScript.js"></script>
     <script type="text/javascript" src="js/showScripts/showAddressScript.js"></script>
     <script type="text/javascript" src="js/showScripts/showPnonesTable.js"></script>
@@ -34,6 +35,7 @@
 <div id="main-contact" style="width: fit-content; margin: auto">
     <div id="main-buttons" style="display: block;padding: auto"></div>
     <table id="contact-table"></table>
+    <div id="navigation" class="simple"></div>
 </div>
 
 <div id="contact-editor" style="display: none">
@@ -66,7 +68,7 @@
     <div id='buttons'></div>
 </div>
 
-<div id="email-page" style="display: none; width: fit-content; align-self: center">
+<div id="email-page" class="simple" style="display: none;">
     <fieldset id="recipients">
         <label>To whom: </label>
         <label id="names"></label>
@@ -96,5 +98,12 @@
     <div id='email-buttons'></div>
 </div>
 
+<div id="search-page" class="simple" style="display: none;">
+    <div class="simple" id="contact-search" style="display: inline-block"></div>
+    <div class="simple" style="display: inline-block">
+    <div class="simple" id="address-search"></div>
+    <div class="simple" id="search-buttons"></div>
+    </div>
+</div>
 </body>
 </html>

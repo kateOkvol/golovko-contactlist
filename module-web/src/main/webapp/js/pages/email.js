@@ -1,5 +1,6 @@
 function loadEmail(event) {
     event.preventDefault();
+    document.getElementById('h1').innerHTML = 'Email Sender';
     let recipients = printRecipientsNames();
     addEmailButtons();
     let promise = getTemplatesFetch();
@@ -78,5 +79,6 @@ function sendEmail(recipients) {
                 })
         });
         console.log(emailPromise);
+        manageScripts("email-page");
     }, false);
 }

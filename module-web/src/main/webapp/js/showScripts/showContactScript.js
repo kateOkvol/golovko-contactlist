@@ -1,5 +1,5 @@
-function showContactInputs(promise) {
-    var textHTML = "<form id='contactInputs'>" +
+function showContactInputs(promise, formId, holderId) {
+    let textHTML = "<form id="+formId+">" +
         "<label> " +
         "<br>" +
         "First name*:" +
@@ -70,9 +70,8 @@ function showContactInputs(promise) {
         "<input name='company' id='company'> " +
         "</label>" +
         "</form>";
-    document.getElementById('content').innerHTML = textHTML;
+    document.getElementById(holderId).innerHTML = textHTML;
 
-    if (promise !== null) {
         inputValues('firstName', promise);
         inputValues('middleName', promise);
         inputValues('lastName', promise);
@@ -83,5 +82,4 @@ function showContactInputs(promise) {
         inputValues('email', promise);
         inputValues('maritalStatus', promise);
         inputValues('company', promise);
-    }
 }

@@ -46,9 +46,11 @@ public class AttachmentController {
     }
 
     public void createAttach(HttpServletRequest request) throws IOException {
-        AttachmentDTO dto = new ObjectMapper().convertValue(
-                util.prepareToDTO(request), AttachmentDTO.class);
-        new AttachmentService(dto).createAttach();
+        AttachmentDTO[] elements = new ObjectMapper().convertValue(
+                util.prepareToDTO(request), AttachmentDTO[].class);
+        for (AttachmentDTO dto : elements) {
+            new AttachmentService(dto).createAttach();
+        }
 
     }
 

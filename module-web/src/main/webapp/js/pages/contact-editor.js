@@ -2,8 +2,8 @@ let contactId;
 
 function loadEditor(event, id) {
     event.preventDefault();
-    document.getElementById("main-contact").style.display = 'none';
-    document.getElementById("contact-editor").style.display = 'block';
+    document.getElementById('main-contact').style.display = 'none';
+    document.getElementById('contact-editor').style.display = 'block';
     document.getElementById('h1').innerHTML = 'Contact Editor';
     checkId(id);
     showPhonesTable(contactId);
@@ -16,8 +16,8 @@ function checkId(id) {
         fillFields(id);
     } else {
         showAttaches(null);
-        showContactInputs(null);
-        showAddressInputs(null);
+        showContactInputs(null, 'contactInputs', 'content');
+        showAddressInputs(null, 'addressInputs', 'addressContent');
     }
 }
 
@@ -54,20 +54,19 @@ async function fillFields(id) {
             })
     });
     showAttaches(promise);
-    showContactInputs(promise);
-    showAddressInputs(promise);
+    showContactInputs(promise, 'contactInputs', 'content');
+    showAddressInputs(promise, 'addressInputs', 'addressContent');
 }
 
 
 function inputValues(info, promise) {
-    document.getElementById(info).value = promise[info];
-    if (promise[info] == null || promise[info] === '' ) {
+    if (promise == null || promise[info] == null || promise[info] === '') {
         document.getElementById(info).placeholder = 'fill the field';
-    }
+    } else document.getElementById(info).value = promise[info];
 }
 
 function cancelButton(element) {
-    if (confirm("Are you sure? You lose all the changes.")){
-            manageScripts(element);
+    if (confirm("Are you sure? You lose all the changes.")) {
+        manageScripts(element);
     }
 }

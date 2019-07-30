@@ -20,8 +20,17 @@ public class MainContactService {
         }
     }
 
-    public List<MainContactDTO> findAll() {
-        List<MainContact> list = this.dao.getAll();
+    public List<MainContactDTO> findAll(int page) {
+        List<MainContact> list = this.dao.getAll(page);
+        return writeResultAsDTO(list);
+    }
+
+    public List<MainContactDTO> findAllMatches(String query){
+        List<MainContact> list = this.dao.search(query);
+       return writeResultAsDTO(list);
+    }
+
+    private List<MainContactDTO> writeResultAsDTO(List<MainContact> list){
         List<MainContactDTO> contactList = new ArrayList<>();
         for (MainContact contact : list) {
             contactList.add(new MainContactDTO(contact));

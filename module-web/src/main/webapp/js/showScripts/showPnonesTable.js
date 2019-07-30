@@ -1,7 +1,7 @@
 function showPhonesTable(contactId) {
     addPhonesButtons();
     if (contactId === 0) {
-        phonesTableHTML();
+        document.getElementById("phones-table").innerHTML = "<tr><th>&#10004</th><th>Full number</th><th>Phone number type</th><th>Note</th></tr>";
     } else {
         createPhonesTable(contactId);
     }

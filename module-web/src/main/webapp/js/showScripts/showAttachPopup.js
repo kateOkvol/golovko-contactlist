@@ -1,7 +1,7 @@
-var attachId = 0;
-var createAttachArray = [];
-var updateAttachArray = [];
-var inputAttachForm = [];
+let attachId = 0;
+let createAttachArray = [];
+let updateAttachArray = [];
+let inputAttachForm = [];
 
 function loadAttachPopup(event) {
     event.preventDefault();
@@ -59,7 +59,6 @@ function attachSave(promise) {
         let inputAttachForm = new FormData(document.forms.attachPopupForm);
         inputAttachForm.append('path', promise.path);
         inputAttachForm.append('date', promise.date);
-        inputAttachForm.append('contactId', promise.contactId);
         if (attachId === 0) {
             inputAttachForm.forEach(function (value, key) {
                 innerArray[key] = value;
@@ -123,7 +122,7 @@ function attachPopUpWindow(promise) {
 
 function addAttachPopupButtons() {
     var textHTML = "<button id='attachOk' type='submit'>Ok</button>" +
-        "<button type='reset' onclick='cancelButton()'>Cancel</button>";
+        "<button type='reset' onclick='cancelButton(\"attach-window\")'>Cancel</button>";
     document.getElementById('attach-popup-buttons').innerHTML = textHTML;
 }
 

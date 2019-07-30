@@ -3,12 +3,14 @@ package dao.DAOImpl;
 import dao.MainContactDAO;
 import entities.MainContact;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 
 public class MainContactDAOImpl implements MainContactDAO {
 
@@ -23,15 +25,37 @@ public class MainContactDAOImpl implements MainContactDAO {
 
 
     @Override
-    public List<MainContact> getAll() {
-        List<MainContact> list = null;
-
+    public List<MainContact> getAll(int page) {
+        Properties properties = new Properties();
+        try {
+            properties.load(MainContactDAOImpl.class.getClassLoader().getResourceAsStream("config-core.properties"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        int amount = Integer.parseInt(properties.getProperty("contact_amount"));
         String sql = "SELECT id, concat_ws(' ', regexp_replace(first_name, '\\s+$', ''), " +
                 "regexp_replace(last_name, '\\s+$', ''), " +
                 "regexp_replace(middle_name, '\\s+$', '')) " +
                 "AS full_name, birth_date, " +
-                "concat_ws(', ', country, city) AS address, company " +
-                "FROM contacts.contact ;";
+                "concat_ws(', ', regexp_replace(country, '\\s+$', ''), " +
+                "regexp_replace(city, '\\s+$', '')) AS address, company " +
+                "FROM contacts.contact limit " + amount +" offset "+ amount * (page - 1) +   ";";
+        return processGetReq(sql);
+    }
+
+    public List<MainContact> search(String query) {
+        String sql = "SELECT id, concat_ws(' ', regexp_replace(first_name, '\\s+$', ''), " +
+                "regexp_replace(last_name, '\\s+$', ''), " +
+                "regexp_replace(middle_name, '\\s+$', '')) " +
+                "AS full_name, birth_date, " +
+                "concat_ws(', ', regexp_replace(country, '\\s+$', ''), " +
+                "regexp_replace(city, '\\s+$', '')) AS address, company " +
+                "FROM contacts.contact WHERE " + query + ";";
+        return processGetReq(sql);
+    }
+
+    private List<MainContact> processGetReq(String sql) {
+        List<MainContact> list = null;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet resultSet = statement.executeQuery();
             list = parseResultSet(resultSet);
@@ -41,26 +65,6 @@ public class MainContactDAOImpl implements MainContactDAO {
         return list;
     }
 
-
-    @Override
-    public void delete(Integer id) {
-        String sql = "DELETE FROM contacts.number WHERE contact_id = ?;" +
-                "DELETE FROM contacts.attachments WHERE contact_id = ?;" +
-                "DELETE FROM contacts.contact WHERE id = ?;";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setObject(1, id);
-            statement.setObject(2, id);
-            statement.setObject(3, id);
-            int count = statement.executeUpdate();
-            if (count != 1) {
-                System.out.println("error main contact");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-
     private List<MainContact> parseResultSet(ResultSet set) {
         LinkedList<MainContact> list = new LinkedList<>();
         try {
@@ -69,12 +73,14 @@ public class MainContactDAOImpl implements MainContactDAO {
                 contact.setId(set.getInt("id"));
                 contact.setFullName(set.getString("full_name"));
                 contact.setBirthDate(set.getDate("birth_date"));
-                contact.setAddress(set.getString("address"));
+                String address = set.getString("address");
+                if (address.equals(", ")) address = null;
+                contact.setAddress(address);
                 contact.setCompany(set.getString("company"));
                 list.add(contact);
             }
-        } catch (SQLException s) {
-            ///////////////////////
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return list;
     }

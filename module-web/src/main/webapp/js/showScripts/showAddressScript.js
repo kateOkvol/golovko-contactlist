@@ -1,5 +1,5 @@
-function showAddressInputs(promise) {
-    const textHTML = "<form id='addressInputs'>" +
+function showAddressInputs(promise, formId, holderId) {
+    const textHTML = "<form id="+formId+">" +
         "<label>" +
         "<br>" +
         "Country:" +
@@ -38,14 +38,12 @@ function showAddressInputs(promise) {
         "</label>" +
         "</form>";
 
-    document.getElementById('addressContent').innerHTML = textHTML;
+    document.getElementById(holderId).innerHTML = textHTML;
 
-    if (promise !== null) {
         inputValues('country', promise);
         inputValues('city', promise);
         inputValues('street', promise);
         inputValues('house', promise);
         inputValues('flat', promise);
         inputValues('zipCode', promise);
-    }
 }

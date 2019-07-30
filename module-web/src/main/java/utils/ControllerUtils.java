@@ -25,7 +25,6 @@ public class ControllerUtils/*<T extends DTO>*/ {
     }
 
 
-
     public JsonNode prepareToDTO(HttpServletRequest request) throws IOException {
         String jsonString = processRequest(request);
 
@@ -59,16 +58,17 @@ public class ControllerUtils/*<T extends DTO>*/ {
     }
 
     public void writeAttachResponse(String fileName, HttpServletResponse response) throws IOException {
-        FileInputStream reader = new FileInputStream(fileName);
-        response.addHeader("Content-Disposition", "attachment;filename=" + fileName);
-        PrintWriter responseWriter = response.getWriter();
-        int i;
-        while ((i = reader.read()) != -1) {
-            responseWriter.write(i);
+        try (FileInputStream reader = new FileInputStream(fileName);
+             PrintWriter responseWriter = response.getWriter()) {
+            response.addHeader("Content-Disposition", "attachment;filename=" + fileName);
+            int i;
+            while ((i = reader.read()) != -1) {
+                responseWriter.write(i);
+            }
         }
     }
 
-    public void uploadAttach(String path, HttpServletRequest request, HttpServletResponse response){
+    public void uploadAttach(String path, HttpServletRequest request, HttpServletResponse response) {
         DiskFileItemFactory factory = new DiskFileItemFactory();
         factory.setSizeThreshold(1024 * 3);//3 MB
         factory.setRepository(new File(path));
@@ -77,7 +77,12 @@ public class ControllerUtils/*<T extends DTO>*/ {
             List items = upload.parseRequest(request);
             for (Object item : items) {
                 FileItem fileItem = (FileItem) item;
-                File file = new File(path, fileItem.getName());
+                File file =null ;
+                if(new File(path, fileItem.getName()).isFile()){
+                    file = new File(path, fileItem.getName()+"_");
+                }else{
+                    file = new File(path, fileItem.getName());
+                }
                 fileItem.write(file);
                 System.out.println(file.getName() + " was added at folder");
                 response.setStatus(HttpServletResponse.SC_OK);

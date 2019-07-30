@@ -42,10 +42,10 @@ public class Server extends HttpServlet {
         try {
             switch (command) {
                 case "mainContacts":
-                    mainContacts(response);
+                    mainContacts(request, response);
                     break;
-                case "deleteElementByURL":
-                    deleteContact(request);
+                case "deleteContacts":
+                    deleteContacts(request);
                     break;
                 case "createContact":
                     createContact(request, response);
@@ -95,11 +95,17 @@ public class Server extends HttpServlet {
                 case "downloadAttach":
                     downloadAttach(request, response);
                     break;
-                case"getTemplates":
+                case "getTemplates":
                     getTemplates(response);
                     break;
                 case "sendEmail":
                     sendEmail(request);
+                    break;
+                case "searchContacts":
+                    searchContacts(request, response);
+                    break;
+                case "getAvatar":
+                    getAvatar(request, response);
                     break;
             }
             System.out.println(command + " finished");
@@ -108,8 +114,8 @@ public class Server extends HttpServlet {
         }
     }
 
-    private void mainContacts(HttpServletResponse response) throws IOException {
-        new MainContactsController().searchContacts(response);
+    private void mainContacts(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        new MainContactsController().getContacts(request, response);
     }
 
     private void createContact(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -120,8 +126,8 @@ public class Server extends HttpServlet {
         new ContactsController().updateContact(request);
     }
 
-    private void deleteContact(HttpServletRequest request) throws IOException {
-        new ContactsController().deleteContact(request);
+    private void deleteContacts(HttpServletRequest request) throws IOException {
+        new ContactsController().deleteContacts(request);
     }
 
     private void getContactById(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -186,6 +192,14 @@ public class Server extends HttpServlet {
 
     private void sendEmail(HttpServletRequest request) throws Exception {
         new EmailMessageController().sendEmail(request);
+    }
+
+    private void searchContacts(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        new MainContactsController().searchContacts(request, response);
+    }
+
+    private void getAvatar(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        new ContactsController().getAvatar(request, response);
     }
 }
 

@@ -1,7 +1,7 @@
-var phoneId;
-var createArray = [];
-var updateArray = [];
-var inputForm;
+let phoneId;
+let createPhonesArray = [];
+let updatePhonesArray = [];
+let inputPhonesForm;
 
 function loadPopupPhones(event, id) {
     event.preventDefault();
@@ -112,13 +112,13 @@ function phonesSave() {
     let elementTable = document.getElementById('phones-table');
 
     let innerArray = {};
-    inputForm = new FormData(document.forms.phonePopupForm);
+    inputPhonesForm = new FormData(document.forms.phonePopupForm);
 
     if (phoneId === 0) {
-        inputForm.forEach(function (value, key) {
+        inputPhonesForm.forEach(function (value, key) {
             innerArray[key] = value;
         });
-        createArray.push(innerArray);
+        createPhonesArray.push(innerArray);
 
         let row = elementTable.insertRow(1);
         let countryCode = Number(innerArray['countryCode']);
@@ -135,12 +135,12 @@ function phonesSave() {
         row.insertCell(2).innerHTML = type;
         row.insertCell(3).innerHTML = note;
     } else {
-        inputForm.append('contactId', contactId);
-        inputForm.append('id', phoneId);
-        inputForm.forEach(function (value, key) {
+        inputPhonesForm.append('contactId', contactId);
+        inputPhonesForm.append('id', phoneId);
+        inputPhonesForm.forEach(function (value, key) {
             innerArray[key] = value;
         });
-        updateArray.push(innerArray);
+        updatePhonesArray.push(innerArray);
 
         let countryCode = Number(innerArray['countryCode']);
         let operatorCode = Number(innerArray['operatorCode']);
@@ -152,7 +152,7 @@ function phonesSave() {
         document.getElementById('type' + phoneId).innerHTML = type;
         document.getElementById('note' + phoneId).innerHTML = note;
     }
-    manageScripts("phone-window");
+    manageScripts("phones-window");
 }
 
 function inputNotNull(countryCode, operatorCode, phone) {

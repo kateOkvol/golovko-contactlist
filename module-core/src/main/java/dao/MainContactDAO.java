@@ -5,7 +5,5 @@ import entities.MainContact;
 import java.util.List;
 
 public interface MainContactDAO {
-    List<MainContact> getAll();
-
-    void delete(Integer id);
+    List<MainContact> getAll(int page);
 }

@@ -5,8 +5,11 @@ import dto.ContactDTO;
 import services.ContactService;
 import utils.ControllerUtils;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,7 +46,7 @@ public class ContactsController {
         new ContactService(dto).updateContact();
     }
 
-    public void deleteContact(HttpServletRequest request) throws IOException {
+    public void deleteContacts(HttpServletRequest request) throws IOException {
         String filePath = properties.getProperty("file_path");
         ContactService service = new ContactService();
         ObjectMapper mapper = new ObjectMapper();
@@ -61,26 +64,27 @@ public class ContactsController {
         Integer id = util.processId("id", request);
         ContactService service = new ContactService();
         String path = service.getById(id).getAvatar();
-        if (path == null) {
-            service.getDto().setAvatar(properties.getProperty("ava_path") + "noAva.jpg");
-        } else {
-            service.getDto().setAvatar(properties.getProperty("ava_path") + path);
-        }
         response.getWriter().write(
                 mapper.writeValueAsString(
                         service.getDto()));
     }
 
-    public void uploadAvatar(HttpServletRequest request, HttpServletResponse response){
+    public void uploadAvatar(HttpServletRequest request, HttpServletResponse response) {
         String path = properties.getProperty("ava_upload_path");
         util.uploadAttach(path, request, response);
     }
 
-//    public void getAvatar(HttpServletRequest request, HttpServletResponse response) throws IOException {
-//        ContactService service = new ContactService();
-//        ObjectMapper mapper = new ObjectMapper();
-//        Integer id = util.processId("id", request);
-//        String filePath = properties.getProperty("ava_path") + "noAva.jpg";//service.getById(id).getAvatar();
-//        response.getWriter().write(mapper.writeValueAsString(filePath));//util.writeAttachResponse(filePath, response);
-//    }
+    public void getAvatar(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String path = properties.getProperty("ava_upload_path");
+        Integer id = util.processId("id", request);
+        String avatar = new ContactService().getById(id).getAvatar();
+        String type = avatar.split(".+\\.", 2)[1];
+        String fileName = path + avatar;
+        BufferedImage image = ImageIO.read(new File(fileName));
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        ImageIO.write(image, type, stream);
+        byte[] array = stream.toByteArray();
+        response.getWriter().write(
+                new ObjectMapper().writeValueAsString(array));
+    }
 }

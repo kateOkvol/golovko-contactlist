@@ -8,14 +8,15 @@ function buttonSave() {
 
     if (contactId !== 0) {
         contactSave('application?updateContact', contactData);
+        manageScripts('contact-editor');
     } else {
         let promise = contactCreate('application?createContact', contactData);
         promise.then(result => {
             let id = JSON.parse(result);
             manageSave(id);
-        })
+        });
+        manageScripts('contact-editor');
     }
-    manageScripts('contact-editor');
 }
 
 function contactCreate(url, data) {
@@ -24,7 +25,7 @@ function contactCreate(url, data) {
                 method: 'POST',
                 headers: {
                     'Accept-type': 'application/json',
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'multipart/form-data'
                 },
                 body: JSON.stringify(data)
             }).then(response => {
@@ -57,12 +58,9 @@ function contactSave(url, data) {
 }
 
 function createPhone(id) {
-    inputForm.append('contactId', id);
-    let innerArray = {};
-    inputForm.forEach(function (value, key) {
-        innerArray[key] = value;
+    createPhonesArray.forEach(function (element) {
+        element['contactId'] = id;
     });
-
     let newPhone = new Promise((resolve, reject) => {
         return fetch('application?createPhone', {
             method: 'POST',
@@ -70,10 +68,10 @@ function createPhone(id) {
                 'Accept-type': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(innerArray)
+            body: JSON.stringify(createPhonesArray)
         })
             .then(() => {
-                inputForm.length = 0;
+                inputPhonesForm.length = 0;
             })
             .catch(function (error) {
                 reject(new Error(error.message));
@@ -90,10 +88,10 @@ function updatePhone() {
                 'Accept-type': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(updateArray)
+            body: JSON.stringify(updatePhonesArray)
         })
             .then(() => {
-                updateArray.length = 0;
+                updatePhonesArray.length = 0;
             })
             .catch(function (error) {
                 reject(new Error(error.message));
@@ -112,7 +110,6 @@ function createAttachFetch() {
             })
                 .then(() => {
                     inputAttachForm.shift();
-                    attachMetaInfFetch(i);
                 })
                 .catch(function (error) {
                     reject(new Error(error.message));
@@ -121,7 +118,10 @@ function createAttachFetch() {
     }
 }
 
-function attachMetaInfFetch(index) {
+function attachMetaInfFetch(respId) {
+    createAttachArray.forEach(function (element) {
+        element['contactId'] = respId;
+    });
     new Promise((resolve, reject) => {
         return fetch('application?createAttach', {
             method: 'POST',
@@ -129,7 +129,7 @@ function attachMetaInfFetch(index) {
                 'Accept-type': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(createAttachArray[index])
+            body: JSON.stringify(createAttachArray)
         })
             .then(() => {
                 createAttachArray.shift();
@@ -161,16 +161,17 @@ function updateAttachFetch() {
 }
 
 function manageSave(responseId) {
-    if (createArray.length !== 0) {
+    if (createPhonesArray !== undefined && createPhonesArray.length > 0) {
         createPhone(responseId);
     }
-    if (updateArray.length !== 0) {
+    if (updatePhonesArray !== undefined && updatePhonesArray.length > 0) {
         updatePhone();
     }
-    if (createAttachArray.length !== 0) {
-        createAttachFetch(responseId);
+    if (createAttachArray !== undefined && createAttachArray.length > 0) {
+        createAttachFetch();
+        attachMetaInfFetch(responseId);
     }
-    if (updateAttachArray.length !== 0) {
+    if (updateAttachArray !== undefined && updateAttachArray.length > 0) {
         updateAttachFetch();
     }
     if (ava != null) {

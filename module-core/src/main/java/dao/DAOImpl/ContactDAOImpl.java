@@ -59,7 +59,7 @@ public class ContactDAOImpl implements ContactDAO {
                 "regexp_replace(street, '\\s+$', '') AS street, " +
                 "regexp_replace(house, '\\s+$', '') AS house, " +
                 "regexp_replace(flat, '\\s+$', '') AS flat, " +
-                "zip_code, avatar " +
+                "zip_code, regexp_replace(avatar, '\\s+$', '') AS avatar " +
                 "FROM contacts.contact WHERE id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);
@@ -68,11 +68,9 @@ public class ContactDAOImpl implements ContactDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        //свой exception
         return contact;
     }
 
-    @Override
     public List<Contact> getByBirthDate(Date date) {
         List<Contact> list = null;
         String sql = "SELECT first_name, middle_name, last_name " +
@@ -84,7 +82,6 @@ public class ContactDAOImpl implements ContactDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        //свой exception
         return list;
 
     }
@@ -96,6 +93,7 @@ public class ContactDAOImpl implements ContactDAO {
                 "country = ?, city = ?, street = ?, house = ?, flat = ?, zip_code = ?, avatar = ? WHERE id = ?;";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             partOfPrepare(statement, contact);
+            statement.setObject(17, contact.getAvatar());
             statement.setInt(18, contact.getId());
             int count = statement.executeUpdate();
             if (count != 1) {
@@ -108,26 +106,21 @@ public class ContactDAOImpl implements ContactDAO {
 
     @Override
     public List<String> delete(Integer id) {
-        String sql = "DELETE FROM contacts.attachments WHERE contact_id = ? RETURNING path;" +
-                "DELETE FROM contacts.number WHERE contact_id = ?;" +
-                "DELETE FROM contacts.contact WHERE id = ? RETURNING avatar;";
+        String sqlAttach = "DELETE FROM contacts.attachments WHERE contact_id = ? RETURNING path;";
+        String sqlNumber = "DELETE FROM contacts.number WHERE contact_id = ?;";
+        String sqlContact = "DELETE FROM contacts.contact WHERE id = ? RETURNING avatar;";
         LinkedList<String> list = new LinkedList<>();
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        fillList(list, sqlAttach, id);
+        try (PreparedStatement statement = connection.prepareStatement(sqlNumber)) {
             statement.setObject(1, id);
-            statement.setObject(2, id);
-            statement.setObject(3, id);
-
-            ResultSet set = statement.executeQuery();
-            while (set.next()){
-                list.add(set.getString(1));
-                list.add(set.getString(2));
-            }
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        fillList(list, sqlContact, id);
         return list;
     }
+
 
     private List<Contact> parseResultSet(ResultSet set) {
         LinkedList<Contact> list = new LinkedList<>();
@@ -151,11 +144,13 @@ public class ContactDAOImpl implements ContactDAO {
                 contact.setHouse(set.getString("house"));
                 contact.setFlat(set.getString("flat"));
                 contact.setZipCode((Integer) set.getObject("zip_code"));
-                contact.setAvatar(set.getString("avatar"));
+
+                String avatar = set.getString("avatar");
+                contact.setAvatar((avatar!= null)? avatar : "no-avatar\\noAva.jpg");
                 list.add(contact);
             }
-        } catch (SQLException s) {
-            ///////////////////////
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return list;
     }
@@ -177,7 +172,17 @@ public class ContactDAOImpl implements ContactDAO {
         statement.setObject(14, contact.getHouse());
         statement.setObject(15, contact.getFlat());
         statement.setObject(16, contact.getZipCode());
-        statement.setObject(17, contact.getAvatar());
     }
 
+    private void fillList(List<String> list, String sql, Integer id){
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setObject(1, id);
+            ResultSet set = statement.executeQuery();
+            while (set.next()) {
+                list.add(set.getString(1));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
