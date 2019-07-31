@@ -5,9 +5,12 @@ import db.DataBaseConnection;
 import dto.MainContactDTO;
 import entities.MainContact;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Properties;
 
 public class MainContactService {
     private MainContactDAOImpl dao;
@@ -25,12 +28,25 @@ public class MainContactService {
         return writeResultAsDTO(list);
     }
 
-    public List<MainContactDTO> findAllMatches(String query){
+    public List<MainContactDTO> findAllMatches(String query) {
         List<MainContact> list = this.dao.search(query);
-       return writeResultAsDTO(list);
+        return writeResultAsDTO(list);
     }
 
-    private List<MainContactDTO> writeResultAsDTO(List<MainContact> list){
+    public HashMap<String, String> getPageInfo() {
+        Properties p = new Properties();
+        HashMap<String, String> map = new HashMap<>();
+        try {
+            p.load(MainContactService.class.getClassLoader().getResourceAsStream("config-core.properties"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        map.put("count", String.valueOf(this.dao.countContacts()));
+        map.put("contact_amount", String.valueOf(Integer.parseInt(p.getProperty("contact_amount"))));
+        return map;
+    }
+
+    private List<MainContactDTO> writeResultAsDTO(List<MainContact> list) {
         List<MainContactDTO> contactList = new ArrayList<>();
         for (MainContact contact : list) {
             contactList.add(new MainContactDTO(contact));

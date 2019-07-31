@@ -28,6 +28,7 @@ public class MainContactDAOImpl implements MainContactDAO {
         Integer result = null;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet resultSet = statement.executeQuery();
+            resultSet.next();
             result = resultSet.getInt(1);
         } catch (SQLException e) {
             e.printStackTrace();

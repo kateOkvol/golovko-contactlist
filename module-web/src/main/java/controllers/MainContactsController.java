@@ -25,6 +25,14 @@ public class MainContactsController {
                 mapper.writeValueAsString(list));
     }
 
+    public void getPageInfo(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String type = request.getHeader("Content-type");
+        response.addHeader("Content-type", type);
+        response.getWriter().write(
+                new ObjectMapper().writeValueAsString(
+                        new MainContactService().getPageInfo()));
+    }
+
     public void searchContacts(HttpServletRequest request, HttpServletResponse response) throws IOException {
         JsonNode json = new ControllerUtils().prepareToDTO(request);
         if (!request.getParameterMap().isEmpty()) {
@@ -49,7 +57,7 @@ public class MainContactsController {
                         (filter.equals("more") ? ">" : "<")
                         + "'" + json.get("birthDate").textValue() + "';";
             } else {
-                if(!query.equals("")){
+                if (!query.equals("")) {
                     query = query.substring(0, query.length() - 4) + ";"; //4 = 'a','n','d',' '
                 }
             }
@@ -63,11 +71,11 @@ public class MainContactsController {
 
     private String setParameter(JsonNode json, String parameter) {
         String query = "";
-            String value = json.get(parameter).textValue();
-            if (value != null && !value.equals("")) {
-                String parameterName = toUnderscore(parameter);
-                query+= parameterName + "='" + value + "' and ";
-            }
+        String value = json.get(parameter).textValue();
+        if (value != null && !value.equals("")) {
+            String parameterName = toUnderscore(parameter);
+            query += parameterName + "='" + value + "' and ";
+        }
         return query;
     }
 

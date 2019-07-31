@@ -15,6 +15,7 @@ import java.util.HashMap;
 
 class CommandMapper {
     private static HashMap<String, Method> map = new HashMap<>();
+
     private static void initMap() throws NoSuchMethodException {
         map.put("mainContacts", MainContactsController.class.getMethod("getContacts", HttpServletRequest.class, HttpServletResponse.class));
         map.put("deleteContacts", ContactsController.class.getMethod("deleteContacts", HttpServletRequest.class, HttpServletResponse.class));
@@ -34,18 +35,19 @@ class CommandMapper {
         map.put("deleteAttach", AttachmentController.class.getMethod("deleteAttach", HttpServletRequest.class, HttpServletResponse.class));
         map.put("updateAttach", AttachmentController.class.getMethod("updateAttach", HttpServletRequest.class, HttpServletResponse.class));
         map.put("downloadAttach", AttachmentController.class.getMethod("download", HttpServletRequest.class, HttpServletResponse.class));
-        map.put("getTemplates", EmailMessageController.class.getMethod("getTemplates", HttpServletRequest.class,HttpServletResponse.class));
+        map.put("getTemplates", EmailMessageController.class.getMethod("getTemplates", HttpServletRequest.class, HttpServletResponse.class));
         map.put("sendEmail", EmailMessageController.class.getMethod("sendEmail", HttpServletRequest.class, HttpServletResponse.class));
         map.put("searchContacts", MainContactsController.class.getMethod("searchContacts", HttpServletRequest.class, HttpServletResponse.class));
         map.put("getAvatar", ContactsController.class.getMethod("getAvatar", HttpServletRequest.class, HttpServletResponse.class));
+        map.put("getPageInfo", MainContactsController.class.getMethod("getPageInfo", HttpServletRequest.class, HttpServletResponse.class));
     }
 
-    void forward(String url, HttpServletRequest request, HttpServletResponse response){
+    void forward(String url, HttpServletRequest request, HttpServletResponse response) {
         try {
-           initMap();
-           Method method = map.get(url);
-           Object type = method.getDeclaringClass().newInstance();
-           method.invoke(type,request,response);
+            initMap();
+            Method method = map.get(url);
+            Object type = method.getDeclaringClass().newInstance();
+            method.invoke(type, request, response);
 
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException e) {
             e.printStackTrace();

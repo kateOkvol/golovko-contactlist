@@ -40,22 +40,10 @@ function fillAvatarComponent(promise) {
                 img.src = path;
                 console.log('ok');
             })
-            // .then(blob => {
-            //     let file = new FileReader();
-            //     console.log(file.result);
-            //     let str = file.readAsBinaryString(blob);
-            //
-            //     console.log(str);
-            //     document.getElementById('avaImg').src = 'data:image/jpeg;base64,' + hexToBase64(str);
-            // })
                 .catch(function (error) {
                     console.log(new Error(error.message));
                 });
         });
-}
-
-function hexToBase64(str) {
-    return btoa(String.fromCharCode.apply(null, str.replace(/[\r\n]/g, "").replace(/([\da-fA-F]{2}) ?/g, "0x$1 ").replace(/ +$/, "").split(" ")));
 }
 
 function setAvatar() {

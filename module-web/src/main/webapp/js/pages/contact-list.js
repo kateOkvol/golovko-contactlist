@@ -77,14 +77,55 @@ function tableText() {
 function pagination() {
     let page = 2;
     document.getElementById('forth').addEventListener('click', function () {
-        createTable(page);
-        page++;
+        page=countContactsFetch(page);
+        // let info = countContactsFetch();
+        // let count = info.count;
+        // let amount = info.contact_amount;
+        // if (amount * page <= count) {
+        //     createTable(page);
+        //     page++;
+        // } else {
+        //     document.getElementById('forth').disabled = true;
+        //     page--;
+        // }
         document.getElementById('back').disabled = page === 1;
     }, false);
     document.getElementById('back').addEventListener('click', function () {
         page--;
         createTable(page);
+        document.getElementById('forth').disabled = false;
         document.getElementById('back').disabled = page === 1;
     }, false);
+}
 
+async function countContactsFetch(page) {
+    const options = {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    };
+
+    let promise = await new Promise((resolve, reject) => {
+        return fetch("application?getPageInfo", options)
+            .then(response => {
+                return resolve(response.json());
+            })
+            .catch(function (error) {
+                reject(new Error(error.message));
+            })
+    });
+    return doJob(page, promise);
+}
+
+function doJob(page, promise) {
+    let count = promise.count;
+    let amount = promise.contact_amount;
+    if (amount * page <= count) {
+        createTable(page);
+        return ++page;
+    } else {
+        createTable(page);
+        document.getElementById('forth').disabled = true;
+        return --page;
+    }
 }
