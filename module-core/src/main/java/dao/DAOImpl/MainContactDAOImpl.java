@@ -23,18 +23,15 @@ public class MainContactDAOImpl implements MainContactDAO {
         this.connection = connection;
     }
 
-    public Integer countContacts() {
-        String sql = "SELECT count(*) FROM contacts.contact ";
-        Integer result = null;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            ResultSet resultSet = statement.executeQuery();
-            resultSet.next();
-            result = resultSet.getInt(1);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return result;
+    public Integer countContacts(String query) {
+        String sql = "SELECT count(*) FROM contacts.contact " + query;
+        return count(sql);
     }
+
+//    public Integer countSearchContacts(String query){
+//        String sql = "select count(*) from contacts.contact where " + query;
+//        return count(sql);
+//    }
 
     @Override
     public List<MainContact> getAll(int page) {
@@ -55,14 +52,21 @@ public class MainContactDAOImpl implements MainContactDAO {
         return processGetReq(sql);
     }
 
-    public List<MainContact> search(String query) {
+    public List<MainContact> search(int page, String query) {
+        Properties properties = new Properties();
+        try {
+            properties.load(MainContactDAOImpl.class.getClassLoader().getResourceAsStream("config-core.properties"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        int amount = Integer.parseInt(properties.getProperty("contact_amount"));
         String sql = "SELECT id, concat_ws(' ', regexp_replace(first_name, '\\s+$', ''), " +
                 "regexp_replace(last_name, '\\s+$', ''), " +
                 "regexp_replace(middle_name, '\\s+$', '')) " +
                 "AS full_name, birth_date, " +
                 "concat_ws(', ', regexp_replace(country, '\\s+$', ''), " +
                 "regexp_replace(city, '\\s+$', '')) AS address, company " +
-                "FROM contacts.contact WHERE " + query + ";";
+                "FROM contacts.contact WHERE " + query +" limit " + amount + " offset " + amount * (page - 1) + ";";
         return processGetReq(sql);
     }
 
@@ -95,5 +99,17 @@ public class MainContactDAOImpl implements MainContactDAO {
             e.printStackTrace();
         }
         return list;
+    }
+
+    private Integer count(String sql){
+        Integer result = null;
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            ResultSet resultSet = statement.executeQuery();
+            resultSet.next();
+            result = resultSet.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }

@@ -5,9 +5,14 @@ function loadMain() {
     addActionButtons();
     addNavigationButtons();
     createTable(1);
-    pagination();
-}
 
+    const options = {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    };
+    pagination('back', 'forth', options, createTable);
+}
 
 function addActionButtons() {
     const tableBodyId = "\"table-body\"";
@@ -61,7 +66,7 @@ function tableText() {
     tableHTML += "<tbody id='table-body'>";
     tableHTML += "{{#.}}";
     tableHTML += "<tr>";
-    tableHTML += "<td><input type='checkbox' name='delete'  id='{{id}}'></td>";
+    tableHTML += "<td><input type='checkbox' name='delete' id='{{id}}'></td>";
     tableHTML += "<td><a href='' id={{id}} onclick='loadEditor(event, id)'>{{fullName}}</a></td> " +
         "<td> {{birthDate}}</td>" +
         "<td> {{address}}</td>" +
@@ -74,38 +79,30 @@ function tableText() {
     document.getElementById("contact-table").innerHTML = tableHTML;
 }
 
-function pagination() {
-    let page = 2;
-    document.getElementById('forth').addEventListener('click', function () {
-        page=countContactsFetch(page);
-        // let info = countContactsFetch();
-        // let count = info.count;
-        // let amount = info.contact_amount;
-        // if (amount * page <= count) {
-        //     createTable(page);
-        //     page++;
-        // } else {
-        //     document.getElementById('forth').disabled = true;
-        //     page--;
-        // }
-        document.getElementById('back').disabled = page === 1;
+async function pagination(backId, forthId, options, func) {
+    let page = 1;
+    let promise = await countContactsFetch(options);
+    if(promise.count <= promise.contact_amount){
+        document.getElementById(forthId).disabled = true;
+    }
+    document.getElementById(forthId).addEventListener('click', async function () {
+        page++;
+        let promise = await countContactsFetch(options);
+        doJob(forthId, page, promise, func);
+        document.getElementById(backId).disabled = page === 1;
     }, false);
-    document.getElementById('back').addEventListener('click', function () {
+    document.getElementById(backId).addEventListener('click', function () {
         page--;
-        createTable(page);
-        document.getElementById('forth').disabled = false;
-        document.getElementById('back').disabled = page === 1;
+        func(page);
+        document.getElementById(forthId).disabled = false;
+        if (page === 1) {
+            document.getElementById(backId).disabled = true;
+        }
     }, false);
 }
 
-async function countContactsFetch(page) {
-    const options = {
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    };
-
-    let promise = await new Promise((resolve, reject) => {
+function countContactsFetch(options) {
+    let promise = new Promise((resolve, reject) => {
         return fetch("application?getPageInfo", options)
             .then(response => {
                 return resolve(response.json());
@@ -114,18 +111,16 @@ async function countContactsFetch(page) {
                 reject(new Error(error.message));
             })
     });
-    return doJob(page, promise);
+    console.log(promise);
+    return promise;
 }
 
-function doJob(page, promise) {
+function doJob(forthId, page, promise, func) {
     let count = promise.count;
     let amount = promise.contact_amount;
-    if (amount * page <= count) {
-        createTable(page);
-        return ++page;
-    } else {
-        createTable(page);
-        document.getElementById('forth').disabled = true;
-        return --page;
+    func(page);
+    if (amount * page >= count) {
+        document.getElementById(forthId).disabled = true;
     }
 }
+

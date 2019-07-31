@@ -32,10 +32,11 @@
 
 <h1 id="h1">Contacts List: </h1>
 
-<div id="main-contact" style="width: fit-content; margin: auto">
-    <div id="main-buttons" style="display: block;padding: auto"></div>
+<div id="main-contact" style="width: fit-content; margin: auto;height: 80%">
+    <div id="filter" style="display: none; text-align: right"></div>
+    <div id="main-buttons" class="table-buttons"></div>
     <table id="contact-table"></table>
-    <div id="navigation" class="simple"></div>
+    <div id="navigation" class="navigation"></div>
 </div>
 
 <div id="contact-editor" style="display: none">
@@ -91,7 +92,7 @@
         </form>
         <form>
             <label>
-                <textarea id="message-area" placeholder="enter your message"></textarea>
+                <textarea id="message-area" placeholder="enter your message" required></textarea>
             </label>
         </form>
     </fieldset>
@@ -101,8 +102,8 @@
 <div id="search-page" class="simple" style="display: none;">
     <div class="simple" id="contact-search" style="display: inline-block"></div>
     <div class="simple" style="display: inline-block">
-    <div class="simple" id="address-search"></div>
-    <div class="simple" id="search-buttons"></div>
+        <div class="simple" id="address-search"></div>
+        <div class="simple" id="search-buttons"></div>
     </div>
 </div>
 </body>

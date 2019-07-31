@@ -6,11 +6,24 @@ function loadSearch(event) {
 }
 
 function addSearchButtons() {
-    let textHTML = "<button id='search-but'>Search</button>" +
-        "<button onclick='cancelButton(\"search-page\")'>Cancel</button>";
+    let textHTML = "<button type='submit' id='search-but'>Search</button>" +
+        "<button id='cancel-search' onclick='cancelButton(\"search-page\")'>Cancel</button>";
     document.getElementById('search-buttons').innerHTML = textHTML;
-    let inp = document.getElementById('firstNameS');
-    document.getElementById('search-but').addEventListener('click', processSearch, false);
+    document.getElementById('search-but').addEventListener('click', function () {
+        drawPage();
+        let form = initSearchForm(1);
+        addFilter(form);
+        const options = {
+            method: 'POST',
+            headers: {
+                'Accept-type': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(form)
+        };
+
+        pagination('backS', 'forthS', options, processSearch);
+    }, false);
 }
 
 function showSearchInputs() {
@@ -130,19 +143,17 @@ function showSearchInputs() {
     inputValues('zipCodeS', null);
 }
 
-function processSearch() {
-    let personalData = new FormData(document.forms['search-contact-inputs']);
-    let addressData = new FormData(document.forms['search-address-inputs']);
-    let form = createPostContactData(personalData, addressData);
-    return fetch("application?searchContacts", {
-            method: 'POST',
-            headers: {
-                'Accept-type': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(form)
-        }
-    )
+function processSearch(page) {
+    let form = initSearchForm(page);
+    const options = {
+        method: 'POST',
+        headers: {
+            'Accept-type': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(form)
+    };
+    return fetch("application?searchContacts", options)
         .then(response => {
             return response.json().catch(error => {
                 return Promise.reject(new Error('Invalid JSON: ' + error.message));
@@ -150,18 +161,73 @@ function processSearch() {
         })
         .then(response => {
             contactsList = response;
-
-            document.getElementById("search-page").style.display = 'none';
-            document.getElementById("main-contact").style.display = 'block';
-            document.getElementById('h1').innerHTML = 'Contacts List';
-
             tableText();
             let template = document.getElementById("template-table").innerHTML;
             console.log(template);
             document.getElementById("contact-table").innerHTML = Mustache.to_html(template, contactsList);
+
         })
         .catch(function (error) {
             console.log(error);
         });
 
+}
+
+function drawPage() {
+    document.getElementById("search-page").style.display = 'none';
+    document.getElementById("main-contact").style.display = 'block';
+    document.getElementById('create').style.display = 'none';
+    document.getElementById('forth').style.display = 'none';
+    document.getElementById('back').style.display = 'none';
+    document.getElementById('filter').style.display = 'block';
+
+    let button = document.createElement('button');
+    button.id = 'outOfSearch';
+    button.textContent = 'to List';
+    button.className = 'table-buttons';
+    document.getElementById('main-buttons').appendChild(button);
+
+    let navDiv = document.getElementById('navigation');
+    let back = document.createElement('button');
+    back.id = "backS";
+    back.textContent = '⯇';
+    back.disabled = true;
+    navDiv.appendChild(back);
+
+    let forth = document.createElement('button');
+    forth.id = 'forthS';
+    forth.textContent = '⯈';
+    navDiv.appendChild(forth);
+
+    button.addEventListener('click', function () {
+        document.getElementById('filter').style.display = 'none';
+        document.getElementById('create').style.display = 'block';
+        document.getElementById('forth').style.display = 'block';
+        document.getElementById('back').style.display = 'block';
+
+        document.getElementById('main-buttons').removeChild(button);
+        document.getElementById('navigation').removeChild(forth);
+        document.getElementById('navigation').removeChild(back);
+        manageScripts('search-page');
+    }, false);
+}
+
+function initSearchForm(page) {
+    let personalData = new FormData(document.forms['search-contact-inputs']);
+    personalData.append('page', page);
+    let addressData = new FormData(document.forms['search-address-inputs']);
+    return createPostContactData(personalData, addressData);
+}
+
+function addFilter(form) {
+    let filters = "";
+    for (let key in form) {
+        if (form.hasOwnProperty(key)) {
+            if (form[key] !== "" && key !== "page" && form[key] !== null && form[key] !== 'undefined') {
+                filters += key + ": " + form[key] + "; ";
+            }
+        }
+    }
+    const textHTML = "<label>" + filters + "</label>";
+    document.getElementById('filter').innerHTML = textHTML;
 }

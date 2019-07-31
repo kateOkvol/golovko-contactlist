@@ -28,21 +28,14 @@ public class MainContactService {
         return writeResultAsDTO(list);
     }
 
-    public List<MainContactDTO> findAllMatches(String query) {
-        List<MainContact> list = this.dao.search(query);
+    public List<MainContactDTO> findAllMatches(int page, String query) {
+        List<MainContact> list = this.dao.search(page, query);
         return writeResultAsDTO(list);
     }
 
-    public HashMap<String, String> getPageInfo() {
-        Properties p = new Properties();
-        HashMap<String, String> map = new HashMap<>();
-        try {
-            p.load(MainContactService.class.getClassLoader().getResourceAsStream("config-core.properties"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        map.put("count", String.valueOf(this.dao.countContacts()));
-        map.put("contact_amount", String.valueOf(Integer.parseInt(p.getProperty("contact_amount"))));
+    public HashMap<String, String> getPageInfo(String query) {
+        HashMap<String, String> map;
+        map = pageInfo(String.valueOf(this.dao.countContacts(query)));
         return map;
     }
 
@@ -52,6 +45,19 @@ public class MainContactService {
             contactList.add(new MainContactDTO(contact));
         }
         return contactList;
+    }
+
+    private HashMap<String, String> pageInfo(String count) {
+        Properties p = new Properties();
+        HashMap<String, String> map = new HashMap<>();
+        try {
+            p.load(MainContactService.class.getClassLoader().getResourceAsStream("config-core.properties"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        map.put("count", count);
+        map.put("contact_amount", String.valueOf(Integer.parseInt(p.getProperty("contact_amount"))));
+        return map;
     }
 }
 

@@ -1,8 +1,7 @@
 body {
-    font-size: 115%;
+    font-size: 130%;
     padding: 0;
     margin: 0;
-    /*   font-family: Calibri, monospace ;*/
 }
 
 h1 {
@@ -23,7 +22,6 @@ table {
 }
 
 th {
-
     background-color: #EAFFF9;
 }
 
@@ -32,16 +30,12 @@ td, th, tr {
 }
 
 button {
-    /*
-    size: 120%;
-    */
     position: relative;
     display: inline-block;
     color: #183E33;
     text-decoration: none;
     user-select: none;
     background-color: #1DAFAC;
-    /*025038*/
     border: 1px;
     border-bottom-color: #183E33;
     padding: 0.5em 1em;
@@ -93,12 +87,12 @@ select{
 fieldset{
     align-self: auto;
     margin: auto;
-    border-color:  #1DAFAC;
+    border-color: #1DAFAC;
     border-width: 1px;
 }
 
 .input-label {
-    font-size: 0.72em;
+    font-size: 0.65em;
     font-family: Arial, serif;
     position: relative;
     display: inline-block;
@@ -123,4 +117,15 @@ fieldset{
 .simple div{
     width: fit-content;
     align-self: center;
+}
+
+.navigation{
+    align-self: center;
+    text-align: center;
+    margin-block-start: 50%;
+}
+
+.table-buttons{
+    align-self: center;
+    text-align: right;
 }

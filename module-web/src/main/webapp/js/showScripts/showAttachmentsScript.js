@@ -7,6 +7,7 @@ function showAttaches(promise) {
 function checkPromise(promise) {
     if (promise === null) {
         addAvatarComponents();
+        document.getElementById('avaImg').src='/resources/noAva.jpg';
         showAttachTable(0);
     } else {
         showAttachTable(promise.id);
@@ -15,13 +16,11 @@ function checkPromise(promise) {
     }
 }
 
-
 function addAvatarComponents() {
-    let textHTML = "<form><label for='avatarId'>" +
-        // "<img src='http://localhost:8080/application?getAvatar' height='170px' alt='No photo' id='avaImg' style='cursor:pointer'><br>" +
+    let textHTML = "<label for='avatarId'>" +
         "<img src='' height='170px' alt='No photo' id='avaImg' style='cursor:pointer'><br>" +
         "<input type='file' onchange='setAvatar()' " +
-        "name='avatarButton' id='avatarId' style='display:none'></label></form>";
+        "name='avatarButton' id='avatarId' style='display:none'></label>";
     document.getElementById('avatar').innerHTML = textHTML;
 }
 
@@ -36,7 +35,7 @@ function fillAvatarComponent(promise) {
         .then(response => {
             response.json().then(function (data) {
                 let path = 'data:image/jpeg;base64,' + data;
-                let img =  document.getElementById('avaImg');
+                let img = document.getElementById('avaImg');
                 img.src = path;
                 console.log('ok');
             })
