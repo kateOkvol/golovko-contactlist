@@ -21,7 +21,7 @@ function addSearchButtons() {
             },
             body: JSON.stringify(form)
         };
-
+        processSearch(1);
         pagination('backS', 'forthS', options, processSearch);
     }, false);
 }
@@ -216,7 +216,7 @@ function initSearchForm(page) {
     let personalData = new FormData(document.forms['search-contact-inputs']);
     personalData.append('page', page);
     let addressData = new FormData(document.forms['search-address-inputs']);
-    return createPostContactData(personalData, addressData);
+    return createPostContactData('search', personalData, addressData);
 }
 
 function addFilter(form) {

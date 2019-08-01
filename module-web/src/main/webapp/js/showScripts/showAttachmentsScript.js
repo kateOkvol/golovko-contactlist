@@ -7,7 +7,7 @@ function showAttaches(promise) {
 function checkPromise(promise) {
     if (promise === null) {
         addAvatarComponents();
-        document.getElementById('avaImg').src='/resources/noAva.jpg';
+        document.getElementById('avaImg').src='/resource/noAva.jpg';
         showAttachTable(0);
     } else {
         showAttachTable(promise.id);

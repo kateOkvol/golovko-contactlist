@@ -25,8 +25,8 @@ public class ContactDAOImpl implements ContactDAO {
     public Integer create(Contact contact) {
         Integer id = null;
         String sql = "INSERT INTO contacts.contact (first_name, last_name, middle_name, gender, " +
-                "birth_date, citizenship, marital_status, web_site, email, company, country, city, street, house, flat, zip_code) " +
-                "VALUES (?, ?, ?, ?::contacts.gender, ?, ?, ?::contacts.marital_status, ?, ?, ?, ?, ?, ?, ?, ?, ?) " +
+                "birth_date, citizenship, marital_status, web_site, email, company, country, city, street, house, flat, zip_code, avatar) " +
+                "VALUES (?, ?, ?, ?::contacts.gender, ?, ?, ?::contacts.marital_status, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) " +
                 "RETURNING id;";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             partOfPrepare(statement, contact);

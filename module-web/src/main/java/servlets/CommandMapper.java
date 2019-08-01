@@ -48,7 +48,7 @@ class CommandMapper {
             Method method = map.get(url);
             Object type = method.getDeclaringClass().newInstance();
             method.invoke(type, request, response);
-
+            response.setStatus(200);
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException e) {
             e.printStackTrace();
         }

@@ -4,7 +4,7 @@ function buttonSave() {
     if (ava != null) {
         personalData.append('avatar', ava.name);
     }
-    let contactData = createPostContactData(personalData, addressData);
+    let contactData = createPostContactData('', personalData, addressData);
 
     if (contactId !== 0) {
         contactSave('application?updateContact', contactData);
@@ -29,9 +29,13 @@ function contactCreate(url, data) {
                 },
                 body: JSON.stringify(data)
             }).then(response => {
+                if (response.ok) {
+                    alert('Contact was created successfully');
+                }
                 return resolve(response.json());
             })
                 .catch(function (error) {
+                    alert('Error creating contact');
                     reject(new Error(error.message));
                 })
         }
@@ -47,7 +51,10 @@ function contactSave(url, data) {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(data)
-            }).then(() => {
+            }).then(response => {
+                if (response.ok) {
+                    alert('Contact was saved successfully');
+                }
                 manageSave(contactId);
             })
                 .catch(function (error) {
@@ -71,6 +78,7 @@ function createPhone(id) {
             body: JSON.stringify(createPhonesArray)
         })
             .then(() => {
+                createPhonesArray.length = 0;
                 inputPhonesForm.length = 0;
             })
             .catch(function (error) {
@@ -109,7 +117,7 @@ function createAttachFetch() {
                 body: inputAttachForm[i]
             })
                 .then(() => {
-                    inputAttachForm.shift();
+                    inputAttachForm.length = 0;
                 })
                 .catch(function (error) {
                     reject(new Error(error.message));
@@ -132,7 +140,7 @@ function attachMetaInfFetch(respId) {
             body: JSON.stringify(createAttachArray)
         })
             .then(() => {
-                createAttachArray.shift();
+                createAttachArray.length = 0;
             })
             .catch(function (error) {
                 reject(new Error(error.message));
@@ -151,6 +159,7 @@ function updateAttachFetch() {
             body: JSON.stringify(updateAttachArray)
         })
             .then(() => {
+                inputAttachForm.length = 0;
                 updateAttachArray.length = 0;
             })
             .catch(function (error) {
@@ -179,17 +188,58 @@ function manageSave(responseId) {
     }
 }
 
-function createPostContactData(personalData, addressData) {
+function createPostContactData(page, personalData, addressData) {
     let contactData = {};
     if (contactId !== 0) {
         personalData.append('id', contactId);
     }
     personalData.forEach(function (value, key) {
-        contactData[key] = value;
+        if (page !== 'search') {
+            valid(key, value);
+        }
+        if (value === "") {
+            contactData[key] = null;
+        } else {
+            contactData[key] = value;
+        }
     });
     addressData.forEach(function (value, key) {
-        contactData[key] = value;
+        if (value === "") {
+            contactData[key] = null;
+        } else {
+            contactData[key] = value;
+        }
     });
 
     return contactData;
+}
+
+function valid(key, value) {
+    if ((key === 'firstName' || key === 'lastName')
+        && (value === '')) {
+        alert("fill the " + key + " filed ");
+        throw '';
+    }
+    if (key === 'birthDate') {
+        validDate(value);
+    }
+    if ((key === 'email') && (value !== '')) {
+        validEmail(value);
+    }
+}
+
+function validDate() {
+    const mess = document.getElementById('birthDate').validationMessage;
+    if (mess !== '') {
+        alert("Date is not valid");
+        throw '';
+    }
+}
+
+function validEmail(value) {
+    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (!re.test(String(value).toLowerCase())) {
+        alert("Email is not valid");
+        throw '';
+    }
 }

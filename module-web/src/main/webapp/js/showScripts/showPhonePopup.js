@@ -5,29 +5,27 @@ let inputPhonesForm;
 
 function loadPopupPhones(event, id) {
     event.preventDefault();
+    document.getElementById('attach-buttons').style.display = 'none';
     checkPhoneId(id);
 }
 
 function checkPhoneId(id) {
     if (id === 0) {
         phoneId = 0;
-        phonePopUpWindow();
+        showPhoneInputs(null);
     } else {
         phoneId = id.replace(/\D+/g, "");
         fillPhoneInputs(phoneId);
     }
-
 }
 
 function showPhoneInputs(promise) {
     phonePopUpWindow();
-    if (promise !== null) {
-        inputValues('phone', promise);
-        inputValues('operatorCode', promise);
-        inputValues('countryCode', promise);
-        inputValues('type', promise);
-        inputValues('note', promise);
-    }
+    inputValues('phone', promise);
+    inputValues('operatorCode', promise);
+    inputValues('countryCode', promise);
+    inputValues('type', promise);
+    inputValues('note', promise);
 }
 
 function phonePopUpWindow() {
@@ -78,8 +76,14 @@ function phonePopUpWindow() {
 
 function addPhonePopupButtons() {
     var textHTML = "<button id='phoneOk' type='submit' onclick='phonesSave()'>Ok</button>" +
-        "<button type='reset' onclick='cancelButton()'>Cancel</button>";
+        "<button id='phoneCancel' type='reset'>Cancel</button>";
     document.getElementById('phone-popup-buttons').innerHTML = textHTML;
+    document.getElementById('phoneCancel').addEventListener('click', cancelPhonesPop, false);
+}
+
+function cancelPhonesPop() {
+    document.getElementById('attach-buttons').style.display = 'block';
+    cancelButton("phones-window");
 }
 
 async function fillPhoneInputs(id) {
@@ -117,6 +121,9 @@ function phonesSave() {
     if (phoneId === 0) {
         inputPhonesForm.forEach(function (value, key) {
             innerArray[key] = value;
+            if (contactId !== 0) {
+                innerArray['contactId'] = contactId;
+            }
         });
         createPhonesArray.push(innerArray);
 
@@ -152,6 +159,7 @@ function phonesSave() {
         document.getElementById('type' + phoneId).innerHTML = type;
         document.getElementById('note' + phoneId).innerHTML = note;
     }
+    document.getElementById('attach-buttons').style.display = 'block';
     manageScripts("phones-window");
 }
 

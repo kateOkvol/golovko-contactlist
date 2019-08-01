@@ -17,13 +17,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-public class ControllerUtils/*<T extends DTO>*/ {
-//    private final Class<T> typeClass;
+public class ControllerUtils {
 
-    public ControllerUtils(/*Class<T> typeClass*/) {
-//        this.typeClass = typeClass;
+    public ControllerUtils() {
     }
-
 
     public JsonNode prepareToDTO(HttpServletRequest request) throws IOException {
         String jsonString = processRequest(request);
@@ -79,7 +76,9 @@ public class ControllerUtils/*<T extends DTO>*/ {
                 FileItem fileItem = (FileItem) item;
                 File file =null ;
                 if(new File(path, fileItem.getName()).isFile()){
-                    file = new File(path, fileItem.getName()+"_");
+                    String[] parts = fileItem.getName().split(".+\\.", 2);
+                    parts[1] = "." + parts[1];
+                    file = new File(path, parts[0]+"_"+parts[1]);
                 }else{
                     file = new File(path, fileItem.getName());
                 }

@@ -58,5 +58,4 @@ public class NumberController {
         }
         response.setStatus(200);
     }
-
 }
