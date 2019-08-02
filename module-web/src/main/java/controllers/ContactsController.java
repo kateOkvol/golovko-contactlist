@@ -5,11 +5,8 @@ import dto.ContactDTO;
 import services.ContactService;
 import utils.ControllerUtils;
 
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,8 +31,8 @@ public class ContactsController {
         ContactDTO dto = new ObjectMapper().convertValue(
                 util.prepareToDTO(request), ContactDTO.class);
         ContactService service = new ContactService(dto);
-        service.createContact();
-        String jsonString = "[" + dto.getId() + "]";
+        int id = service.createContact();
+        String jsonString = "[" + id + "]";
         response.getWriter().write(jsonString);
         System.out.println(jsonString);
     }
@@ -79,13 +76,6 @@ public class ContactsController {
         String path = properties.getProperty("ava_upload_path");
         Integer id = util.processId("id", request);
         String avatar = new ContactService().getById(id).getAvatar();
-        String type = avatar.split(".+\\.", 2)[1];
-        String fileName = path + avatar;
-        BufferedImage image = ImageIO.read(new File(fileName));
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        ImageIO.write(image, type, stream);
-        byte[] array = stream.toByteArray();
-        response.getWriter().write(
-                new ObjectMapper().writeValueAsString(array));
+        util.downloadImg(avatar, path, response);
     }
 }

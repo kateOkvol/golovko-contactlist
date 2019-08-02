@@ -20,7 +20,7 @@ function getSelected() {
 
 
 function showAttachInputs(promise) {
-    attachPopUpWindow(promise);
+    attachPopUpWindow();
     if (promise !== null) {
         inputValues('attachName', promise);
         inputValues('attachNote', promise);
@@ -56,11 +56,12 @@ function attachSave(promise) {
         let elementTable = document.getElementById('attach-table');
 
         let innerArray = {};
-        let inputAttachForm = new FormData(document.forms.attachPopupForm);
-        inputAttachForm.append('path', promise.path);
-        inputAttachForm.append('date', promise.date);
+        let attachForm = new FormData(document.forms.attachPopupForm);
+        attachForm.append('path', promise.path);
+        attachForm.append('date', promise.date);
+        attachForm.append('contactId', contactId);
         if (attachId === 0) {
-            inputAttachForm.forEach(function (value, key) {
+            attachForm.forEach(function (value, key) {
                 innerArray[key] = value;
             });
 
@@ -77,8 +78,8 @@ function attachSave(promise) {
             row.insertCell(2).innerHTML = date;
             row.insertCell(3).innerHTML = note;
         } else {
-            inputAttachForm.append('id', attachId);
-            inputAttachForm.forEach(function (value, key) {
+            attachForm.append('id', attachId);
+            attachForm.forEach(function (value, key) {
                 innerArray[key] = value;
             });
             updateAttachArray.push(innerArray);
@@ -95,8 +96,8 @@ function attachSave(promise) {
     }, false);
 }
 
-function attachPopUpWindow(promise) {
-    var textHTML = "<fieldset id='attache-fieldset'>" +
+function attachPopUpWindow() {
+    const textHTML = "<fieldset id='attache-fieldset'>" +
         "<form id='attachPopupForm' enctype='multipart/form-data'>" +
         "<label> " +
         "<br>" +
@@ -117,11 +118,11 @@ function attachPopUpWindow(promise) {
     const element = document.getElementById('attach-window');
     element.innerHTML = textHTML;
     element.style.display = 'block';
-    addAttachPopupButtons(promise);
+    addAttachPopupButtons();
 }
 
 function addAttachPopupButtons() {
-    var textHTML = "<button id='attachOk' type='submit'>Ok</button>" +
+    const textHTML = "<button id='attachOk' type='submit'>Ok</button>" +
         "<button type='reset' onclick='cancelButton(\"attach-window\")'>Cancel</button>";
     document.getElementById('attach-popup-buttons').innerHTML = textHTML;
 }

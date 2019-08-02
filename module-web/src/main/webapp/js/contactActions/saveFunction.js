@@ -1,9 +1,10 @@
 function buttonSave() {
     let personalData = new FormData(document.forms.contactInputs);
     let addressData = new FormData(document.forms.addressInputs);
-    if (ava != null) {
-        personalData.append('avatar', ava.name);
+    if ((ava === '/resource/noAva.jpg')||(ava ==="no-avatar\\noAva.jpg")) {
+        ava = '';
     }
+    personalData.append('avatar', ava);
     let contactData = createPostContactData('', personalData, addressData);
 
     if (contactId !== 0) {
@@ -127,9 +128,11 @@ function createAttachFetch() {
 }
 
 function attachMetaInfFetch(respId) {
-    createAttachArray.forEach(function (element) {
-        element['contactId'] = respId;
-    });
+    if(contactId===0) {
+        createAttachArray.forEach(function (element) {
+            element['contactId'] = respId;
+        });
+    }
     new Promise((resolve, reject) => {
         return fetch('application?createAttach', {
             method: 'POST',

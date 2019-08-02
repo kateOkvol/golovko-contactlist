@@ -28,11 +28,6 @@ public class MainContactDAOImpl implements MainContactDAO {
         return count(sql);
     }
 
-//    public Integer countSearchContacts(String query){
-//        String sql = "select count(*) from contacts.contact where " + query;
-//        return count(sql);
-//    }
-
     @Override
     public List<MainContact> getAll(int page) {
         Properties properties = new Properties();

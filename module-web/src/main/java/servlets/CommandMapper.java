@@ -50,6 +50,7 @@ class CommandMapper {
             method.invoke(type, request, response);
             response.setStatus(200);
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException e) {
+            response.setStatus(500);
             e.printStackTrace();
         }
     }

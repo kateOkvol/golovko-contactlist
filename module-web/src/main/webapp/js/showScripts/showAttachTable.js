@@ -1,7 +1,7 @@
 function showAttachTable(contactId) {
     addAttachButtons();
     if (contactId === 0) {
-        document.getElementById("attach-table").innerHTML ="<tr><th>&#10004</th><th>File name</th><th>Date of download</th><th>Note</th></tr>";
+        document.getElementById("attach-table").innerHTML = "<tr><th>&#10004</th><th>File name</th><th>Date of download</th><th>Note</th></tr>";
     } else {
         createAttachTable(contactId);
     }
@@ -9,7 +9,7 @@ function showAttachTable(contactId) {
 }
 
 function AttachTableHTML() {
-    let tableHTML =         "<script type='text/html-template' id='template-attach-table'>";
+    let tableHTML = "<script type='text/html-template' id='template-attach-table'>";
     tableHTML += "<tr>";
     tableHTML += "<th>&#10004</th><th>File name</th><th>Date of download</th><th>Note</th>";
     tableHTML += "<tbody id='attach-table-body'>";
@@ -77,30 +77,46 @@ function downloadAttachFetch(attachmentId) {
     id['id'] = number;
     console.log(JSON.stringify(id));
     if (id !== 0) {
-        new Promise((resolve, reject) => {
-            return fetch('application?downloadAttach', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(id)
-            })
-                .then(response => {
-                    response.blob().then(responseFile => {
-                        let header = response.headers.get("Content-Disposition");
-                        let name = header.split('=', 2)[1];
-                        let file = new Blob([responseFile], {type: 'application/octet-stream'});
-                        let aTeg = document.getElementById('a'+number);
-                        aTeg.href = URL.createObjectURL(file);
-                        aTeg.download = name;
-                        aTeg.click();
-                        URL.revokeObjectURL(aTeg.href);
-                    });
-                })
-                .catch(function (error) {
-                    reject(new Error(error.message));
-                })
-        });
+        let header;
+        return fetch('application?downloadAttach', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(id)
+        }).then(response => {
+            header = response.headers.get("Content-Disposition");
+            return response.text();
+        }).then(text=>{
+            return atob(text);
+        }).then(bytes => {
+            let byteArrays = [];
+            const sliceSize = 512;
+            for (let offset = 0; offset < bytes.length; offset += sliceSize) {
+                const slice = bytes.slice(offset, offset + sliceSize);
+
+                let byteNumbers = new Array(slice.length);
+                for (let i = 0; i < slice.length; i++) {
+                    byteNumbers[i] = slice.charCodeAt(i);
+                }
+
+                let byteArray = new Uint8Array(byteNumbers);
+
+                byteArrays.push(byteArray);
+            }
+
+            let name = header.split('=', 2)[1];
+            let file = new Blob(byteArrays, {type: 'application/octet-stream'});
+            let aTeg = document.getElementById('a' + number);
+            aTeg.href = URL.createObjectURL(file);
+            aTeg.download = name;
+            aTeg.click();
+            URL.revokeObjectURL(aTeg.href);
+        })
+            .catch(function (error) {
+                console.log(new Error(error.message));
+            });
+
     } else {
         alert("Save changes to download file");
     }

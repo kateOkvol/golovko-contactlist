@@ -30,6 +30,7 @@ public class ContactDAOImpl implements ContactDAO {
                 "RETURNING id;";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             partOfPrepare(statement, contact);
+            statement.setObject(17, contact.getAvatar());
             ResultSet insertPerson = statement.executeQuery();
             insertPerson.next();
             id = (Integer) insertPerson.getObject(1);

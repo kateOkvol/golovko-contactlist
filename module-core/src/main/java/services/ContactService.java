@@ -35,9 +35,8 @@ public class ContactService {
         return dto;
     }
 
-    public void createContact() {
-        Integer id = dao.create(setContactFields());
-        dto.setId(id);
+    public Integer createContact() {
+        return dao.create(setContactFields());
     }
 
     public void updateContact() {

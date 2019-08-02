@@ -69,7 +69,7 @@ public class MainContactsController {
 
             String filter = json.get("filter").textValue();
             if (filter != null && !filter.equals("")) {
-                query += "birthDate" +
+                query += "birth_date" +
                         (filter.equals("more") ? ">" : "<")
                         + "'" + json.get("birthDate").textValue() + "'";
             } else {

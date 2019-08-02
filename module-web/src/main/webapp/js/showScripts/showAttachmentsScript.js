@@ -7,7 +7,8 @@ function showAttaches(promise) {
 function checkPromise(promise) {
     if (promise === null) {
         addAvatarComponents();
-        document.getElementById('avaImg').src='/resource/noAva.jpg';
+        ava = '/resource/noAva.jpg';
+        document.getElementById('avaImg').src = ava;
         showAttachTable(0);
     } else {
         showAttachTable(promise.id);
@@ -27,9 +28,10 @@ function addAvatarComponents() {
 function fillAvatarComponent(promise) {
     let id = {};
     id['id'] = promise.id;
+    ava = promise['avatar'];
     fetch('application?getAvatar', {
         method: 'POST',
-        dataType : 'binary',
+        dataType: 'binary',
         body: JSON.stringify(id)
     })
         .then(response => {
@@ -46,7 +48,7 @@ function fillAvatarComponent(promise) {
 }
 
 function setAvatar() {
-    ava = document.getElementById('avatarId').files[0];
+    let avaElement = document.getElementById('avatarId').files[0];
     const preview = document.getElementById('avaImg');
     const reader = new FileReader();
 
@@ -58,13 +60,15 @@ function setAvatar() {
         console.log(preview.src);
     }, false);
 
-    if (ava) {
-        reader.readAsDataURL(ava);
-        console.log(ava);
+    if (avaElement) {
+        reader.readAsDataURL(avaElement);
+        console.log(avaElement);
     } else {
         preview.src = '';
         console.log('else :(');
     }
+
+    ava = avaElement.name;
 }
 
 function uploadAvaFetch(file) {

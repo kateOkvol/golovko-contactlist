@@ -7,14 +7,17 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import sun.misc.BASE64Encoder;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 
 public class ControllerUtils {
@@ -55,14 +58,17 @@ public class ControllerUtils {
     }
 
     public void writeAttachResponse(String fileName, HttpServletResponse response) throws IOException {
-        try (FileInputStream reader = new FileInputStream(fileName);
-             PrintWriter responseWriter = response.getWriter()) {
-            response.addHeader("Content-Disposition", "attachment;filename=" + fileName);
-            int i;
-            while ((i = reader.read()) != -1) {
-                responseWriter.write(i);
-            }
-        }
+//        try (FileInputStream reader = new FileInputStream(fileName);
+//             PrintWriter responseWriter = response.getWriter()) {
+//            response.addHeader("Content-Disposition", "attachment;filename=" + fileName);
+//            int i;
+//            while ((i = reader.read()) != -1) {
+//                responseWriter.write(i);
+//            }
+//        }
+        BASE64Encoder encoder = new BASE64Encoder();
+        encoder.encode(new FileInputStream(new File(fileName)), response.getOutputStream());
+
     }
 
     public void uploadAttach(String path, HttpServletRequest request, HttpServletResponse response) {
@@ -74,20 +80,33 @@ public class ControllerUtils {
             List items = upload.parseRequest(request);
             for (Object item : items) {
                 FileItem fileItem = (FileItem) item;
-                File file =null ;
-                if(new File(path, fileItem.getName()).isFile()){
-                    String[] parts = fileItem.getName().split(".+\\.", 2);
-                    parts[1] = "." + parts[1];
-                    file = new File(path, parts[0]+"_"+parts[1]);
-                }else{
-                    file = new File(path, fileItem.getName());
+                if (fileItem.getName() != null) {
+                    File file;
+                    if (new File(path, fileItem.getName()).isFile()) {
+                        String[] parts = fileItem.getName().split("\\.(?=[^\\.]+$)");
+                        parts[1] = "." + parts[1];
+                        file = new File(path, parts[0] + "_" + parts[1]);
+                    } else {
+                        file = new File(path, fileItem.getName());
+                    }
+                    fileItem.write(file);
+                    System.out.println(file.getName() + " was added at folder");
+                    response.setStatus(HttpServletResponse.SC_OK);
                 }
-                fileItem.write(file);
-                System.out.println(file.getName() + " was added at folder");
-                response.setStatus(HttpServletResponse.SC_OK);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void downloadImg(String name, String filePath, HttpServletResponse response) throws IOException {
+        String type = name.split(".+\\.", 2)[1];
+        String fileName = filePath + name;
+        BufferedImage image = ImageIO.read(new File(fileName));
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        ImageIO.write(image, type, stream);
+        byte[] array = stream.toByteArray();
+        response.getWriter().write(
+                new ObjectMapper().writeValueAsString(array));
     }
 }

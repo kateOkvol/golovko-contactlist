@@ -112,15 +112,15 @@ public class AttachmentDAOImpl implements AttachmentDAO {
         try {
             while (set.next()) {
                 Attachment attachment = new Attachment();
-                attachment.setId((Integer) set.getObject("id"));
-                attachment.setContactId((Integer) set.getObject("contact_id"));
+                attachment.setId(set.getInt("id"));
+                attachment.setContactId(set.getInt("contact_id"));
 
                 String name = (set.getString("attach_name") == null)
                         ? set.getString("path")
                         : set.getString("attach_name");
                 attachment.setAttachName(name);
-
-                attachment.setPath(set.getString("path"));
+                String path = set.getString("path");
+                attachment.setPath(path);
                 attachment.setDate(set.getDate("date"));
                 attachment.setNote(set.getString("note"));
 

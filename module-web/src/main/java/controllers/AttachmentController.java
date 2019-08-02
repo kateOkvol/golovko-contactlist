@@ -83,7 +83,10 @@ public class AttachmentController {
     public void download(HttpServletRequest request, HttpServletResponse response) throws IOException {
         AttachmentService service = new AttachmentService();
         Integer id = util.processId("id", request);
-        String fileName = properties.getProperty("file_path") + service.getById(id).getPath();
+        String name = service.getById(id).getPath();
+        String filePath = properties.getProperty("file_path");
+        String fileName = filePath + name;
+        response.addHeader("Content-Disposition", "attachment;filename=" + fileName);
         util.writeAttachResponse(fileName, response);
     }
 }

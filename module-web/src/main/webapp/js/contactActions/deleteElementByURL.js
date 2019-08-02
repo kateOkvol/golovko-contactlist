@@ -1,8 +1,10 @@
 function deleteManager(tableBodyId, url) {
     if (confirm("Are you sure?")) {
-        var id = getCheckbox(tableBodyId);
+        const id = getCheckbox(tableBodyId);
         deleteElementByURL(url, id);
-        contactId = null;
+        if (url === 'deleteContacts') {
+            contactId = null;
+        }
     }
 }
 
@@ -11,9 +13,9 @@ function getCheckbox(tableBodyId) {
     const tableBody = document.getElementById(tableBodyId);
     const elements = tableBody.getElementsByTagName('input');
 
-    for (var i = elements.length - 1; i >= 0; i--) {
+    for (let i = elements.length - 1; i >= 0; i--) {
         if (elements[i].checked) {
-            const newId =elements[i].id.replace(/\D+/g, "");
+            const newId = elements[i].id.replace(/\D+/g, "");
             console.log(newId);
             selectedId.push(newId);
             tableBody.deleteRow(i);
