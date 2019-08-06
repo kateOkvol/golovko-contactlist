@@ -1,42 +1,43 @@
 package db;
 
+import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.Properties;
 
 public class DataBaseConnection {
-    private static String DB_DRIVER;
-    private static String URL;
-    private static String USER;
-    private static String PASSWORD ;
+    private static BasicDataSource source = new BasicDataSource();
+    private static DataBaseConnection dataBaseConnection;
+    private final static Logger LOGGER = LogManager.getLogger(DataBaseConnection.class);
 
+    public static DataBaseConnection getInstance() {
+        if (dataBaseConnection == null) {
+            dataBaseConnection = new DataBaseConnection();
+        }
+        return dataBaseConnection;
+    }
 
-    public static Connection getConnection() throws SQLException {
+    private DataBaseConnection() {
         Properties p = new Properties();
         try {
             p.load(DataBaseConnection.class.getClassLoader().getResourceAsStream("config-core.properties"));
-            DB_DRIVER = p.getProperty("db_driver");
-            URL = p.getProperty("db_url");
-            USER = p.getProperty("db_user");
-            PASSWORD = p.getProperty("db_password");
+            source.setDriverClassName(p.getProperty("db_driver"));
+            source.setUrl(p.getProperty("db_url"));
+            source.setUsername(p.getProperty("db_user"));
+            source.setPassword(p.getProperty("db_password"));
 
-            Class.forName(DB_DRIVER);
-        } catch (ClassNotFoundException | IOException e) {
+            source.setInitialSize(20);
+            source.setMaxActive(50);
+        } catch (IOException e) {
+            LOGGER.error(e);
             e.printStackTrace();
         }
-        return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 
-//    public static boolean isClosed(Connection connection){
-//        try {
-//            connection.close();
-//            return true;
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return false;
-//    }
+    public BasicDataSource getSource() {
+        return source;
+    }
 }
 

@@ -6,6 +6,8 @@ import controllers.EmailMessageController;
 import controllers.MainContactsController;
 import controllers.MainNumberController;
 import controllers.NumberController;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,6 +16,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 
 class CommandMapper {
+    private final static Logger LOGGER = LogManager.getLogger(CommandMapper.class);
     private static HashMap<String, Method> map = new HashMap<>();
 
     private static void initMap() throws NoSuchMethodException {

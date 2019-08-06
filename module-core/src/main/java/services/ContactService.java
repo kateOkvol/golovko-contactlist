@@ -1,11 +1,9 @@
 package services;
 
 import dao.DAOImpl.ContactDAOImpl;
-import db.DataBaseConnection;
 import dto.ContactDTO;
 import entities.Contact;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public class ContactService {
@@ -13,19 +11,11 @@ public class ContactService {
     private ContactDTO dto;
 
     public ContactService() {
-        try {
-            this.dao = new ContactDAOImpl(DataBaseConnection.getConnection());
-        } catch (SQLException e) {
-            System.out.println("no connection to start the address service");
-        }
+        this.dao = new ContactDAOImpl();
     }
 
     public ContactService(ContactDTO dto) {
-        try {
-            this.dao = new ContactDAOImpl(DataBaseConnection.getConnection());
-        } catch (SQLException e) {
-            System.out.println("no connection to start the address service");
-        }
+        this.dao = new ContactDAOImpl();
         this.dto = dto;
     }
 
@@ -33,6 +23,10 @@ public class ContactService {
         ContactDTO dto = new ContactDTO(dao.getById(id));
         this.dto = dto;
         return dto;
+    }
+
+    public String setAvatar(String ava, int id){
+        return dao.setAvatar(ava, id);
     }
 
     public Integer createContact() {

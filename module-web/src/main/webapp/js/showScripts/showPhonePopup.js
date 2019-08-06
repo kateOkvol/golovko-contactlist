@@ -29,13 +29,13 @@ function showPhoneInputs(promise) {
 }
 
 function phonePopUpWindow() {
-    var textHTML = "<fieldset id='phones-fieldset'>" +
+    const textHTML = "<fieldset id='phones-fieldset'>" +
         "<form id='phonePopupForm' enctype='multipart/form-data'>" +
         "<label> " +
         "<br>" +
         "Phone number*:" +
         "<br>" +
-        "<input name='phone' id='phone' required> " +
+        "<input name='phone' id='phone' type='tel' required='required'> " +
         "</label> " +
         "<br>" +
         "<label> " +
@@ -47,7 +47,7 @@ function phonePopUpWindow() {
         "<label> " +
         "Country code:" +
         "<br>" +
-        "<input name='countryCode'  id='countryCode'> " +
+        "<input name='countryCode' id='countryCode'> " +
         "</label> " +
         "<label> " +
         "<br>" +
@@ -65,8 +65,8 @@ function phonePopUpWindow() {
         "<br>" +
         "<input name='note' id='note'> " +
         "</label> " +
-        "</form>" +
         "<div id='phone-popup-buttons'></div>" +
+        "</form>" +
         "</fieldset>";
     const element = document.getElementById('phones-window');
     element.innerHTML = textHTML;
@@ -75,7 +75,7 @@ function phonePopUpWindow() {
 }
 
 function addPhonePopupButtons() {
-    var textHTML = "<button id='phoneOk' type='submit' onclick='phonesSave()'>Ok</button>" +
+    const textHTML = "<button id='phoneOk' onclick='phonesSave()' type='submit'>Ok</button>" +
         "<button id='phoneCancel' type='reset'>Cancel</button>";
     document.getElementById('phone-popup-buttons').innerHTML = textHTML;
     document.getElementById('phoneCancel').addEventListener('click', cancelPhonesPop, false);
@@ -88,7 +88,6 @@ function cancelPhonesPop() {
 
 async function fillPhoneInputs(id) {
     const numberId = {id};
-    console.log(numberId);
     const options = {
         method: 'POST',
         headers: {
@@ -97,7 +96,6 @@ async function fillPhoneInputs(id) {
         },
         body: JSON.stringify(numberId)
     };
-    console.log(options);
 
     let promise = await new Promise((resolve, reject) => {
         return fetch("application?getPhoneById", options)
@@ -113,54 +111,65 @@ async function fillPhoneInputs(id) {
 
 
 function phonesSave() {
-    let elementTable = document.getElementById('phones-table');
-
-    let innerArray = {};
+    validPhone(document.forms.phonePopupForm.phone);
     inputPhonesForm = new FormData(document.forms.phonePopupForm);
-
     if (phoneId === 0) {
-        inputPhonesForm.forEach(function (value, key) {
-            innerArray[key] = value;
-            if (contactId !== 0) {
-                innerArray['contactId'] = contactId;
-            }
-        });
-        createPhonesArray.push(innerArray);
-
-        let row = elementTable.insertRow(1);
-        let countryCode = Number(innerArray['countryCode']);
-        let operatorCode = Number(innerArray['operatorCode']);
-        let phone = Number(innerArray['phone']);
-        let type = innerArray['type'];
-        let note = innerArray['note'];
-
-        row.insertCell(0).innerHTML = "<input type='checkbox' name='delete'>";
-        row.insertCell(1).innerHTML =
-            "<a href='' id='phone0' onclick='loadPopupPhones(event, id)'>" +
-            inputNotNull(countryCode, operatorCode, phone) +
-            "</a>";
-        row.insertCell(2).innerHTML = type;
-        row.insertCell(3).innerHTML = note;
+        createPhoneRow();
     } else {
-        inputPhonesForm.append('contactId', contactId);
-        inputPhonesForm.append('id', phoneId);
-        inputPhonesForm.forEach(function (value, key) {
-            innerArray[key] = value;
-        });
-        updatePhonesArray.push(innerArray);
-
-        let countryCode = Number(innerArray['countryCode']);
-        let operatorCode = Number(innerArray['operatorCode']);
-        let phone = Number(innerArray['phone']);
-        let type = innerArray['type'];
-        let note = innerArray['note'];
-
-        document.getElementById('number' + phoneId).innerHTML = inputNotNull(countryCode, operatorCode, phone);
-        document.getElementById('type' + phoneId).innerHTML = type;
-        document.getElementById('note' + phoneId).innerHTML = note;
+        editPhoneRow();
     }
     document.getElementById('attach-buttons').style.display = 'block';
     manageScripts("phones-window");
+}
+
+function createPhoneRow() {
+    let elementTable = getPhoneTbody();
+    let innerArray = {};
+    inputPhonesForm.forEach(function (value, key) {
+        innerArray[key] = value;
+        if (contactId !== 0) {
+            innerArray['contactId'] = contactId;
+        }
+    });
+    createPhonesArray.push(innerArray);
+
+    let row = elementTable.insertRow(0);
+    let countryCode = Number(innerArray['countryCode']);
+    let operatorCode = Number(innerArray['operatorCode']);
+    let phone = Number(innerArray['phone']);
+    let type = innerArray['type'];
+    let note = innerArray['note'];
+
+    row.insertCell(0).innerHTML = "<input type='checkbox' id='new" + (createPhonesArray.length-1)+"' name='delete'>";
+    row.insertCell(1).innerHTML =
+        "<a href='' id='phone0' onclick='loadPopupPhones(event, id)'>" +
+        inputNotNull(countryCode, operatorCode, phone) +
+        "</a>";
+    row.insertCell(2).innerHTML = type;
+    row.insertCell(3).innerHTML = note;
+    return innerArray;
+}
+
+function editPhoneRow() {
+    inputPhonesForm.append('contactId', contactId);
+    inputPhonesForm.append('id', phoneId);
+    let innerArray = {};
+    inputPhonesForm.forEach(function (value, key) {
+        innerArray[key] = value;
+    });
+    updatePhonesArray.push(innerArray);
+
+    let countryCode = Number(innerArray['countryCode']);
+    let operatorCode = Number(innerArray['operatorCode']);
+    let phone = Number(innerArray['phone']);
+    let type = innerArray['type'];
+    let note = innerArray['note'];
+
+    document.getElementById('number' + phoneId).innerHTML = inputNotNull(countryCode, operatorCode, phone);
+    document.getElementById('type' + phoneId).innerHTML = type;
+    document.getElementById('note' + phoneId).innerHTML = note;
+
+    return innerArray;
 }
 
 function inputNotNull(countryCode, operatorCode, phone) {
@@ -170,4 +179,17 @@ function inputNotNull(countryCode, operatorCode, phone) {
     return countryCodeInput + " " + operatorCodeInput + " " + phoneInput;
 }
 
+function validPhone(phone) {
+    if (phone.value===''){
+        throw '';
+    }
+}
 
+function getPhoneTbody() {
+    if(document.getElementById('phone-table-body')===null){
+        let tbody = document.createElement('tbody');
+        tbody.id = 'phone-table-body';
+        document.getElementById('phones-table').appendChild(tbody);
+    }
+    return  document.getElementById('phone-table-body');
+}

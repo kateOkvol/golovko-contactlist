@@ -1,6 +1,7 @@
 package dao.DAOImpl;
 
 import dao.AttachmentDAO;
+import db.DataBaseConnection;
 import entities.Attachment;
 
 import java.sql.Connection;
@@ -11,28 +12,37 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class AttachmentDAOImpl implements AttachmentDAO {
-    private Connection connection;
 
     public AttachmentDAOImpl() {
     }
 
-    public AttachmentDAOImpl(Connection connection) {
-        this.connection = connection;
+    public String setPat(String path, int id) {
+            path = id + path;
+            String sql = "UPDATE contacts.attachments SET  path = '" + path + "' WHERE id = " + id + ";";
+            try (Connection connection = DataBaseConnection.getInstance().getSource().getConnection();
+                 PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        return path;
     }
 
     @Override
-    public void create(Attachment attachment) {
-        String sql = "INSERT INTO contacts.attachments (contact_id, path, attach_name, date, note)" +
-                "VALUES (?, ?, ?, ?::date, ?);";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+    public Integer create(Attachment attachment) {
+        Integer id = null;
+        String sql = "INSERT INTO contacts.attachments (contact_id, attach_name, date, note) " +
+                "VALUES (?, ?, ?::date, ?) RETURNING id;";
+        try (Connection connection =  DataBaseConnection.getInstance().getSource().getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             partOfPrepare(statement, attachment);
-            int count = statement.executeUpdate();
-            if (count != 1) {
-                System.out.println("contact update exception");
-            }
+            ResultSet insertPerson = statement.executeQuery();
+            insertPerson.next();
+            id = (Integer) insertPerson.getObject(1);
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return id;
     }
 
     @Override
@@ -42,7 +52,8 @@ public class AttachmentDAOImpl implements AttachmentDAO {
                 "regexp_replace(path, '\\s+$', '') AS path, date, regexp_replace(note, '\\s+$', '') AS note " +
                 "FROM contacts.attachments " +
                 "WHERE contact_id = ?;";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection =  DataBaseConnection.getInstance().getSource().getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, contactId);
             ResultSet resultSet = statement.executeQuery();
             list = parseResultSet(resultSet);
@@ -58,7 +69,8 @@ public class AttachmentDAOImpl implements AttachmentDAO {
         String sql = "SELECT id, contact_id, regexp_replace(attach_name, '\\s+$', '') AS attach_name, " +
                 "regexp_replace(path, '\\s+$', '') AS path, date, regexp_replace(note, '\\s+$', '') AS note " +
                 "FROM contacts.attachments WHERE id = ?";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = DataBaseConnection.getInstance().getSource().getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
             attachment = parseResultSet(resultSet).get(0);
@@ -71,7 +83,8 @@ public class AttachmentDAOImpl implements AttachmentDAO {
     @Override
     public void update(Attachment attachment) {
         String sql = "UPDATE contacts.attachments SET contact_id = ?, path = ?, attach_name = ?, date = ?, note = ? WHERE id = ?;";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = DataBaseConnection.getInstance().getSource().getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(6, attachment.getId());
             partOfPrepare(statement, attachment);
             int count = statement.executeUpdate();
@@ -87,7 +100,8 @@ public class AttachmentDAOImpl implements AttachmentDAO {
     public String delete(Integer id) {
         String sql = "DELETE FROM contacts.attachments WHERE id = ? RETURNING path;";
         String deletePath = "";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = DataBaseConnection.getInstance().getSource().getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setObject(1, id);
             ResultSet resultSet = statement.executeQuery();
             resultSet.next();
@@ -100,11 +114,9 @@ public class AttachmentDAOImpl implements AttachmentDAO {
 
     private void partOfPrepare(PreparedStatement statement, Attachment attachment) throws SQLException {
         statement.setInt(1, attachment.getContactId());
-        statement.setObject(2, attachment.getPath());
-        statement.setObject(3, attachment.getAttachName());
-        statement.setDate(4, attachment.getDate());
-        statement.setObject(5, attachment.getNote());
-
+        statement.setObject(2, attachment.getAttachName());
+        statement.setDate(3, attachment.getDate());
+        statement.setObject(4, attachment.getNote());
     }
 
     private List<Attachment> parseResultSet(ResultSet set) {
@@ -119,6 +131,7 @@ public class AttachmentDAOImpl implements AttachmentDAO {
                         ? set.getString("path")
                         : set.getString("attach_name");
                 attachment.setAttachName(name);
+
                 String path = set.getString("path");
                 attachment.setPath(path);
                 attachment.setDate(set.getDate("date"));
@@ -131,5 +144,4 @@ public class AttachmentDAOImpl implements AttachmentDAO {
         }
         return list;
     }
-
 }

@@ -48,10 +48,21 @@ public class AttachmentController {
     public void createAttach(HttpServletRequest request, HttpServletResponse response) throws IOException {
         AttachmentDTO[] elements = new ObjectMapper().convertValue(
                 util.prepareToDTO(request), AttachmentDTO[].class);
+        ArrayList<Integer> list = new ArrayList<>();
         for (AttachmentDTO dto : elements) {
-            new AttachmentService(dto).createAttach();
+            AttachmentService service = new AttachmentService(dto);
+            int id = service.createAttach();
+            service.setPath(dto.getPath(), id);
+
+            list.add(id);
+            // String jsonString = "[" + id + "]";
+//            response.getWriter().write(jsonString);
+//            System.out.println(jsonString);
+
         }
+        response.getWriter().write(new ObjectMapper().writeValueAsString(list));
         response.setStatus(200);
+        System.out.println(list.toString());
     }
 
     public void deleteAttach(HttpServletRequest request, HttpServletResponse response) throws IOException {

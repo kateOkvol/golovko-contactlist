@@ -1,12 +1,9 @@
 function buttonSave() {
     let personalData = new FormData(document.forms.contactInputs);
     let addressData = new FormData(document.forms.addressInputs);
-    if ((ava === '/resource/noAva.jpg')||(ava ==="no-avatar\\noAva.jpg")) {
-        ava = '';
-    }
+    setAvaValue(contactId);
     personalData.append('avatar', ava);
     let contactData = createPostContactData('', personalData, addressData);
-
     if (contactId !== 0) {
         contactSave('application?updateContact', contactData);
         manageScripts('contact-editor');
@@ -65,6 +62,24 @@ function contactSave(url, data) {
     );
 }
 
+function uploadAvaFetch(file) {
+    let form = new FormData();
+    form.append('file', file);
+    let promise = new Promise((resolve, reject) => {
+        return fetch('application?uploadAva', {
+            method: 'POST',
+            body: form
+        })
+            .then(() => {
+                ava = null;
+            })
+            .catch(function (error) {
+                reject(new Error(error.message));
+            });
+    });
+    console.log(promise);
+}
+
 function createPhone(id) {
     createPhonesArray.forEach(function (element) {
         element['contactId'] = id;
@@ -79,6 +94,7 @@ function createPhone(id) {
             body: JSON.stringify(createPhonesArray)
         })
             .then(() => {
+                phoneId = 0;
                 createPhonesArray.length = 0;
                 inputPhonesForm.length = 0;
             })
@@ -100,7 +116,9 @@ function updatePhone() {
             body: JSON.stringify(updatePhonesArray)
         })
             .then(() => {
+                phoneId = 0;
                 updatePhonesArray.length = 0;
+                inputPhonesForm.length = 0;
             })
             .catch(function (error) {
                 reject(new Error(error.message));
@@ -110,14 +128,23 @@ function updatePhone() {
 }
 
 
-function createAttachFetch() {
+function uploadAttachFetch(id) {
     for (let i = 0; i < inputAttachForm.length; i++) {
+        let form = inputAttachForm[i];
+        const file = form.get('file');
+        const type = file.name.split(/\.(?=[^\.]+$)/)[1];
+        const name = id[i].toString() + '.' + type;
+        const newFile = new File([file], name);
+        form = new FormData();
+        form.append('file', newFile);
+
         new Promise((resolve, reject) => {
             return fetch('application?uploadAttach', {
                 method: 'POST',
-                body: inputAttachForm[i]
+                body: form
             })
                 .then(() => {
+                    attachId = 0;
                     inputAttachForm.length = 0;
                 })
                 .catch(function (error) {
@@ -127,28 +154,31 @@ function createAttachFetch() {
     }
 }
 
-function attachMetaInfFetch(respId) {
-    if(contactId===0) {
+function createAttachFetch(respId) {
+    if (contactId === 0) {
         createAttachArray.forEach(function (element) {
             element['contactId'] = respId;
         });
+    } else {
+        contactId = 0;
     }
-    new Promise((resolve, reject) => {
-        return fetch('application?createAttach', {
-            method: 'POST',
-            headers: {
-                'Accept-type': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(createAttachArray)
+    return fetch('application?createAttach', {
+        method: 'POST',
+        headers: {
+            'Accept-type': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(createAttachArray)
+    })
+        .then(response => {
+            createAttachArray.length = 0;
+            return response.json();
+        }).then(result => {
+            uploadAttachFetch(result);
         })
-            .then(() => {
-                createAttachArray.length = 0;
-            })
-            .catch(function (error) {
-                reject(new Error(error.message));
-            })
-    });
+        .catch(function (error) {
+            console.log(new Error(error.message));
+        });
 }
 
 function updateAttachFetch() {
@@ -162,8 +192,10 @@ function updateAttachFetch() {
             body: JSON.stringify(updateAttachArray)
         })
             .then(() => {
-                inputAttachForm.length = 0;
+                attachId = 0;
+                contactId = 0;
                 updateAttachArray.length = 0;
+                inputAttachForm.length = 0;
             })
             .catch(function (error) {
                 reject(new Error(error.message));
@@ -180,14 +212,17 @@ function manageSave(responseId) {
         updatePhone();
     }
     if (createAttachArray !== undefined && createAttachArray.length > 0) {
-        createAttachFetch();
-        attachMetaInfFetch(responseId);
+        createAttachFetch(responseId);
+    } else {
+        contactId = 0;
     }
     if (updateAttachArray !== undefined && updateAttachArray.length > 0) {
         updateAttachFetch();
     }
-    if (ava != null) {
-        uploadAvaFetch(ava);
+    setAvaValue(responseId);
+    if (ava !== '') {
+        const newFile = new File([file], ava);
+        uploadAvaFetch(newFile);
     }
 }
 
@@ -217,6 +252,19 @@ function createPostContactData(page, personalData, addressData) {
     return contactData;
 }
 
+function setAvaValue(id) {
+    if ((ava === '/resource/noAva.jpg') || (ava === "no-avatar\\noAva.jpg") || (ava === '')) {
+        ava = '';
+    } else {
+        const type = ava.split(/\.(?=[^\.]+$)/)[1];
+        if (id !== 0) {
+            ava = id.toString() + '.' + type;
+        } else {
+            ava = '.' + type;
+        }
+    }
+}
+
 function valid(key, value) {
     if ((key === 'firstName' || key === 'lastName')
         && (value === '')) {
@@ -232,8 +280,11 @@ function valid(key, value) {
 }
 
 function validDate() {
-    const mess = document.getElementById('birthDate').validationMessage;
-    if (mess !== '') {
+    const date = document.getElementById('birthDate');
+    const mess = date.validationMessage;
+    const now = new Date();
+    if ((mess !== '') ||
+        (new Date(date.value) > now)) {
         alert("Date is not valid");
         throw '';
     }

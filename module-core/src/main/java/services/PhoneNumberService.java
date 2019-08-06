@@ -1,11 +1,8 @@
 package services;
 
 import dao.DAOImpl.PhoneNumberDAOImpl;
-import db.DataBaseConnection;
 import dto.PhoneNumberDTO;
 import entities.PhoneNumber;
-
-import java.sql.SQLException;
 
 public class PhoneNumberService {
 
@@ -13,19 +10,11 @@ public class PhoneNumberService {
     private PhoneNumberDTO dto;
 
     public PhoneNumberService() {
-        try {
-            this.dao = new PhoneNumberDAOImpl(DataBaseConnection.getConnection());
-        } catch (SQLException e) {
-            System.out.println("no connection to start the address service");
-        }
+        this.dao = new PhoneNumberDAOImpl();
     }
 
     public PhoneNumberService(PhoneNumberDTO dto) {
-        try {
-            this.dao = new PhoneNumberDAOImpl(DataBaseConnection.getConnection());
-        } catch (SQLException e) {
-            System.out.println("no connection to start the address service");
-        }
+        this.dao = new PhoneNumberDAOImpl();
         this.dto = dto;
     }
 

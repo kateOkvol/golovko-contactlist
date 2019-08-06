@@ -1,6 +1,7 @@
 package dao.DAOImpl;
 
 import dao.ContactDAO;
+import db.DataBaseConnection;
 import entities.Contact;
 
 import java.sql.Connection;
@@ -12,35 +13,42 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ContactDAOImpl implements ContactDAO {
-    private Connection connection;
 
     public ContactDAOImpl() {
     }
 
-    public ContactDAOImpl(Connection connection) {
-        this.connection = connection;
+    public String setAvatar(String avatar, int id) {
+        if (avatar != null) {
+            avatar = id + avatar;
+            String sql = "UPDATE contacts.contact SET  avatar = '" + avatar + "' WHERE id = " + id + ";";
+            try (Connection connection = DataBaseConnection.getInstance().getSource().getConnection();
+                 PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return avatar;
     }
 
     @Override
     public Integer create(Contact contact) {
         Integer id = null;
         String sql = "INSERT INTO contacts.contact (first_name, last_name, middle_name, gender, " +
-                "birth_date, citizenship, marital_status, web_site, email, company, country, city, street, house, flat, zip_code, avatar) " +
-                "VALUES (?, ?, ?, ?::contacts.gender, ?, ?, ?::contacts.marital_status, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) " +
+                "birth_date, citizenship, marital_status, web_site, email, company, country, city, street, house, flat, zip_code) " +
+                "VALUES (?, ?, ?, ?::contacts.gender, ?, ?, ?::contacts.marital_status, ?, ?, ?, ?, ?, ?, ?, ?, ?) " +
                 "RETURNING id;";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = DataBaseConnection.getInstance().getSource().getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             partOfPrepare(statement, contact);
-            statement.setObject(17, contact.getAvatar());
             ResultSet insertPerson = statement.executeQuery();
             insertPerson.next();
             id = (Integer) insertPerson.getObject(1);
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return id;
     }
-
 
     @Override
     public Contact getById(Integer id) {
@@ -62,7 +70,8 @@ public class ContactDAOImpl implements ContactDAO {
                 "regexp_replace(flat, '\\s+$', '') AS flat, " +
                 "zip_code, regexp_replace(avatar, '\\s+$', '') AS avatar " +
                 "FROM contacts.contact WHERE id = ?";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = DataBaseConnection.getInstance().getSource().getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
             contact = parseResultSet(resultSet).get(0);
@@ -76,7 +85,8 @@ public class ContactDAOImpl implements ContactDAO {
         List<Contact> list = null;
         String sql = "SELECT first_name, middle_name, last_name " +
                 "FROM contacts.contact WHERE birth_date = ?::date;";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = DataBaseConnection.getInstance().getSource().getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setDate(1, date);
             ResultSet resultSet = statement.executeQuery();
             list = parseResultSet(resultSet);
@@ -92,7 +102,8 @@ public class ContactDAOImpl implements ContactDAO {
         String sql = "UPDATE contacts.contact SET first_name = ?, last_name = ?, middle_name = ?, gender = ?::contacts.gender, " +
                 "birth_date = ?, citizenship = ?, marital_status = ?::contacts.marital_status, web_site = ?, email = ?, company = ?, " +
                 "country = ?, city = ?, street = ?, house = ?, flat = ?, zip_code = ?, avatar = ? WHERE id = ?;";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = DataBaseConnection.getInstance().getSource().getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             partOfPrepare(statement, contact);
             statement.setObject(17, contact.getAvatar());
             statement.setInt(18, contact.getId());
@@ -112,7 +123,8 @@ public class ContactDAOImpl implements ContactDAO {
         String sqlContact = "DELETE FROM contacts.contact WHERE id = ? RETURNING avatar;";
         LinkedList<String> list = new LinkedList<>();
         fillList(list, sqlAttach, id);
-        try (PreparedStatement statement = connection.prepareStatement(sqlNumber)) {
+        try (Connection connection = DataBaseConnection.getInstance().getSource().getConnection();
+             PreparedStatement statement = connection.prepareStatement(sqlNumber)) {
             statement.setObject(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -147,7 +159,7 @@ public class ContactDAOImpl implements ContactDAO {
                 contact.setZipCode((Integer) set.getObject("zip_code"));
 
                 String avatar = set.getString("avatar");
-                contact.setAvatar((avatar!= null)? avatar : "no-avatar\\noAva.jpg");
+                contact.setAvatar((avatar != null) ? avatar : "no-avatar\\noAva.jpg");
                 list.add(contact);
             }
         } catch (SQLException e) {
@@ -175,8 +187,9 @@ public class ContactDAOImpl implements ContactDAO {
         statement.setObject(16, contact.getZipCode());
     }
 
-    private void fillList(List<String> list, String sql, Integer id){
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+    private void fillList(List<String> list, String sql, Integer id) {
+        try (Connection connection = DataBaseConnection.getInstance().getSource().getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setObject(1, id);
             ResultSet set = statement.executeQuery();
             while (set.next()) {

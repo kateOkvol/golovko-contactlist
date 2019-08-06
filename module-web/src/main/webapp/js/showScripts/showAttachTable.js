@@ -5,7 +5,6 @@ function showAttachTable(contactId) {
     } else {
         createAttachTable(contactId);
     }
-
 }
 
 function AttachTableHTML() {
@@ -13,7 +12,6 @@ function AttachTableHTML() {
     tableHTML += "<tr>";
     tableHTML += "<th>&#10004</th><th>File name</th><th>Date of download</th><th>Note</th>";
     tableHTML += "<tbody id='attach-table-body'>";
-    tableHTML += "</tr>";
     tableHTML += "{{#.}}";
     tableHTML += "<tr>";
     tableHTML += "<td><input class='messageCheckbox' type='checkbox' name='delete' id='attach{{id}}'></td>";
@@ -24,6 +22,7 @@ function AttachTableHTML() {
     tableHTML += "</tr>";
     tableHTML += "{{/.}}";
     tableHTML += "</tbody>";
+    tableHTML += "</tr>";
     tableHTML += "</script>";
 
     document.getElementById("attach-table").innerHTML = tableHTML;

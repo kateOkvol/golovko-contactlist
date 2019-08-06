@@ -32,6 +32,7 @@ public class ContactsController {
                 util.prepareToDTO(request), ContactDTO.class);
         ContactService service = new ContactService(dto);
         int id = service.createContact();
+        service.setAvatar(dto.getAvatar(), id);
         String jsonString = "[" + id + "]";
         response.getWriter().write(jsonString);
         System.out.println(jsonString);
@@ -45,11 +46,15 @@ public class ContactsController {
 
     public void deleteContacts(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String filePath = properties.getProperty("file_path");
+        String avaPath = properties.getProperty("ava_upload_path");
         ContactService service = new ContactService();
         ObjectMapper mapper = new ObjectMapper();
         ArrayList array = mapper.convertValue(util.prepareToDTO(request), ArrayList.class);
         for (Object element : array) {
-            List<String> files = service.deleteContact(Integer.parseInt((String) element));
+            Integer id = Integer.parseInt((String) element);
+            List<String> files = service.deleteContact(id);
+            new File(avaPath + files.get(files.size()-1)).delete();
+            files.remove(files.size()-1);
             for (String path : files) {
                 new File(filePath + path).delete();
             }
@@ -61,10 +66,9 @@ public class ContactsController {
         ObjectMapper mapper = new ObjectMapper();
         Integer id = util.processId("id", request);
         ContactService service = new ContactService();
-        String path = service.getById(id).getAvatar();
         response.getWriter().write(
                 mapper.writeValueAsString(
-                        service.getDto()));
+                        service.getById(id)));
     }
 
     public void uploadAvatar(HttpServletRequest request, HttpServletResponse response) {

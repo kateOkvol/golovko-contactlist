@@ -3,6 +3,7 @@ function manageScripts(element, pageId) {
     switch (element) {
         case("phones-window"):
             document.getElementById(element).style.display = 'none';
+            event.preventDefault();
             break;
         case("attach-window"):
             document.getElementById(element).style.display = 'none';
@@ -31,3 +32,11 @@ function manageScripts(element, pageId) {
             }
     }
 }
+//
+// function cleanValues() {
+//     contactId = 0;
+//     attachId = 0;
+//     phoneId = 0;
+//     inputAttachForm.length = 0;
+//     inputPhonesForm.length = 0;
+// }

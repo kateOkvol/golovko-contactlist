@@ -1,7 +1,10 @@
 package dao.DAOImpl;
 
 import dao.MainContactDAO;
+import db.DataBaseConnection;
 import entities.MainContact;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -13,19 +16,24 @@ import java.util.List;
 import java.util.Properties;
 
 public class MainContactDAOImpl implements MainContactDAO {
-
-    private Connection connection;
+    private final static Logger LOGGER = LogManager.getLogger(MainContactDAO.class);
 
     public MainContactDAOImpl() {
     }
 
-    public MainContactDAOImpl(Connection connection) {
-        this.connection = connection;
-    }
-
     public Integer countContacts(String query) {
         String sql = "SELECT count(*) FROM contacts.contact " + query;
-        return count(sql);
+        Integer result = null;
+        try (Connection connection = DataBaseConnection.getInstance().getSource().getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            ResultSet resultSet = statement.executeQuery();
+            resultSet.next();
+            result = resultSet.getInt(1);
+        } catch (SQLException e) {
+         //   LOGGER.error(e);
+            e.printStackTrace();
+        }
+        return result;
     }
 
     @Override
@@ -34,6 +42,7 @@ public class MainContactDAOImpl implements MainContactDAO {
         try {
             properties.load(MainContactDAOImpl.class.getClassLoader().getResourceAsStream("config-core.properties"));
         } catch (IOException e) {
+         //   LOGGER.error(e);
             e.printStackTrace();
         }
         int amount = Integer.parseInt(properties.getProperty("contact_amount"));
@@ -67,10 +76,12 @@ public class MainContactDAOImpl implements MainContactDAO {
 
     private List<MainContact> processGetReq(String sql) {
         List<MainContact> list = null;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = DataBaseConnection.getInstance().getSource().getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet resultSet = statement.executeQuery();
             list = parseResultSet(resultSet);
         } catch (SQLException e) {
+        //    LOGGER.error(e);
             e.printStackTrace();
         }
         return list;
@@ -91,20 +102,9 @@ public class MainContactDAOImpl implements MainContactDAO {
                 list.add(contact);
             }
         } catch (SQLException e) {
+        //    LOGGER.error(e);
             e.printStackTrace();
         }
         return list;
-    }
-
-    private Integer count(String sql){
-        Integer result = null;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            ResultSet resultSet = statement.executeQuery();
-            resultSet.next();
-            result = resultSet.getInt(1);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return result;
     }
 }

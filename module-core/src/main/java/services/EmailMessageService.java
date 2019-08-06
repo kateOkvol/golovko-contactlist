@@ -1,7 +1,6 @@
 package services;
 
 import dao.DAOImpl.ContactDAOImpl;
-import db.DataBaseConnection;
 import dto.EmailMessageDTO;
 import entities.Contact;
 import org.antlr.stringtemplate.StringTemplate;
@@ -21,6 +20,9 @@ import java.util.Map;
 import java.util.Properties;
 
 public class EmailMessageService {
+    public EmailMessageService() {
+    }
+
     public static void sendMessage(String recipient, String message, String topic) throws IOException, MessagingException {
         Properties properties = new Properties();
         properties.load(EmailMessageService.class.getClassLoader().getResourceAsStream("email.properties"));
@@ -54,7 +56,7 @@ public class EmailMessageService {
         List<String> recipientsEmail = new ArrayList<>();
         List<String> recipientsNames = new ArrayList<>();
 
-        ContactDAOImpl dao = new ContactDAOImpl(DataBaseConnection.getConnection());
+        ContactDAOImpl dao = new ContactDAOImpl();
 
         for (String id : recipientsId) {
             Contact contact = dao.getById(Integer.parseInt(id));

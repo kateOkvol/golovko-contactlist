@@ -1,4 +1,5 @@
 let ava;
+let file;
 
 function showAttaches(promise) {
     checkPromise(promise);
@@ -67,24 +68,6 @@ function setAvatar() {
         preview.src = '';
         console.log('else :(');
     }
-
+    file = avaElement;
     ava = avaElement.name;
-}
-
-function uploadAvaFetch(file) {
-    let form = new FormData();
-    form.append('file', file);
-    let promise = new Promise((resolve, reject) => {
-        return fetch('application?uploadAva', {
-            method: 'POST',
-            body: form
-        })
-            .then(() => {
-                ava = null;
-            })
-            .catch(function (error) {
-                reject(new Error(error.message));
-            });
-    });
-    console.log(promise);
 }

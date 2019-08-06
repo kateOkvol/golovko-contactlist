@@ -117,18 +117,18 @@ CREATE TABLE contacts.contact (
     middle_name character(20),
     birth_date date,
     citizenship character(30),
-    web_site character(50),
-    email character(30),
-    company character(50),
-    country character(20),
+    web_site character(100),
+    email character(100),
+    company character(100),
+    country character(30),
     city character(20),
-    street character(30),
+    street character(50),
     house character(10),
     flat character(10),
     zip_code integer,
     marital_status contacts.marital_status,
     gender contacts.gender,
-    avatar character(50)
+    avatar character(150)
 );
 
 
@@ -219,7 +219,8 @@ ALTER TABLE ONLY contacts.number ALTER COLUMN id SET DEFAULT nextval('contacts.n
 --
 
 COPY contacts.attachments (contact_id, path, date, note, id, attach_name) FROM stdin;
-1	13_black_and_white.jpg                            	2018-09-02	                              	26	13_black_and_white.jpg                            
+20	35.png                                            	2019-08-01	                              	35	555.png                                           
+1	26.jpg                                            	2018-09-02	                              	26	13_black_and_white.jpg                            
 \.
 
 
@@ -228,14 +229,12 @@ COPY contacts.attachments (contact_id, path, date, note, id, attach_name) FROM s
 --
 
 COPY contacts.contact (id, first_name, last_name, middle_name, birth_date, citizenship, web_site, email, company, country, city, street, house, flat, zip_code, marital_status, gender, avatar) FROM stdin;
-115	John                	Wick                	                    	1970-07-22	                              	                                                  	contactslist.okvol@gmail.com  	                                                  	USA                 	New York            	                              	          	          	\N		male	\N
-7	Steven              	Rogers              	Joseph              	1918-07-04	                              	                                                  	                              	                                                  	USA                 	New York            	Brooklyn                      	          	          	\N	married	male	\N
-1	Джессика            	Джонс               	Васильевна          	\N	                              	                                                  	kate.okvol@gmail.com          	Под псевдонимом                                   	США                 	Нью-Йорк            	                              	          	          	\N	in a relationship	female	1.jpg                                             
-8	Harry               	Potter              	James               	1980-07-29	                              	                                                  	                              	                                                  	Great Britain       	London              	                              	          	          	\N	in a relationship	male	potter.jpg                                        
-20	Hermione            	Granger             	                    	1980-07-26	                              	                                                  	golovkokatrin2000@gmail.com   	Министерство магии                                	Великобритания      	Лондон              	                              	          	          	\N	married	female	206487375.jpg                                     
-116	Harry               	Potter              	James               	1980-07-30	                              	                                                  	                              	                                                  	Great Britain       	London              	                              	          	          	\N	in a relationship	male	\N
-117	Рон                 	Уизли               	                    	\N	                              	                                                  	                              	                                                  	                    	                    	                              	          	          	\N	married	male	OVhsxIDjGA0.jpg                                   
-118	John                	Wick                	                    	1970-07-22	                              	                                                  	contactslist.okvol@gmail.com  	                                                  	USA                 	New York            	                              	          	          	\N		male	\N
+1	Джессика            	Джонс               	Васильевна          	\N	\N	\N	kate.okvol@gmail.com                                                                                	Под псевдонимом                                                                                     	США                           	Нью-Йорк            	\N	\N	\N	\N	in a relationship	female	\N
+115	John                	Wick                	\N	1970-07-17	\N	\N	kate.okvol@gmail.com                                                                                	\N	USA                           	New York            	\N	\N	\N	\N	\N	male	115.jpg                                                                                                                                               
+20	Hermione            	Granger             	\N	1980-07-23	\N	\N	golovkokatrin2000@gmail.com                                                                         	Министерство магии                                                                                  	Великобритания                	Лондон              	\N	\N	\N	\N	married	female	20.jpg                                                                                                                                                
+117	Рон                 	Уизли               	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	married	male	117.jpg                                                                                                                                               
+8	Harry               	Potter              	James               	1980-07-26	\N	\N	\N	\N	Great Britain                 	London              	\N	\N	\N	\N	in a relationship	male	\N
+7	Steven              	Rogers              	Joseph              	1918-07-03	\N	\N	\N	\N	USA                           	New York            	Brooklyn                                          	\N	\N	\N	married	male	\N
 \.
 
 
@@ -246,18 +245,45 @@ COPY contacts.contact (id, first_name, last_name, middle_name, birth_date, citiz
 COPY contacts.number (id, contact_id, phone, country_code, operator_code, note, type) FROM stdin;
 8	1	98546	\N	\N	\N	home
 9	1	5796182	375	29	agency contact number         	mobile
-22	8	453735	854	56	вместо совиной почты          	mobile
 23	20	78645	741	44	лолрпсамит                    	mobile
 24	20	552435	852	85	рпп  ла                       	mobile
 25	20	996364	963	96	нльплмлпм                     	mobile
 49	115	542174	375	29	для связи с белорусами        	mobile
 48	115	86758	\N	\N	дом сгорел в первой части     	home
 50	115	85274	\N	\N	новый                         	home
-51	1	4546874	1	687	Люк Кейдж                     	mobile
-20	1	235547	315	63	странный номер                	mobile
+58	8	852	\N	\N	                              	
+59	8	963	\N	\N	                              	
+60	1	86532	\N	\N	                              	
+51	1	454644	321	67	Люк Кейдж                     	mobile
+81	7	2	\N	\N	                              	
+82	7	4	\N	\N	                              	
 \.
 
 
+--
+-- Name: attachments_id_seq; Type: SEQUENCE SET; Schema: contacts; Owner: postgres
+--
+
+--SELECT pg_catalog.setval('contacts.attachments_id_seq', 72, true);
+
+
+--
+-- Name: contact_id_seq; Type: SEQUENCE SET; Schema: contacts; Owner: postgres
+--
+
+--SELECT pg_catalog.setval('contacts.contact_id_seq', 169, true);
+
+
+--
+-- Name: number_id_seq; Type: SEQUENCE SET; Schema: contacts; Owner: postgres
+--
+
+--SELECT pg_catalog.setval('contacts.number_id_seq', 82, true);
+
+
+--
+-- Name: attachments attachments_pk; Type: CONSTRAINT; Schema: contacts; Owner: postgres
+--
 
 ALTER TABLE ONLY contacts.attachments
     ADD CONSTRAINT attachments_pk PRIMARY KEY (id);

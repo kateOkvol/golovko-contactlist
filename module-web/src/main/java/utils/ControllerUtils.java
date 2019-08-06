@@ -39,7 +39,7 @@ public class ControllerUtils {
     }
 
     public String processRequest(HttpServletRequest request) throws IOException {
-        String line = null;
+        String line;
         StringBuffer buffer = new StringBuffer();
         BufferedReader reader = request.getReader();
         while ((line = reader.readLine()) != null) {
@@ -58,17 +58,8 @@ public class ControllerUtils {
     }
 
     public void writeAttachResponse(String fileName, HttpServletResponse response) throws IOException {
-//        try (FileInputStream reader = new FileInputStream(fileName);
-//             PrintWriter responseWriter = response.getWriter()) {
-//            response.addHeader("Content-Disposition", "attachment;filename=" + fileName);
-//            int i;
-//            while ((i = reader.read()) != -1) {
-//                responseWriter.write(i);
-//            }
-//        }
         BASE64Encoder encoder = new BASE64Encoder();
         encoder.encode(new FileInputStream(new File(fileName)), response.getOutputStream());
-
     }
 
     public void uploadAttach(String path, HttpServletRequest request, HttpServletResponse response) {
@@ -81,14 +72,10 @@ public class ControllerUtils {
             for (Object item : items) {
                 FileItem fileItem = (FileItem) item;
                 if (fileItem.getName() != null) {
-                    File file;
-                    if (new File(path, fileItem.getName()).isFile()) {
-                        String[] parts = fileItem.getName().split("\\.(?=[^\\.]+$)");
-                        parts[1] = "." + parts[1];
-                        file = new File(path, parts[0] + "_" + parts[1]);
-                    } else {
-                        file = new File(path, fileItem.getName());
+                    if( new File(path, fileItem.getName()).isFile()){
+                        new File(path, fileItem.getName()).delete();
                     }
+                    File file = new File(path, fileItem.getName());
                     fileItem.write(file);
                     System.out.println(file.getName() + " was added at folder");
                     response.setStatus(HttpServletResponse.SC_OK);

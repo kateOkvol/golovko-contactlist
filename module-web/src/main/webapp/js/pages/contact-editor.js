@@ -33,7 +33,6 @@ function showButtons() {
 
 async function fillFields(id) {
     const contactId = {id};
-    console.log(contactId);
     const options = {
         method: 'POST',
         headers: {
@@ -42,7 +41,6 @@ async function fillFields(id) {
         },
         body: JSON.stringify(contactId)
     };
-    console.log(options);
 
     let promise = await new Promise((resolve, reject) => {
         return fetch("application?getContactById", options)

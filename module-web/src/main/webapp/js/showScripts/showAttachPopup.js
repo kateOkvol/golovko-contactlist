@@ -9,9 +9,9 @@ function loadAttachPopup(event) {
 }
 
 function getSelected() {
-    const element = document.querySelector(".messageCheckbox:checked");
+    const element = document.getElementById('attach-table').querySelector(".messageCheckbox:checked");
     if (element === null) {
-        alert("Choose any file to edit");
+        alert("Select a file to edit or save a new attachment before this");
     } else {
         attachId = element.id.replace(/\D+/g, "");
         fillAttachInputs(attachId);
@@ -53,11 +53,11 @@ function createAttach() {
 
 function attachSave(promise) {
     document.getElementById('attachOk').addEventListener("click", function () {
-        let elementTable = document.getElementById('attach-table');
+        let elementTable = getAttachTbody();
 
         let innerArray = {};
         let attachForm = new FormData(document.forms.attachPopupForm);
-        attachForm.append('path', promise.path);
+        attachForm.append('path', ('.' + promise.path.split(/\.(?=[^\.]+$)/)[1]));
         attachForm.append('date', promise.date);
         attachForm.append('contactId', contactId);
         if (attachId === 0) {
@@ -67,13 +67,13 @@ function attachSave(promise) {
 
             createAttachArray.push(innerArray);
 
-            let row = elementTable.insertRow(1);
+            let row = elementTable.insertRow(0);
 
             let attachName = innerArray['attachName'];
             let note = innerArray['note'];
             let date = promise.date;
 
-            row.insertCell(0).innerHTML = "<input type='checkbox' name='delete'>";
+            row.insertCell(0).innerHTML = "<input type='checkbox' id='new" + (createAttachArray.length - 1) + "' name='delete'>";
             row.insertCell(1).innerHTML = "<a style='cursor:pointer' id='attach0' onclick='downloadAttachFetch(id)'>" + attachName + "</a>";
             row.insertCell(2).innerHTML = date;
             row.insertCell(3).innerHTML = note;
@@ -129,7 +129,6 @@ function addAttachPopupButtons() {
 
 async function fillAttachInputs(id) {
     const numberId = {id};
-    console.log(numberId);
     const options = {
         method: 'POST',
         headers: {
@@ -138,7 +137,6 @@ async function fillAttachInputs(id) {
         },
         body: JSON.stringify(numberId)
     };
-    console.log(options);
 
     let promise = await new Promise((resolve, reject) => {
         return fetch("application?getAttachById", options)
@@ -152,4 +150,13 @@ async function fillAttachInputs(id) {
     promise['attachNote'] = promise['note'];
     delete promise['note'];
     showAttachInputs(promise);
+}
+
+function getAttachTbody() {
+    if(document.getElementById('attach-table-body')===null){
+        let tbody = document.createElement('tbody');
+        tbody.id = 'attach-table-body';
+        document.getElementById('attach-table').appendChild(tbody);
+    }
+    return  document.getElementById('attach-table-body');
 }

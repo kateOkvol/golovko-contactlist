@@ -1,11 +1,9 @@
 package services;
 
 import dao.DAOImpl.AttachmentDAOImpl;
-import db.DataBaseConnection;
 import dto.AttachmentDTO;
 import entities.Attachment;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,19 +12,11 @@ public class AttachmentService {
     private AttachmentDTO dto;
 
     public AttachmentService() {
-        try {
-            this.dao = new AttachmentDAOImpl(DataBaseConnection.getConnection());
-        } catch (SQLException e) {
-            System.out.println("no connection to start the address service");
-        }
+        this.dao = new AttachmentDAOImpl();
     }
 
     public AttachmentService(AttachmentDTO dto) {
-        try {
-            this.dao = new AttachmentDAOImpl(DataBaseConnection.getConnection());
-        } catch (SQLException e) {
-            System.out.println("no connection to start the address service");
-        }
+        this.dao = new AttachmentDAOImpl();
         this.dto = dto;
     }
 
@@ -43,8 +33,12 @@ public class AttachmentService {
         return new AttachmentDTO(dao.getById(id));
     }
 
-    public void createAttach() {
-        dao.create(setContactFields());
+    public Integer createAttach() {
+        return dao.create(setContactFields());
+    }
+
+    public String setPath(String path, int id){
+        return dao.setPat(path, id);
     }
 
     public void updateAttach() {
