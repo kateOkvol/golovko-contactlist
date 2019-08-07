@@ -1,11 +1,12 @@
 let ava;
 let file;
+let isUpload = false;
 
 function showAttaches(promise) {
-    checkPromise(promise);
+    checkAttachPromise(promise);
 }
 
-function checkPromise(promise) {
+function checkAttachPromise(promise) {
     if (promise === null) {
         addAvatarComponents();
         ava = '/resource/noAva.jpg';
@@ -70,4 +71,5 @@ function setAvatar() {
     }
     file = avaElement;
     ava = avaElement.name;
+    isUpload = true;
 }

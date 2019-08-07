@@ -220,7 +220,8 @@ function manageSave(responseId) {
         updateAttachFetch();
     }
     setAvaValue(responseId);
-    if (ava !== '') {
+    if (isUpload) {
+        isUpload = false;
         const newFile = new File([file], ava);
         uploadAvaFetch(newFile);
     }

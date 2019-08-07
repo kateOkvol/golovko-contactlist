@@ -3,16 +3,19 @@ package dao.DAOImpl;
 import dao.ContactDAO;
 import db.DataBaseConnection;
 import entities.Contact;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 public class ContactDAOImpl implements ContactDAO {
+    private final static Logger logger = Logger.getLogger(ContactDAOImpl.class);
 
     public ContactDAOImpl() {
     }
@@ -25,6 +28,7 @@ public class ContactDAOImpl implements ContactDAO {
                  PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.executeUpdate();
             } catch (SQLException e) {
+                logger.error("Contact DAO, setAvatar method (avatar=" + avatar + ":\n\t" + Arrays.toString(e.getStackTrace()));
                 e.printStackTrace();
             }
         }
@@ -45,6 +49,7 @@ public class ContactDAOImpl implements ContactDAO {
             insertPerson.next();
             id = (Integer) insertPerson.getObject(1);
         } catch (SQLException e) {
+            logger.error("Contact DAO, create method:\n\t" + Arrays.toString(e.getStackTrace()));
             e.printStackTrace();
         }
         return id;
@@ -76,6 +81,7 @@ public class ContactDAOImpl implements ContactDAO {
             ResultSet resultSet = statement.executeQuery();
             contact = parseResultSet(resultSet).get(0);
         } catch (SQLException e) {
+            logger.error("Contact DAO, getById method:\n\t" + Arrays.toString(e.getStackTrace()));
             e.printStackTrace();
         }
         return contact;
@@ -91,6 +97,7 @@ public class ContactDAOImpl implements ContactDAO {
             ResultSet resultSet = statement.executeQuery();
             list = parseResultSet(resultSet);
         } catch (SQLException e) {
+            logger.error("Contact DAO, getByBirthDate method("+date.toString()+"):\n\t" + Arrays.toString(e.getStackTrace()));
             e.printStackTrace();
         }
         return list;
@@ -107,11 +114,9 @@ public class ContactDAOImpl implements ContactDAO {
             partOfPrepare(statement, contact);
             statement.setObject(17, contact.getAvatar());
             statement.setInt(18, contact.getId());
-            int count = statement.executeUpdate();
-            if (count != 1) {
-                System.out.println("contact update exception");
-            }
+            statement.executeUpdate();
         } catch (SQLException e) {
+            logger.error("Contact DAO, update method:\n\t" + Arrays.toString(e.getStackTrace()));
             e.printStackTrace();
         }
     }
@@ -128,6 +133,7 @@ public class ContactDAOImpl implements ContactDAO {
             statement.setObject(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
+            logger.error("Contact DAO, delete method:\n\t" + Arrays.toString(e.getStackTrace()));
             e.printStackTrace();
         }
         fillList(list, sqlContact, id);
@@ -163,6 +169,7 @@ public class ContactDAOImpl implements ContactDAO {
                 list.add(contact);
             }
         } catch (SQLException e) {
+            logger.error("Contact DAO, parseResultSet method:\n\t" + Arrays.toString(e.getStackTrace()));
             e.printStackTrace();
         }
         return list;
@@ -196,6 +203,7 @@ public class ContactDAOImpl implements ContactDAO {
                 list.add(set.getString(1));
             }
         } catch (SQLException e) {
+            logger.error("Contact DAO, FillList method:\n\t" + Arrays.toString(e.getStackTrace()));
             e.printStackTrace();
         }
     }

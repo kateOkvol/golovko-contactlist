@@ -5,8 +5,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.log4j.Logger;
 import sun.misc.BASE64Encoder;
 
 import javax.imageio.ImageIO;
@@ -18,23 +20,23 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 public class ControllerUtils {
+    private static final org.apache.log4j.Logger logger = Logger.getLogger(ControllerUtils.class);
 
     public ControllerUtils() {
     }
 
     public JsonNode prepareToDTO(HttpServletRequest request) throws IOException {
         String jsonString = processRequest(request);
-
-        System.out.println(jsonString);
-
         ObjectMapper mapper = new ObjectMapper();
         mapper.disable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
         mapper.disable(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS);
         mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
 
+        logger.info("JSON from client:\n\t" + jsonString);
         return mapper.readTree(jsonString);
     }
 
@@ -53,13 +55,14 @@ public class ControllerUtils {
         ObjectMapper mapper = new ObjectMapper();
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         JsonNode jsonNode = mapper.readTree(jsonString);
-        System.out.println(jsonNode);
+        logger.info("id JSON from client:\n\t" + jsonString);
         return jsonNode.get(idName).asInt();
     }
 
     public void writeAttachResponse(String fileName, HttpServletResponse response) throws IOException {
         BASE64Encoder encoder = new BASE64Encoder();
         encoder.encode(new FileInputStream(new File(fileName)), response.getOutputStream());
+        logger.info("File "+fileName+" was successfully written to the response.");
     }
 
     public void uploadAttach(String path, HttpServletRequest request, HttpServletResponse response) {
@@ -72,16 +75,21 @@ public class ControllerUtils {
             for (Object item : items) {
                 FileItem fileItem = (FileItem) item;
                 if (fileItem.getName() != null) {
-                    if( new File(path, fileItem.getName()).isFile()){
+                    if (new File(path, fileItem.getName()).isFile()) {
                         new File(path, fileItem.getName()).delete();
+                        logger.info("Old file was deleted");
                     }
                     File file = new File(path, fileItem.getName());
                     fileItem.write(file);
-                    System.out.println(file.getName() + " was added at folder");
+                    logger.info(file.getName() + " was added at folder " + path);
                     response.setStatus(HttpServletResponse.SC_OK);
                 }
             }
+        } catch (FileUploadException e) {
+            logger.error("Can't upload file:\n\t"+ Arrays.toString(e.getStackTrace()));
+            e.printStackTrace();
         } catch (Exception e) {
+            logger.error("FileItem write exception:\n\t"+ Arrays.toString(e.getStackTrace()));
             e.printStackTrace();
         }
     }

@@ -1,6 +1,7 @@
 package servlets;
 
 import email.QuartzJob;
+import org.apache.log4j.Logger;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
@@ -12,12 +13,15 @@ import org.quartz.impl.StdSchedulerFactory;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import java.util.Arrays;
 
 public class QuartsListener implements ServletContextListener {
+    private static final Logger logger = Logger.getLogger(QuartsListener.class);
     private Scheduler scheduler;
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
+        logger.info("Quarts Listener started.");
         try {
             JobDetail job = JobBuilder.newJob(QuartzJob.class)
                     .withIdentity("job", "group").build();
@@ -32,6 +36,7 @@ public class QuartsListener implements ServletContextListener {
             scheduler.start();
 
         } catch (SchedulerException e) {
+            logger.error("Scheduler jobs exception:\n\t" + Arrays.toString(e.getStackTrace()));
             e.printStackTrace();
         }
     }
@@ -41,6 +46,7 @@ public class QuartsListener implements ServletContextListener {
         try {
             scheduler.shutdown();
         } catch (SchedulerException e) {
+            logger.error("Can't shutdown scheduler :\n\t" + Arrays.toString(e.getStackTrace()));
             e.printStackTrace();
         }
     }

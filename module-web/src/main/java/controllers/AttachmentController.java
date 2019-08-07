@@ -2,6 +2,7 @@ package controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dto.AttachmentDTO;
+import org.apache.log4j.Logger;
 import services.AttachmentService;
 import utils.ControllerUtils;
 
@@ -10,9 +11,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Properties;
 
 public class AttachmentController {
+    private final static Logger logger = Logger.getLogger(AttachmentController.class);
     private final ControllerUtils util;
     private Properties properties = new Properties();
 
@@ -22,13 +25,14 @@ public class AttachmentController {
         try {
             this.properties.load(AttachmentController.class.getClassLoader().getResourceAsStream("config-web.properties"));
         } catch (IOException e) {
+            logger.error("Cant't load properties:\n\t" + Arrays.toString(e.getStackTrace()));
             e.printStackTrace();
         }
     }
 
     public void searchAttaches(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Integer contactId = util.processId("contactId", request);
-        System.out.println(contactId);
+        logger.info("Contact id is " + contactId + " for attaches");
         ObjectMapper mapper = new ObjectMapper();
         response.getWriter().write(
                 mapper.writeValueAsString(
@@ -53,16 +57,11 @@ public class AttachmentController {
             AttachmentService service = new AttachmentService(dto);
             int id = service.createAttach();
             service.setPath(dto.getPath(), id);
-
             list.add(id);
-            // String jsonString = "[" + id + "]";
-//            response.getWriter().write(jsonString);
-//            System.out.println(jsonString);
-
         }
         response.getWriter().write(new ObjectMapper().writeValueAsString(list));
         response.setStatus(200);
-        System.out.println(list.toString());
+        logger.info("Id of created attaches: " + list.toString());
     }
 
     public void deleteAttach(HttpServletRequest request, HttpServletResponse response) throws IOException {

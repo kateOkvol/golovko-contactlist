@@ -3,6 +3,7 @@ package services;
 import dao.DAOImpl.MainContactDAOImpl;
 import dto.MainContactDTO;
 import entities.MainContact;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Properties;
 
 public class MainContactService {
+    private static final Logger logger = Logger.getLogger(MainContactService.class);
     private MainContactDAOImpl dao;
 
     public MainContactService() {

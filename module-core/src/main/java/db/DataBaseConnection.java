@@ -5,6 +5,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Properties;
 
 public class DataBaseConnection {
@@ -31,7 +32,7 @@ public class DataBaseConnection {
             source.setInitialSize(20);
             source.setMaxActive(50);
         } catch (IOException e) {
-            LOGGER.error(e);
+            LOGGER.error(Arrays.toString(e.getStackTrace()));
             e.printStackTrace();
         }
     }

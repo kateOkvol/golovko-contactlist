@@ -3,26 +3,30 @@ package dao.DAOImpl;
 import dao.AttachmentDAO;
 import db.DataBaseConnection;
 import entities.Attachment;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 public class AttachmentDAOImpl implements AttachmentDAO {
+    private final static Logger logger = Logger.getLogger(AttachmentDAOImpl.class);
 
     public AttachmentDAOImpl() {
     }
 
-    public String setPat(String path, int id) {
+    public String setPath(String path, int id) {
             path = id + path;
             String sql = "UPDATE contacts.attachments SET  path = '" + path + "' WHERE id = " + id + ";";
             try (Connection connection = DataBaseConnection.getInstance().getSource().getConnection();
                  PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.executeUpdate();
             } catch (SQLException e) {
+                logger.error("Attachment DAO, setPath method:\n\t" + Arrays.toString(e.getStackTrace()));
                 e.printStackTrace();
             }
         return path;
@@ -40,6 +44,7 @@ public class AttachmentDAOImpl implements AttachmentDAO {
             insertPerson.next();
             id = (Integer) insertPerson.getObject(1);
         } catch (SQLException e) {
+            logger.error("Attachment DAO, create method:\n\t" + Arrays.toString(e.getStackTrace()));
             e.printStackTrace();
         }
         return id;
@@ -58,6 +63,7 @@ public class AttachmentDAOImpl implements AttachmentDAO {
             ResultSet resultSet = statement.executeQuery();
             list = parseResultSet(resultSet);
         } catch (SQLException e) {
+            logger.error("Attachment DAO, getAll method:\n\t" + Arrays.toString(e.getStackTrace()));
             e.printStackTrace();
         }
         return list;
@@ -75,6 +81,7 @@ public class AttachmentDAOImpl implements AttachmentDAO {
             ResultSet resultSet = statement.executeQuery();
             attachment = parseResultSet(resultSet).get(0);
         } catch (SQLException e) {
+            logger.error("Attachment DAO, getBiId method:\n\t" + Arrays.toString(e.getStackTrace()));
             e.printStackTrace();
         }
         return attachment;
@@ -87,11 +94,9 @@ public class AttachmentDAOImpl implements AttachmentDAO {
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(6, attachment.getId());
             partOfPrepare(statement, attachment);
-            int count = statement.executeUpdate();
-            if (count != 1) {
-                System.out.println("contact update exception");
-            }
+            statement.executeUpdate();
         } catch (SQLException e) {
+            logger.error("Attachment DAO, update method:\n\t" + Arrays.toString(e.getStackTrace()));
             e.printStackTrace();
         }
     }
@@ -107,6 +112,7 @@ public class AttachmentDAOImpl implements AttachmentDAO {
             resultSet.next();
             deletePath = resultSet.getString(1);
         } catch (SQLException e) {
+            logger.error("Attachment DAO, delete method:\n\t" + Arrays.toString(e.getStackTrace()));
             e.printStackTrace();
         }
         return deletePath;
@@ -140,6 +146,7 @@ public class AttachmentDAOImpl implements AttachmentDAO {
                 list.add(attachment);
             }
         } catch (SQLException e) {
+            logger.error("Attachment DAO, parseResultSet method:\n\t" + Arrays.toString(e.getStackTrace()));
             e.printStackTrace();
         }
         return list;

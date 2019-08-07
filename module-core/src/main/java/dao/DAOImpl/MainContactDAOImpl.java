@@ -3,7 +3,6 @@ package dao.DAOImpl;
 import dao.MainContactDAO;
 import db.DataBaseConnection;
 import entities.MainContact;
-import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
@@ -11,12 +10,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
 public class MainContactDAOImpl implements MainContactDAO {
-    private final static Logger LOGGER = LogManager.getLogger(MainContactDAO.class);
+    private final static Logger logger = Logger.getLogger(MainContactDAO.class);
 
     public MainContactDAOImpl() {
     }
@@ -30,7 +30,7 @@ public class MainContactDAOImpl implements MainContactDAO {
             resultSet.next();
             result = resultSet.getInt(1);
         } catch (SQLException e) {
-         //   LOGGER.error(e);
+            logger.error("MainContact DAO, countContacts method:\n\t" + Arrays.toString(e.getStackTrace()));
             e.printStackTrace();
         }
         return result;
@@ -42,7 +42,7 @@ public class MainContactDAOImpl implements MainContactDAO {
         try {
             properties.load(MainContactDAOImpl.class.getClassLoader().getResourceAsStream("config-core.properties"));
         } catch (IOException e) {
-         //   LOGGER.error(e);
+            logger.error("MainContact DAO, getAll method, can't load properties:\n\t" + Arrays.toString(e.getStackTrace()));
             e.printStackTrace();
         }
         int amount = Integer.parseInt(properties.getProperty("contact_amount"));
@@ -61,6 +61,7 @@ public class MainContactDAOImpl implements MainContactDAO {
         try {
             properties.load(MainContactDAOImpl.class.getClassLoader().getResourceAsStream("config-core.properties"));
         } catch (IOException e) {
+            logger.error("MainContact DAO, search method, can't load properties:\n\t" + Arrays.toString(e.getStackTrace()));
             e.printStackTrace();
         }
         int amount = Integer.parseInt(properties.getProperty("contact_amount"));
@@ -81,7 +82,7 @@ public class MainContactDAOImpl implements MainContactDAO {
             ResultSet resultSet = statement.executeQuery();
             list = parseResultSet(resultSet);
         } catch (SQLException e) {
-        //    LOGGER.error(e);
+            logger.error("MainContact DAO, processGetReq method:\n\t" + Arrays.toString(e.getStackTrace()));
             e.printStackTrace();
         }
         return list;
@@ -102,7 +103,7 @@ public class MainContactDAOImpl implements MainContactDAO {
                 list.add(contact);
             }
         } catch (SQLException e) {
-        //    LOGGER.error(e);
+            logger.error("MainContact DAO, parseResultSet method:\n\t" + Arrays.toString(e.getStackTrace()));
             e.printStackTrace();
         }
         return list;

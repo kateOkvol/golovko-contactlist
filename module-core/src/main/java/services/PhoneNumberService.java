@@ -3,9 +3,10 @@ package services;
 import dao.DAOImpl.PhoneNumberDAOImpl;
 import dto.PhoneNumberDTO;
 import entities.PhoneNumber;
+import org.apache.log4j.Logger;
 
 public class PhoneNumberService {
-
+    private static final Logger logger = Logger.getLogger(PhoneNumberService.class);
     private PhoneNumberDAOImpl dao;
     private PhoneNumberDTO dto;
 

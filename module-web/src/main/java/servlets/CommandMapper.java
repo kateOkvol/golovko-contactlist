@@ -6,17 +6,17 @@ import controllers.EmailMessageController;
 import controllers.MainContactsController;
 import controllers.MainNumberController;
 import controllers.NumberController;
-import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.HashMap;
 
 class CommandMapper {
-    private final static Logger LOGGER = LogManager.getLogger(CommandMapper.class);
+    private final static Logger logger = Logger.getLogger(CommandMapper.class);
     private static HashMap<String, Method> map = new HashMap<>();
 
     private static void initMap() throws NoSuchMethodException {
@@ -52,7 +52,20 @@ class CommandMapper {
             Object type = method.getDeclaringClass().newInstance();
             method.invoke(type, request, response);
             response.setStatus(200);
-        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException e) {
+        } catch (NoSuchMethodException e) {
+            logger.error("Method for the command not found:\n\t" + Arrays.toString(e.getStackTrace()));
+            response.setStatus(500);
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            logger.error("No access to command:\n\t" + Arrays.toString(e.getStackTrace()));
+            response.setStatus(500);
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            logger.error("Instantiation exception:\n\t" + Arrays.toString(e.getStackTrace()));
+            response.setStatus(500);
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            logger.error("Invocation target exception:\n\t" + Arrays.toString(e.getStackTrace()));
             response.setStatus(500);
             e.printStackTrace();
         }

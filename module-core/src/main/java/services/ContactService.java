@@ -3,10 +3,12 @@ package services;
 import dao.DAOImpl.ContactDAOImpl;
 import dto.ContactDTO;
 import entities.Contact;
+import org.apache.log4j.Logger;
 
 import java.util.List;
 
 public class ContactService {
+    private static final Logger logger = Logger.getLogger(ContactService.class);
     private ContactDAOImpl dao;
     private ContactDTO dto;
 

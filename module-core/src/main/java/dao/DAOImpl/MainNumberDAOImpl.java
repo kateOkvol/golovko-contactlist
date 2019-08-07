@@ -3,15 +3,19 @@ package dao.DAOImpl;
 import dao.MainNumberDAO;
 import db.DataBaseConnection;
 import entities.MainNumber;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 public class MainNumberDAOImpl implements MainNumberDAO {
+    private final static Logger logger = Logger.getLogger(MainNumberDAOImpl.class);
+
     public MainNumberDAOImpl() {
     }
 
@@ -37,9 +41,11 @@ public class MainNumberDAOImpl implements MainNumberDAO {
                     list.add(number);
                 }
             } catch (SQLException e) {
+                logger.error("MainNumber DAO, getAll method, parse ResultSet:\n\t" + Arrays.toString(e.getStackTrace()));
                 e.printStackTrace();
             }
         } catch (SQLException e) {
+            logger.error("MainNumber DAO, getAll method:\n\t" + Arrays.toString(e.getStackTrace()));
             e.printStackTrace();
         }
         return list;
@@ -52,11 +58,9 @@ public class MainNumberDAOImpl implements MainNumberDAO {
         try (Connection connection = DataBaseConnection.getInstance().getSource().getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setObject(1, id);
-            int count = statement.executeUpdate();
-            if (count != 1) {
-                System.out.println("error main contact");
-            }
+            statement.executeUpdate();
         } catch (SQLException e) {
+            logger.error("MainNumber DAO, delete method:\n\t" + Arrays.toString(e.getStackTrace()));
             e.printStackTrace();
         }
     }

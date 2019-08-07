@@ -2,6 +2,7 @@ package controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dto.ContactDTO;
+import org.apache.log4j.Logger;
 import services.ContactService;
 import utils.ControllerUtils;
 
@@ -10,10 +11,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
 public class ContactsController {
+    private final static Logger logger = Logger.getLogger(ContactsController.class);
     private final ControllerUtils util;
     private Properties properties = new Properties();
 
@@ -23,6 +26,7 @@ public class ContactsController {
         try {
             this.properties.load(AttachmentController.class.getClassLoader().getResourceAsStream("config-web.properties"));
         } catch (IOException e) {
+            logger.error("Cant't load properties:\n\t" + Arrays.toString(e.getStackTrace()));
             e.printStackTrace();
         }
     }
@@ -35,7 +39,7 @@ public class ContactsController {
         service.setAvatar(dto.getAvatar(), id);
         String jsonString = "[" + id + "]";
         response.getWriter().write(jsonString);
-        System.out.println(jsonString);
+        logger.info("Created contact id is " + jsonString);
     }
 
     public void updateContact(HttpServletRequest request, HttpServletResponse response) throws IOException {

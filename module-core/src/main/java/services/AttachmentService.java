@@ -3,11 +3,13 @@ package services;
 import dao.DAOImpl.AttachmentDAOImpl;
 import dto.AttachmentDTO;
 import entities.Attachment;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AttachmentService {
+    private static final Logger logger = Logger.getLogger(AttachmentService.class);
     private AttachmentDAOImpl dao;
     private AttachmentDTO dto;
 
@@ -38,7 +40,7 @@ public class AttachmentService {
     }
 
     public String setPath(String path, int id){
-        return dao.setPat(path, id);
+        return dao.setPath(path, id);
     }
 
     public void updateAttach() {

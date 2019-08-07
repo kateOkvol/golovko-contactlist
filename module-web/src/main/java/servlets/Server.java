@@ -1,15 +1,24 @@
 package servlets;
 
+import org.apache.log4j.Logger;
+
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 
 @WebServlet(name = "application", urlPatterns = {"/application"})
 @MultipartConfig
 public class Server extends HttpServlet {
+    private static final Logger logger = Logger.getLogger(Server.class);
+
+    @Override
+    public void init(){
+        logger.info(" \n \nServer started\n ");
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
@@ -27,11 +36,12 @@ public class Server extends HttpServlet {
         try {
             request.setCharacterEncoding("UTF-8");
         } catch (UnsupportedEncodingException e) {
+            logger.error("Request encoding exception:\n\t" + Arrays.toString(e.getStackTrace()));
             e.printStackTrace();
         }
         String command = request.getQueryString();
         new CommandMapper().forward(command, request, response);
-        System.out.println(command + " finished");
+        logger.info("Command \"" + command + "\" finished");
     }
 }
 
